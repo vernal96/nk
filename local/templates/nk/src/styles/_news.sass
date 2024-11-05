@@ -1,0 +1,87 @@
+@import "functions"
+
+.news
+  &__swiper
+    overflow: visible !important
+
+  .swiper-wrapper
+    padding: 2em
+    margin: -2em
+
+  &__footer
+    display: flex
+    justify-content: flex-end
+    gap: 1.5em
+    margin-top: #{setCalcSize(12, 48)}
+
+  &__list
+    display: flex
+    flex-wrap: wrap
+    gap: var(--gap)
+    width: 100%
+
+    .news-item
+      width: calc((100% - var(--gap) * (var(--news-row-count) - 1)) / var(--news-row-count))
+
+.news-item
+  display: flex
+  flex-direction: column
+  justify-content: space-between
+  border-radius: #{setCalcSize(8, 18)}
+  background: var(--clr-white)
+  overflow: hidden
+  transition: box-shadow .3s
+  text-decoration: none
+  color: var(--clr-black)
+
+  &__image
+    width: 100%
+    aspect-ratio: 1.5
+
+    & *
+      width: 100%
+
+  &__title
+    display: block
+    padding: #{setCalcSize(12, 24)} #{setCalcSize(12, 16)} 0
+
+  &__footer
+    display: flex
+    justify-content: space-between
+    gap: 0.5em
+    align-items: center
+    padding: 0 #{setCalcSize(12, 16)} #{setCalcSize(16, 29)}
+    margin-top: #{setCalcSize(12, 32)}
+
+  &__date
+    color: var(--clr-black-40)
+    font-size: #{setCalcSize(12, 16)}
+
+  &__link
+    white-space: nowrap
+
+@media (max-width: 1200px)
+  \:root
+    --news-row-count: 3
+
+@media (max-width: 767px)
+  .news
+    &__slide
+      width: 20em
+
+  \:root
+    --news-row-count: 2
+
+@media (max-width: 530px)
+  \:root
+    --news-row-count: 1
+
+@media (hover: hover)
+  .news-item
+    &:hover
+      box-shadow: var(--hover-shadow)
+
+@media (hover: none)
+  .news-item
+    &:active
+      box-shadow: var(--hover-shadow)

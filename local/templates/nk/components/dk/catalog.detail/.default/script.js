@@ -1,0 +1,1 @@
+DK.Methods.toggleTextSlider();

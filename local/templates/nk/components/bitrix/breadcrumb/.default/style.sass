@@ -1,0 +1,60 @@
+@import "../../../../src/styles/functions"
+
+.breadcrumbs
+  padding-top: #{setCalcSize(5, 12)}
+  padding-bottom: 0.25em
+
+  &__wrapper
+    font-size: 0.88em
+    display: flex
+    flex-wrap: wrap
+    gap: #{setCalcSize(8, 16)}
+
+  &__item
+    display: flex
+    gap: inherit
+    align-items: center
+    color: var(--clr-black-60)
+
+    &--home
+      a
+        &::before
+          content: ""
+          display: block
+          height: 1em
+          aspect-ratio: 1
+          background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTciIHZpZXdCb3g9IjAgMCAxNiAxNyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE1LjA5NjEgNy4xMDcwNUw4Ljg0NjA5IDEuMjEwMTdDOC44NDMwNCAxLjIwNzUgOC44NDAxNyAxLjIwNDYzIDguODM3NSAxLjIwMTU4QzguNjA3MzkgMC45OTIzMDYgOC4zMDc1MiAwLjg3NjM0MyA3Ljk5NjQ4IDAuODc2MzQzQzcuNjg1NDUgMC44NzYzNDMgNy4zODU1OCAwLjk5MjMwNiA3LjE1NTQ3IDEuMjAxNThMNy4xNDY4OCAxLjIxMDE3TDAuOTAzOTA2IDcuMTA3MDVDMC43NzY1NjEgNy4yMjQxNCAwLjY3NDkwOSA3LjM2NjQgMC42MDUzODQgNy41MjQ4MkMwLjUzNTg1OSA3LjY4MzIzIDAuNDk5OTc0IDcuODU0MzYgMC41IDguMDI3MzZWMTUuMjVDMC41IDE1LjU4MTUgMC42MzE2OTYgMTUuODk5NSAwLjg2NjExNiAxNi4xMzM5QzEuMTAwNTQgMTYuMzY4MyAxLjQxODQ4IDE2LjUgMS43NSAxNi41SDUuNUM1LjgzMTUyIDE2LjUgNi4xNDk0NiAxNi4zNjgzIDYuMzgzODggMTYuMTMzOUM2LjYxODMgMTUuODk5NSA2Ljc1IDE1LjU4MTUgNi43NSAxNS4yNVYxMS41SDkuMjVWMTUuMjVDOS4yNSAxNS41ODE1IDkuMzgxNyAxNS44OTk1IDkuNjE2MTIgMTYuMTMzOUM5Ljg1MDU0IDE2LjM2ODMgMTAuMTY4NSAxNi41IDEwLjUgMTYuNUgxNC4yNUMxNC41ODE1IDE2LjUgMTQuODk5NSAxNi4zNjgzIDE1LjEzMzkgMTYuMTMzOUMxNS4zNjgzIDE1Ljg5OTUgMTUuNSAxNS41ODE1IDE1LjUgMTUuMjVWOC4wMjczNkMxNS41IDcuODU0MzYgMTUuNDY0MSA3LjY4MzIzIDE1LjM5NDYgNy41MjQ4MkMxNS4zMjUxIDcuMzY2NCAxNS4yMjM0IDcuMjI0MTQgMTUuMDk2MSA3LjEwNzA1Wk0xNC4yNSAxNS4yNUgxMC41VjExLjVDMTAuNSAxMS4xNjg1IDEwLjM2ODMgMTAuODUwNiAxMC4xMzM5IDEwLjYxNjFDOS44OTk0NiAxMC4zODE3IDkuNTgxNTIgMTAuMjUgOS4yNSAxMC4yNUg2Ljc1QzYuNDE4NDggMTAuMjUgNi4xMDA1NCAxMC4zODE3IDUuODY2MTIgMTAuNjE2MUM1LjYzMTcgMTAuODUwNiA1LjUgMTEuMTY4NSA1LjUgMTEuNVYxNS4yNUgxLjc1VjguMDI3MzZMMS43NTg1OSA4LjAxOTU1TDggMi4xMjUwMUwxNC4yNDIyIDguMDE3OThMMTQuMjUwOCA4LjAyNThMMTQuMjUgMTUuMjVaIiBmaWxsPSIjMjEyMTIxIi8+Cjwvc3ZnPgo=) no-repeat center / contain
+
+    &::after
+      content: ""
+      display: block
+      width: #{setCalcSize(12, 37)}
+      background: var(--clr-black)
+      height: 1px
+
+    &:last-child
+      &::after
+        display: none
+
+    a
+      display: inherit
+      gap: 0.5em
+      align-items: center
+      color: var(--clr-black)
+      text-decoration: none
+      transition: color 0.3s
+      line-height: 1
+
+@media (hover: hover)
+  .breadcrumbs
+    &__item
+      a
+        &:hover
+          color: var(--clr-orange)
+
+@media (hover: none)
+  .breadcrumbs
+    &__item
+      a
+        &:active
+          color: var(--clr-orange)

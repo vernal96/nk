@@ -1,0 +1,30 @@
+.search-page {
+  --items-row-count: 4;
+}
+.search-page__items {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: var(--gap);
+  -webkit-flex-wrap: wrap;
+      -ms-flex-wrap: wrap;
+          flex-wrap: wrap;
+}
+.search-page__items .product {
+  width: -webkit-calc((100% - var(--gap) * (var(--items-row-count) - 1)) / var(--items-row-count));
+  width: calc((100% - var(--gap) * (var(--items-row-count) - 1)) / var(--items-row-count));
+}
+
+@media (max-width: 1110px) {
+  .search-page {
+    --items-row-count: 3;
+  }
+}
+@media (max-width: 650px) {
+  .search-page {
+    --items-row-count: 2;
+  }
+}
+
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInN0eWxlLnNhc3MiLCJzdHlsZS5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBRUE7RUFDRSxvQkFBQTtBQ0RGO0FER0U7RUFDRSxvQkFBQTtFQUFBLHFCQUFBO0VBQUEsb0JBQUE7RUFBQSxhQUFBO0VBQ0EsZUFBQTtFQUNBLHVCQUFBO01BQUEsbUJBQUE7VUFBQSxlQUFBO0FDREo7QURHSTtFQUNFLGdHQUFBO0VBQUEsd0ZBQUE7QUNETjs7QURHQTtFQUNFO0lBQ0Usb0JBQUE7RUNBRjtBQUNGO0FEQ0E7RUFDRTtJQUNFLG9CQUFBO0VDQ0Y7QUFDRiIsImZpbGUiOiJzdHlsZS5jc3MifQ== */

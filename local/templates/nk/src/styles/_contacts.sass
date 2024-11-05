@@ -1,0 +1,80 @@
+@import "functions"
+
+.contacts
+  &__wrapper
+    display: flex
+    gap: #{setCalcSize(12, 64)}
+    height: 32em
+    position: relative
+
+  &__list
+    display: flex
+    width: 25em
+    flex-shrink: 0
+    flex-direction: column
+    gap: 0.75em
+
+  &__item
+    border-radius: .75em
+    background: var(--clr-black-6)
+
+  &__map
+    width: 100%
+    border-radius: .75em
+    overflow: hidden
+    background: var(--clr-black-6)
+
+.contact
+  padding: 1.5em 2em 1.5em 1em
+
+  &__item
+    margin-top: 0.75em
+    padding-left: 1.8em
+
+    &:first-child
+      margin-top: 0 !important
+
+    &--main
+      padding-left: 0 !important
+      font-weight: 700
+      margin-top: 1.4em
+
+    &--icon
+      display: flex
+      gap: 0.8em
+
+.contact-item
+  background: var(--clr-white)
+  display: flex
+  border-radius: .75em
+  overflow: hidden
+  box-shadow: var(--hover-shadow)
+
+  &__data
+    width: 40%
+    padding: #{setCalcSize(18, 32)} #{setCalcSize(12, 32)}
+
+  &__map
+    width: 60%
+    background: var(--clr-black-6)
+
+@media (max-width: 850px)
+  .contacts
+    &__wrapper
+      flex-direction: column
+      height: auto
+
+    &__list
+      width: 100%
+      padding-right: 0 !important
+
+    &__map
+      height: 30em
+  .contact-item
+    display: block
+
+    &__data, &__map
+      width: 100%
+
+    &__map
+      height: 25em

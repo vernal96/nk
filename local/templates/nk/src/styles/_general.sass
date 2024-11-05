@@ -1,0 +1,192 @@
+@import "functions"
+
+html
+  font-size: var(--font-size)
+
+body
+  position: relative
+  width: 100%
+  min-height: 100vh
+  min-width: 360px
+  margin: 0
+  overflow-x: hidden
+  color: var(--clr-black)
+  font-size: 1rem
+  line-height: 1.3
+  font-family: var(--font), sans-serif
+  text-align: left
+  font-weight: 500
+  background: var(--clr-black-6)
+
+::selection
+  color: #fff !important
+  background-color: var(--clr-blue)
+
+*
+  box-sizing: border-box
+  -webkit-tap-highlight-color: transparent !important
+  font-variant-numeric: lining-nums proportional-nums
+
+  &::before, &::after
+    box-sizing: border-box
+
+  &:focus
+    outline: none !important
+
+a
+  text-decoration: none
+  color: var(--clr-black)
+
+.wrapper
+  overflow: hidden
+  height: 100%
+
+.scroll, textarea
+  &::-webkit-scrollbar
+    width: 0.25rem
+    height: 0.25rem
+
+  &::-webkit-scrollbar-track
+    border-radius: 0.125rem
+    background-color: var(--clr-black-20)
+
+  &::-webkit-scrollbar-thumb
+    border-radius: 0.125rem
+    background-color: var(--clr-blue)
+
+    &:hover
+      background-color: var(--clr-blue-1)
+
+    &:active
+      background-color: var(--clr-blue-2)
+
+input, textarea, button, select, a
+  margin: 0
+  padding: 0
+  border: none
+  outline: none !important
+  font-size: 1em
+  font-family: inherit
+  background: none
+  box-shadow: none
+  font-weight: inherit
+
+input, button, select
+  line-height: 1
+
+input[type="number"]
+  -moz-appearance: textfield
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button
+    -webkit-appearance: none
+
+button
+  cursor: pointer
+
+article,
+aside,
+dialog,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+nav,
+section,
+form,
+img
+  display: block
+
+h1, h2, h3, h4, h5, h6
+  margin-top: 0
+  margin-bottom: 0
+
+p
+  margin-top: 0
+  margin-bottom: 0
+  line-height: 1.3
+
+b, strong
+  font-weight: bold
+
+a[href^="tel:"]
+  white-space: nowrap
+
+a:not([href])
+  cursor: default
+
+::placeholder
+  line-height: 1
+  color: var(--clr-black-80)
+  font-weight: 500
+  font-family: var(--font), sans-serif
+
+ul, ol, dl
+  margin: 0
+  padding: 0
+  list-style-type: none
+
+svg:not(:root)
+  overflow: hidden
+
+table
+  border-collapse: collapse
+
+label
+  display: block
+  margin-bottom: 0
+
+.h-scroll
+  overflow-x: hidden
+  overflow-y: auto
+  scrollbar-width: none
+  -ms-overflow-style: none
+  -webkit-overflow-scrolling: touch
+
+  &::-webkit-scrollbar
+    display: none
+
+ymaps
+  ymaps[class$="map-copyrights-promo"]
+    display: none !important
+
+.grecaptcha-badge
+  display: none !important
+
+.container
+  width: var(--container)
+  min-width: 350px
+  margin-inline: auto
+  padding-inline: #{setCalcSize(10, 60)}
+
+.hscroll
+  overflow-x: hidden
+  overflow-y: auto
+  scrollbar-width: none
+  -ms-overflow-style: none
+  -webkit-overflow-scrolling: touch
+
+  &::-webkit-scrollbar
+    display: none
+
+.scroll
+  overflow-y: auto
+  padding-right: 1.4em
+
+.items, .row
+  display: flex
+  flex-wrap: wrap
+  margin: calc(0px - var(--gap))
+
+.col
+  padding: var(--gap)
+  height: auto !important
+
+  &.full
+    width: 100% !important
+
+.inner
+  display: block
+  height: 100%

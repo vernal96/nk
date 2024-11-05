@@ -1,0 +1,180 @@
+@import "functions"
+@import "global/button"
+@import "global/form"
+@import "global/input"
+@import "global/link"
+@import "global/loader"
+@import "global/modal"
+@import "global/pic"
+@import "global/slide-text"
+@import "global/title"
+@import "global/note"
+
+.logo
+  position: relative
+
+  &::before
+    content: ""
+    display: block
+    position: absolute
+    height: 100%
+    width: 1em
+    background: var(--clr-white)
+    transform: skewX(-10deg)
+    opacity: 0.4
+    right: 100%
+    top: 0
+    animation: logo-spark 5s linear 5s infinite
+
+  img
+    display: block
+    height: 100%
+    width: auto
+
+nav
+  a
+    text-decoration: none
+    color: var(--clr-black)
+    transition: color 0.3s
+
+    &:active
+      color: var(--clr-blue-1)
+
+.checkmark
+  display: block
+  width: #{setCalcSize(40, 80)}
+  aspect-ratio: 1
+  border-radius: 50%
+  animation: checkmark_fill 0.4s ease-in-out 0.4s forwards, checkmark_scale 0.3s ease-in-out 0.9s both
+  stroke-width: 3
+  stroke: var(--clr-orange)
+  stroke-miterlimit: 10
+
+  &_close
+    stroke-width: 2
+
+  &__circle
+    animation: checkmark_stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards
+    stroke-dasharray: 166
+    stroke-dashoffset: 166
+    stroke-width: 2
+    stroke-miterlimit: 10
+    stroke: var(--clr-orange)
+    fill: none
+
+  &__check, &__close
+    animation: checkmark_stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards
+    transform-origin: 50% 50%
+    stroke-dasharray: 48
+    stroke-dashoffset: 48
+
+.white-block
+  background: var(--clr-white)
+  border-radius: .75em
+  padding: #{setCalcSize(16, 32)}
+  overflow: hidden
+
+.more
+  cursor: pointer
+  display: inline-flex
+  align-items: center
+  color: var(--clr-orange)
+  transition: color 0.3s
+  gap: .4em
+
+  &::after
+    content: ""
+    display: block
+    width: .8em
+    height: .8em
+    background: var(--icon-more-arrow) no-repeat center / contain
+
+  &:active
+    color: var(--clr-orange-2)
+
+.dots
+  display: flex
+  align-items: center
+
+  &.is-disabled
+    display: none
+
+.dot
+  display: flex
+  align-items: center
+  width: 1.5em
+  aspect-ratio: 1
+  background-image: radial-gradient(var(--clr-black-20) 0%, var(--clr-black-20) 40%, transparent 45%)
+  cursor: pointer
+  transition: transform .3s, filter .3s
+
+  &.is-active
+    background-image: radial-gradient(var(--clr-blue) 0%, var(--clr-blue) 40%, transparent 45%)
+    cursor: default
+    transform: scale(1.1)
+
+.arrows
+  display: flex
+  gap: 0.75em
+
+.arrow
+  width: var(--input-height)
+  aspect-ratio: 1
+  border-radius: 50%
+  background: var(--clr-white)
+  transition: box-shadow .3s, opacity .3s
+  opacity: 0.8
+  z-index: 20
+  background-repeat: no-repeat
+  background-position: center
+  background-size: auto
+
+  &--prev
+    background-image: var(--icon-slider-arrow-prev)
+
+  &--next
+    background-image: var(--icon-slider-arrow-next)
+
+.section
+  padding-top: #{setCalcSize(30, 80)}
+  padding-bottom: #{setCalcSize(30, 120)}
+
+  &--white
+    background: var(--clr-white)
+
+  &--pb0
+    padding-bottom: 0 !important
+
+  &--pt0
+    padding-top: 0 !important
+
+.information
+  border-radius: #{setCalcSize(20, 64)}
+
+.content-blocks
+  display: flex
+  flex-direction: column
+  gap: #{setCalcSize(12, 32)}
+
+.fancybox__container
+  z-index: 99999
+
+@media (hover: hover)
+  nav
+    a
+      &:hover
+        color: var(--clr-blue)
+
+  .more
+    &:hover
+      color: var(--clr-orange-1)
+
+@media (hover: none)
+  nav
+    a
+      &:active
+        color: var(--clr-blue)
+
+  .more
+    &:active
+      color: var(--clr-orange-1)

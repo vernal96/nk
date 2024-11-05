@@ -1,0 +1,64 @@
+.about {
+    position: relative;
+    width: min(48em, 100%);
+    max-width: 100%;
+}
+
+.about__content {
+    font-size: 1.1em;
+}
+
+.about__properties {
+    margin-top: 1.5em;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.about__property {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    background: var(--clr-black-6);
+    -webkit-border-radius: 0.75rem;
+    border-radius: 0.75rem;
+    font-size: 1.125em;
+}
+
+.about__property-image {
+    width: 2rem;
+    aspect-ratio: 1;
+}
+
+.about__property-content {
+    padding-top: 0.3em;
+}
+
+.about__link {
+    margin-top: 2em;
+}
+
+.about__image {
+    width: 48em;
+    max-width: 100%;
+    position: absolute;
+    inset: 0 auto auto -webkit-calc(100% + max(10vw, 1em));
+    inset: 0 auto auto calc(100% + max(10vw, 1em));
+}
+
+@media (max-width: 1000px) {
+    .about__image {
+        display: none;
+    }
+}
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInN0eWxlLnNhc3MiLCJzdHlsZS5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7SUFDRSxrQkFBQTtJQUNBLHNCQUFBO0lBQ0EsZUFBQTtBQ0NGOztBQUVBO0lBQ0EsZ0JBQUE7QURDRTs7QUNFRjtJREFJLGlCQUFBO0lBQUEsb0JBQUE7SUFBQSxxQkFBQTtJQUNBLG9CQUFBO0lBQUEsYUFBQTtJQUFBLDRCQUFBO0lDTUEsNkJETkE7SUNPQSw4QkRQQTtJQUNBLDBCQUFBO0lDQ0osc0JBQUE7SURDRSxVQUFBO0FDUUY7O0FBRUE7SURUSSxvQkFBQTtJQUNBLHFCQUFBO0lBQ0Esb0JBQUE7SUFDQSxhQUFBO0lBQ0EsWUFBQTtJQ1dBLG9CRFhBO0lBQ0EsOEJBQUE7SUNDSiw4QkFBQTtJRENJLHNCQUFBO0lBQ0Usa0JBQUE7QUNZTjs7QURUSTtJQUNFLFdBQUE7SUNDTixlQUFBO0FEQ0U7O0FDRUY7SURDRSxrQkFBQTtBQ1lGOztBQUVBO0lEVkksZUFBQTtBQ1lKOztBQUVBO0lEWkEsV0FBQTtJQUVJLGVBQUE7SUFDRSxrQkFBQTtJQ0NKLHNEQUFBO0lBQ0YsOENBQUE7QUFhQTs7QUFFQTtJQUNJO1FBQ0ksYUFBYTtJQUNqQjtBQUNKIiwiZmlsZSI6InN0eWxlLmNzcyJ9 */

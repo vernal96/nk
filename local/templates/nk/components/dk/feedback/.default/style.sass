@@ -1,0 +1,40 @@
+@import "../../../../src/styles/functions"
+
+.feedback
+  padding: #{setCalcSize(20, 60)} 0
+
+  &__container
+    display: flex
+    gap: 2em
+    justify-content: space-between
+
+  &__form
+    width: min(65.6em, 100%)
+
+    &-content
+      display: flex
+      flex-direction: column
+      gap: 1em
+
+    &-wrapper
+      display: flex
+      gap: 1em
+
+      & > *
+        width: 100%
+
+  &__confirm
+    margin-top: 1.2em
+
+@media (max-width: 990px)
+  .feedback
+    &__container
+      flex-direction: column
+      gap: 1.5em
+
+@media (max-width: 630px)
+  .feedback
+    &__form
+      &-wrapper
+        flex-direction: column
+        gap: 0.5em

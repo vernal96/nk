@@ -1,0 +1,82 @@
+.link
+  position: relative
+  display: inline-flex
+  align-items: center
+  gap: 0.5em
+  padding-bottom: 0.25em
+  text-decoration: none
+  color: var(--clr-black)
+  transition: color 0.3s
+
+  &::before
+    content: ''
+    display: block
+    position: absolute
+    left: 0
+    bottom: 0
+    height: 0.125em
+    background: var(--clr-orange)
+    width: calc(100% - 1.3em)
+    transition: width .3s
+
+  &::after
+    content: ''
+    display: block
+    opacity: 0
+    transform: translateX(-.5em)
+    transition: opacity 0.3s, transform 0.3s
+    width: .8em
+    aspect-ratio: 1
+    background-repeat: no-repeat
+    background-position: center
+    background-size: contain
+    background-image: var(--icon-link-arrow)
+
+  &--white
+    color: var(--clr-white)
+
+    &::after
+      background-image: var(--icon-link-arrow-white)
+
+.simple-link, a > i
+  display: inline
+  font-style: normal
+  font-weight: 600
+  color: var(--clr-blue)
+  border-bottom: solid 1px transparent
+  transition: border-color .3s
+  text-decoration: none
+
+@media (max-width: 990px)
+  .link
+    &::after
+      display: none
+
+    &::before
+      width: 100% !important
+
+@media (hover: hover)
+  .link
+    &:hover
+      &::before
+        width: 100%
+
+      &::after
+        opacity: 1
+        transform: translateX(0)
+  .simple-link, a > i
+    &:hover
+      border-color: inherit
+
+@media (hover: none)
+  .link
+    &:active
+      &::before
+        width: 100%
+
+      &::after
+        opacity: 1
+        transform: translateX(0)
+  .simple-link, a > i
+    &:active
+      border-color: inherit

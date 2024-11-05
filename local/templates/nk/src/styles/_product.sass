@@ -1,0 +1,90 @@
+@import "functions"
+
+.product
+  overflow: hidden
+  border-radius: 1em
+  background: var(--clr-white)
+  padding: #{setCalcSize(10, 16)}
+  position: relative
+  display: flex
+  flex-direction: column
+  gap: 0.75em
+  justify-content: space-between
+  transition: box-shadow 0.3s, opacity 0.3s
+
+  &__header
+    display: block
+    text-decoration: none
+    color: var(--clr-black)
+
+  &__image
+    width: calc(100% + 2em)
+    aspect-ratio: 1.5
+    object-fit: contain
+    object-position: center
+    margin: #{setCalcSize(-10, -16)} #{setCalcSize(-10, -16)} 1em #{setCalcSize(-10, -16)}
+    transform-origin: bottom center
+    transition: transform 0.3s
+    will-change: transform
+    background: var(--clr-white)
+
+  &__title
+    display: block
+    transition: color .3s
+
+  &__price
+    display: flex
+    align-items: center
+    line-height: 1
+    font-weight: 600
+    height: 1.4rem
+    margin-bottom: 1rem
+    font-size: 1.25em
+    color: var(--clr-black-80)
+
+    &--min
+      font-size: .9rem
+      color: var(--clr-black-60)
+
+  &--section
+    & .product
+
+      &__header
+        display: flex
+        flex-direction: column
+        height: 100%
+
+      &__image
+        object-fit: cover
+        flex-shrink: 0
+
+      &__title
+        text-align: center
+        display: flex
+        align-items: center
+        justify-content: center
+        height: 100%
+
+@media (hover: hover)
+  .product
+    &:hover
+      box-shadow: var(--hover-shadow)
+
+      .product
+        &__title
+          color: var(--clr-orange)
+
+        &__image
+          transform: scale(1.05)
+
+@media (hover: none)
+  .product
+    &:active
+      box-shadow: var(--hover-shadow)
+
+      .product
+        &__title
+          color: var(--clr-orange)
+
+        &__image
+          transform: scale(1.05)

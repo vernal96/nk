@@ -1,0 +1,42 @@
+.about
+  position: relative
+  width: min(48em, 100%)
+  max-width: 100%
+
+  &__content
+    font-size: 1.1em
+
+  &__properties
+    margin-top: 1.5em
+    display: flex
+    flex-direction: column
+    gap: 0.5em
+
+  &__property
+    display: flex
+    gap: 0.75rem
+    padding: 0.5rem 1rem
+    background: var(--clr-black-6)
+    border-radius: .75rem
+    font-size: 1.125em
+
+    &-image
+      width: 2rem
+      aspect-ratio: 1
+
+    &-content
+      padding-top: 0.3em
+
+  &__link
+    margin-top: 2em
+
+  &__image
+    width: 48em
+    max-width: 100%
+    position: absolute
+    inset: 0 auto auto calc(100% + max(10vw, 1em))
+
+@media (max-width: 1000px)
+  .about
+    &__image
+      display: none

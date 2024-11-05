@@ -1,0 +1,5 @@
+@function setCalcSize($min, $max, $minus: false)
+  @if $minus
+    @return calc(0px - ((100vw - 350px) / 1920 * ($max - $min) + #{$min}px))
+  @else
+    @return min(calc((100vw - 350px) / 1920 * ($max - $min) + #{$min}px), #{$max}px)

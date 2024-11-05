@@ -1,0 +1,86 @@
+@import "../../../../src/styles/functions"
+
+.product-page
+  display: flex
+  align-items: flex-start
+  gap: #{setCalcSize(20, 96)}
+
+  &__image
+    width: #{setCalcSize(100, 530)}
+    aspect-ratio: 1
+    display: flex
+    align-items: center
+    justify-content: center
+    background: var(--clr-white)
+    border-radius: 0.75em
+    flex-shrink: 0
+
+    &--mobile
+      display: none
+      margin-top: 1.5em
+      width: 100%
+      aspect-ratio: 2
+
+    img
+      width: 100%
+      height: 100%
+      object-fit: contain
+      object-position: center
+
+  &__main
+    width: 100%
+
+  &__buy
+    display: flex
+    align-items: center
+    flex-wrap: wrap
+    gap: 1em
+    margin-top: 1.5em
+    margin-bottom: 1.8em
+
+  &__sum
+    font-weight: 600
+    font-size: 1.5em
+    white-space: nowrap
+    min-width: 6em
+
+  &__counter-place
+    width: 13em
+
+@media (max-width: 1040px)
+  .product-page
+    &__image
+      &--desktop
+        display: none
+
+      &--mobile
+        display: flex
+
+@media (max-width: 780px)
+  .product-page
+    margin-top: #{setCalcSize(16, 30)}
+
+    &__image
+      &--desktop
+        display: flex
+        width: 25em
+
+      &--mobile
+        display: none
+
+    &__title
+      font-size: #{setCalcSize(24, 40)} !important
+  .catalog-detail-page-header
+    display: none !important
+
+@media (max-width: 670px)
+  .product-page
+    &__image
+      &--desktop
+        display: none
+
+      &--mobile
+        display: flex
+
+    &__buy
+      flex-wrap: nowrap

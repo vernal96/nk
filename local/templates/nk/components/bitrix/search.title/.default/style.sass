@@ -1,0 +1,53 @@
+.search
+  width: clamp(16em, 50%, 23em)
+  min-width: 16em
+  position: relative
+
+  &__input
+    input
+      padding-right: 4em !important
+
+  &__button
+    position: absolute !important
+    right: 0
+    top: 0
+
+  &__result
+    position: absolute
+    background: var(--clr-white)
+    border-radius: .75em
+    box-shadow: 0 0 5px var(--hover-shadow)
+    z-index: 1000
+    overflow: hidden
+    width: 100%
+
+    &-list
+      max-height: 20em
+      padding-right: 0 !important
+
+    &-item
+      padding: 0.5em 1em
+      border-bottom: solid 1px var(--clr-black-20)
+
+      &:hover
+        background: var(--clr-black-6)
+
+      &:last-child
+        border: none
+
+    &-footer
+      padding: .5em 1em 1em
+
+@media (hover: hover)
+  .search
+    &__result
+      &-item
+        &:hover
+          background: var(--clr-black-6)
+
+@media (hover: none)
+  .search
+    &__result
+      &-item
+        &:active
+          background: var(--clr-black-6)

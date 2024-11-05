@@ -1,0 +1,38 @@
+@import "functions"
+
+.product-slider
+  display: flex
+
+  &__nav
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 4.5em
+    flex-shrink: 0
+
+    &--prev
+      justify-content: flex-start
+
+    &--next
+      justify-content: flex-end
+
+  &__main
+    width: calc(100% - 9em)
+
+    .swiper-slide
+      height: auto
+
+      > *
+        height: 100%
+
+@media (max-width: 640px)
+  .product-slider
+    &__nav
+      display: none
+
+    &__main
+      width: 100vw
+      margin-left: #{setCalcSize(10, 60, true)}
+
+      .swiper-slide
+        width: 16em

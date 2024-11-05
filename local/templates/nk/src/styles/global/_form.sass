@@ -1,0 +1,82 @@
+.form
+  position: relative
+
+  &.is-success
+    .form
+      &-content
+        opacity: 0
+        visibility: hidden
+
+      &-success
+        display: block
+
+  &-content, &-success
+    transition: opacity 0.3s, visibility 0.3s
+
+  &-success
+    position: absolute
+    inset: 0
+
+    &--horizontal
+
+      & .form-success
+        &__inner
+          flex-direction: row
+          text-align: left
+
+    &--static
+      position: static
+
+      .form-success__inner
+        position: relative
+
+    &--blue
+
+      & .checkmark
+        stroke: var(--clr-blue)
+
+        &__circle
+          stroke: var(--clr-blue)
+
+    &__inner
+      position: absolute
+      inset: 0
+      display: flex
+      align-items: center
+      justify-content: center
+      flex-direction: column
+      gap: 1em
+      text-align: center
+
+    &__title
+      font-weight: 600
+      font-size: 1.3em
+
+    &__description
+      color: var(--clr-black-80)
+      margin-top: 0.5em
+
+  &-confirm
+    font-size: 0.8em
+    color: var(--clr-black-40)
+
+  &-fieldset
+    display: flex
+    flex-direction: column
+    gap: 0.8em
+
+    &--horizontal
+      flex-direction: row
+      gap: 1.5em
+
+  &-label
+    font-weight: 600
+    margin-bottom: 1em
+    margin-top: 0.5em
+
+@media (max-width: 450px)
+  .form-success--horizontal
+    .form-success
+      &__inner
+        flex-direction: column
+        text-align: center

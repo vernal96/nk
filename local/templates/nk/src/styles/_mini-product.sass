@@ -1,0 +1,58 @@
+.mini-product
+  display: flex
+  align-items: flex-start
+  gap: .75em
+  transition: color .3s, background 0.3s
+
+  &__image
+    width: 3.5em
+    margin-top: 0.5em
+    aspect-ratio: 1
+    flex-shrink: 0
+    border-radius: 50%
+    border: solid 1px var(--clr-black-40)
+
+    &--no-border
+      border: none
+
+  &__content
+    display: block
+    width: 100%
+
+  &__title
+    display: block
+    grid-area: title
+    margin-top: 0.2em
+
+  &__price
+    display: block
+    margin-top: .3em
+    color: var(--clr-black-60)
+    line-height: 1
+
+    &--min
+      font-size: 0.88em
+
+  &:active
+    color: var(--clr-blue-1)
+
+.mini-product--no-price
+  align-items: center
+
+  & .mini-product__title
+    margin-top: 0
+    align-self: center
+
+@media (hover: hover)
+  .mini-product
+
+    &:hover
+      color: var(--clr-blue)
+      background: darken(#fff, 2%)
+
+@media (hover: none)
+  .mini-product
+
+    &:active
+      color: var(--clr-blue)
+      background: darken(#fff, 2%)

@@ -1,0 +1,87 @@
+.menu
+  &__catalog
+    margin-right: clamp(0em, 0.5%, 1em)
+
+    &-closer
+      display: none !important
+
+    &.is-active
+      z-index: 99
+
+      .menu
+        &__catalog-closer
+          display: block !important
+
+        &__catalog-opener
+          display: none !important
+
+  &__parent
+    > a
+      &::after
+        content: ""
+        display: block
+        flex-shrink: 0
+        width: 0.6em
+        aspect-ratio: 1
+        background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjMiIGhlaWdodD0iMTMiIHZpZXdCb3g9IjAgMCAyMyAxMyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0wLjg1ODIwMSAwLjYxODY2OEMxLjI0ODczIDAuMjI4MTQ0IDEuODgxODkgMC4yMjgxNDQgMi4yNzI0MSAwLjYxODY2OEwxMS41NjUzIDkuOTExNTZMMjAuODU4MiAwLjYxODY2OEMyMS4yNDg3IDAuMjI4MTQ0IDIxLjg4MTkgMC4yMjgxNDQgMjIuMjcyNCAwLjYxODY2OEMyMi42NjI5IDEuMDA5MTkgMjIuNjYyOSAxLjY0MjM2IDIyLjI3MjQgMi4wMzI4OEwxMi4yNzI0IDEyLjAzMjlDMTEuODgxOSAxMi40MjM0IDExLjI0ODcgMTIuNDIzNCAxMC44NTgyIDEyLjAzMjlMMC44NTgyMDEgMi4wMzI4OEMwLjQ2NzY3NyAxLjY0MjM2IDAuNDY3Njc3IDEuMDA5MTkgMC44NTgyMDEgMC42MTg2NjhaIiBmaWxsPSIjMjEyMTIxIi8+Cjwvc3ZnPgo=) no-repeat center / contain
+        transform-origin: center
+        transition: transform 0.3s
+
+  > ul
+    display: flex
+
+    > li
+      position: relative
+
+      > a
+        display: flex
+        align-items: center
+        height: var(--input-height)
+        gap: 0.5em
+        padding: 0.9em clamp(0.8em, 0.5%, 1em)
+        white-space: nowrap
+        line-height: 1
+
+      > ul
+        transition: opacity 0.3s, visibility 0.3s, transform 0.3s
+        visibility: hidden
+        top: 100%
+        left: 1em
+        opacity: 0
+        position: absolute
+        transform: translateY(20px)
+        overflow: hidden
+        border-radius: 0.75em
+        filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.05))
+        z-index: 99
+        width: 20em
+        background: var(--clr-white)
+
+        > li
+          border-bottom: solid 1px var(--clr-black-6)
+
+          > a
+            display: block
+            padding: 0.8em 1em
+            transition: background 0.3s, color 0.3s
+
+@media (hover: hover)
+  .menu
+    &__parent
+      &:hover
+        > a
+          &::after
+            transform: rotate(180deg)
+
+        > ul
+          opacity: 1
+          visibility: visible
+          transform: translateY(10px)
+
+    > ul
+      > li
+        > ul
+          > li
+            > a
+              &:hover
+                background: var(--clr-black-2)

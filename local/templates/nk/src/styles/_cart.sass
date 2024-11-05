@@ -1,0 +1,120 @@
+@import "functions"
+
+.cart
+  &__left
+    width: calc(55% - var(--gap))
+    flex-shrink: 0
+
+    &--full
+      width: 100%
+
+  &__right
+    width: 45%
+    flex-shrink: 0
+
+  &__buttons, &__total
+    margin-bottom: #{setCalcSize(12, 32)}
+
+  &__wrapper
+    display: flex
+    gap: #{setCalcSize(16, 32)}
+    align-items: flex-start
+
+  &__form
+    width: 100%
+    display: flex
+    flex-wrap: wrap
+    gap: var(--form-gap)
+    --form-gap: #{setCalcSize(10, 15)}
+    --form-item-row-count: 2
+    --form-min-item-row-count: 4
+
+    &--full
+      --form-item-row-count: 4
+      --form-min-item-row-count: 8
+
+    &-item
+      width: calc((100% - (var(--form-gap) * (var(--form-item-row-count) - 1))) / var(--form-item-row-count))
+
+      &--full
+        width: 100%
+
+      &--min
+        width: calc((100% - (var(--form-gap) * (var(--form-min-item-row-count) - 1))) / var(--form-min-item-row-count))
+
+      &--auto
+        width: auto
+
+  &__left, &__right
+    transition: width 0.3s, transform 0.3s, opacity 0.3s
+
+  &__items
+    display: flex
+    flex-direction: column
+    gap: #{setCalcSize(8, 12)}
+
+    .product-table
+      margin-top: 0 !important
+
+  &__sum
+    font-size: #{setCalcSize(18, 32)}
+
+  &__count
+    font-size: #{setCalcSize(14, 18)}
+    color: var(--clr-black-60)
+    margin-top: 0.4em
+
+
+.cart-items-slider
+  &-leave-to
+    transform: translateX(100%)
+    opacity: 0
+
+  &-enter-from
+    transform: translateX(100%)
+    opacity: 0
+
+  &-enter-to
+    transform: translateX(0)
+    opacity: 1
+
+.modal-cart
+  width: min(60em, 95%)
+  display: block !important
+
+@media (max-width: 1050px)
+  .cart
+    &__wrapper
+      flex-direction: column-reverse
+
+    &__left, &__right
+      width: 100%
+
+  .cart-items-slider
+    &-leave-to
+      transform: translateY(100%)
+      opacity: 0
+
+    &-enter-from
+      transform: translateY(100%)
+      opacity: 0
+
+    &-enter-to
+      transform: translateX(0)
+      opacity: 1
+
+@media (max-width: 700px)
+  .cart
+    .form-confirm
+      margin-top: 0.5em
+      margin-bottom: 0.5em
+
+@media (max-width: 540px)
+  .cart
+    &__form
+      --form-item-row-count: 1
+      --form-min-item-row-count: 2
+
+      &--full
+        --form-item-row-count: 1
+        --form-min-item-row-count: 2

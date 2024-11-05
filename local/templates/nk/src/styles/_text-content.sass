@@ -1,0 +1,168 @@
+@import "functions"
+
+.text-content
+  max-width: 100%
+  line-height: 1.65
+
+  *
+    line-height: inherit
+
+  > *:first-child
+    margin-top: 0
+
+  > *:last-child
+    margin-bottom: 0
+
+  h1, h2, h3, h4, h5, h6
+    margin-bottom: 0.7em
+    font-weight: 600
+    line-height: 1.3
+
+  h1
+    font-size: #{setCalcSize(20, 32)}
+
+  h2
+    font-size: #{setCalcSize(19, 29)}
+
+  h3
+    font-size: #{setCalcSize(18, 26)}
+
+  h4
+    font-size: #{setCalcSize(17, 23)}
+
+  h5
+    font-size: #{setCalcSize(16, 19)}
+
+  h6
+    font-size: 1em
+
+  h2, h3, h4
+    margin-top: 1em
+
+    &:not(:first-child)
+      margin-top: 1.3em
+
+  hr
+    display: block
+    height: 2px
+    margin: 1.5rem 0
+    border: none
+    background: var(--clr-black-20)
+
+  p, > ul, > ol, q, blockquote, table, img, iframe
+    margin-bottom: #{setCalcSize(10, 22)}
+
+  p
+    img, iframe
+      margin-bottom: 0 !important
+
+  ol, ul
+    margin-left: 1.5rem
+
+  ul, ol
+    ul, ol
+      margin-top: 0.8em
+
+  ul
+    list-style: disc
+
+    ul
+      list-style-type: circle
+
+  ol
+    list-style-type: decimal
+
+  li
+    margin-bottom: 0.8rem
+
+    &::marker
+      color: var(--clr-blue)
+
+    & + li
+      margin-top: 0.2em
+
+    &:last-child
+      margin-bottom: 0
+
+  blockquote
+    position: relative
+    margin-top: 0
+    margin-right: 0
+    margin-left: 0
+    padding: 1em 0 1em 2em
+    border-left: solid 3px var(--clr-blue)
+    font-style: italic
+
+    > *
+      &:last-child
+        margin-bottom: 0 !important
+
+  table
+    width: 100% !important
+    border-radius: var(--border-radius)
+    overflow: hidden
+    border-spacing: 0
+    border-collapse: collapse
+
+    &.price
+      td
+        &:last-child
+          white-space: nowrap
+
+  td, th
+    width: auto !important
+    height: auto !important
+    padding: .8em 1.2em
+    border: 0 !important
+    vertical-align: top
+
+  th
+    color: #fff
+    font-weight: 600
+    background: var(--clr-orange)
+
+  tr
+    height: auto !important
+    transition: background-color 0.3s
+
+    &:nth-child(2n+1)
+      background: darken(#fff, 2%)
+
+    &:nth-child(2n + 2)
+      &:hover
+        background: darken(#fff, 3%)
+
+    &:nth-child(2n + 3)
+      &:hover
+        background: darken(#fff, 3%)
+
+  img, iframe
+    max-width: 100%
+
+  .fl
+    float: left
+    margin-right: 2rem
+
+  .fr
+    float: right
+    margin-left: 2rem
+
+  a
+    color: var(--clr-orange)
+    border-bottom: solid 1px transparent
+    transition: border-color 0.3s
+    text-decoration: none
+
+    &:hover
+      border-bottom-color: var(--clr-orange)
+
+.content-image
+  width: 100%
+  border-radius: 0.75em
+  overflow: hidden
+
+  img
+    width: 100%
+    height: 100%
+    object-fit: cover
+    object-position: center

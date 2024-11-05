@@ -1,0 +1,115 @@
+.header-catalog
+  position: absolute
+  display: flex
+  overflow: hidden
+  visibility: hidden
+  opacity: 0
+  transition: opacity 0.3s, visibility 0.3s
+  z-index: 98
+  background: var(--clr-white)
+  border-radius: 0.75em
+  box-shadow: 0 0 24px 0 rgba(77, 77, 77, .16)
+  left: -0.5em
+  top: -0.5em
+  padding: 6.25em 2.6em 3.7em 2em
+  width: calc(var(--container) - (100vw - 320px) / 1600 * (120 - 8) + 8px)
+  max-height: max(min(43em, 90vh), 31em)
+
+  &.is-active
+    visibility: visible
+    opacity: 1
+
+  &-overlay
+    position: fixed
+    opacity: 0
+    visibility: hidden
+    inset: 0
+    height: 100vh
+    width: 100vw
+    z-index: 97
+    background: var(--clr-black)
+    transition: opacity .3s, visibility 0.3s
+
+    &.is-active
+      opacity: 0.5
+      visibility: visible
+
+  &__categories
+    margin-right: min(calc((100vw - 320px) / 1600 * (56 - 12) + 12px), 56px)
+
+  &__more
+    margin-top: .5em
+
+  &__main
+    width: 100%
+    display: flex
+    flex-direction: column
+
+    &-content
+      display: flex
+      flex-direction: column
+      gap: 2em
+      height: 100%
+
+  &__image
+    display: block
+    width: 18%
+    margin-left: min(calc((100vw - 320px) / 1600 * (44 - 12) + 12px), 44px)
+    border-radius: .75em
+    object-fit: cover
+    object-position: center
+
+  &__categories, &__image
+    flex-shrink: 0
+
+  &__rows
+    display: flex
+    flex-wrap: wrap
+    justify-content: space-between
+    gap: min(calc((100vw - 320px) / 1600 * (32 - 12) + 12px), 32px) min(calc((100vw - 320px) / 1600 * (16 - 10) + 10px), 16px)
+
+  &__column
+    width: 30%
+    display: flex
+    align-items: flex-start
+    gap: 0.7em
+
+    &-image
+      width: 2.5em
+      height: auto
+      border-radius: 50%
+      flex-shrink: 0
+
+    &-list
+      width: 100%
+
+    &-ul
+      font-size: 0.9rem
+
+      li
+        padding-top: 1em
+
+      a
+        display: block
+        color: var(--clr-black-80)
+
+      ul
+        padding-left: 2em
+
+  &__products
+    border-top: solid 1px var(--clr-black-20)
+    padding-top: 2em
+    display: flex
+    flex-wrap: wrap
+    gap: var(--gap)
+
+  &__product
+    width: calc(50% - var(--gap) / 2)
+
+    .mini-product
+      height: 100%
+
+@media (max-width: 1400px)
+  .header-catalog
+    &__column
+      width: 48%

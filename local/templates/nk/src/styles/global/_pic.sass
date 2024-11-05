@@ -1,0 +1,45 @@
+.pic
+  position: relative
+  cursor: pointer
+  overflow: hidden
+
+  &::before, &::after
+    content: ""
+    opacity: 0
+    position: absolute
+    display: block
+
+  &::after
+    z-index: 3
+    inset: 0
+    background: var(--clr-black)
+    transition: opacity 0.3s
+
+  &::before
+    z-index: 4
+    width: min(2em, 30%)
+    aspect-ratio: 1
+    background: var(--icon-pic) no-repeat center / contain
+    inset: calc(50% - min(1em, 15%))
+    transform-origin: center
+    transition: opacity 0.3s, transform 0.3s
+
+@media (hover: hover)
+  .pic
+    &:hover
+      &::after
+        opacity: 0.5
+
+      &::before
+        opacity: 1
+        transform: scale(1.5)
+
+@media (hover: none)
+  .pic
+    &:active
+      &::after
+        opacity: 0.5
+
+      &::before
+        opacity: 1
+        transform: scale(1.5)

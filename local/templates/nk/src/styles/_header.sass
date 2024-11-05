@@ -1,0 +1,187 @@
+@import "functions"
+
+.header
+  &__logo
+    height: 3em
+
+  &__top
+    background: var(--clr-white)
+    padding: 0.75em 0
+
+    &-recall
+      display: none
+
+
+  &__wrapper
+    gap: clamp(1em, 1%, 4em)
+    display: flex
+    align-items: center
+    justify-content: space-between
+
+  &__bottom
+    padding: #{setCalcSize(14, 24)} 0
+
+  &__tools
+    display: flex
+    gap: 1em
+    align-items: center
+    justify-content: flex-end
+    width: clamp(50%, 80%, 100%)
+    &--auto
+      width: auto
+
+  &__mobile
+    display: none
+    gap: 0.5em
+
+  &__burger
+    display: none
+
+  &__phone
+    display: flex
+    align-items: center
+    gap: 0.75em
+    text-decoration: none
+    color: var(--clr-black)
+    transition: color 0.3s
+    margin-right: clamp(0em, 1%, 2em)
+
+    &:active
+      color: var(--clr-blue-1)
+
+      .header
+        &__phone
+          &-icon
+            background-color: var(--clr-blue-2)
+
+    &-icon
+      flex-shrink: 0
+      width: var(--input-height)
+      aspect-ratio: 1
+      border-radius: 50%
+      background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkiIGhlaWdodD0iMTkiIHZpZXdCb3g9IjAgMCAxOSAxOSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3Ljg0NzIgMTIuODU1N0wxMy40MzA2IDEwLjg3NjZMMTMuNDE4NCAxMC44NzFDMTMuMTg5MSAxMC43NzI5IDEyLjkzOSAxMC43MzM2IDEyLjY5MDcgMTAuNzU2NUMxMi40NDI0IDEwLjc3OTQgMTIuMjAzNyAxMC44NjM5IDExLjk5NjIgMTEuMDAyMkMxMS45NzE4IDExLjAxODQgMTEuOTQ4MyAxMS4wMzU5IDExLjkyNTkgMTEuMDU0N0w5LjY0NDA2IDEzLjAwMDFDOC4xOTg0MyAxMi4yOTc5IDYuNzA1OTMgMTAuODE2NiA2LjAwMzc0IDkuMzg5NzRMNy45NTE4NyA3LjA3MzE4QzcuOTcwNjIgNy4wNDk3NCA3Ljk4ODQzIDcuMDI2MyA4LjAwNTMxIDcuMDAwOTlDOC4xNDA3MSA2Ljc5NDA5IDguMjIyODYgNi41NTY5MiA4LjI0NDQ1IDYuMzEwNTlDOC4yNjYwNCA2LjA2NDI3IDguMjI2NCA1LjgxNjQyIDguMTI5MDYgNS41ODkxMlY1LjU3Nzg3TDYuMTQ0MzcgMS4xNTM4QzYuMDE1NjkgMC44NTY4NjUgNS43OTQ0MiAwLjYwOTUwNiA1LjUxMzYxIDAuNDQ4NjUzQzUuMjMyNzkgMC4yODc4IDQuOTA3NDggMC4yMjIwOCA0LjU4NjI0IDAuMjYxMzA0QzMuMzE1OSAwLjQyODQ2NyAyLjE0OTg1IDEuMDUyMzQgMS4zMDU4NyAyLjAxNjM5QzAuNDYxODg3IDIuOTgwNDUgLTAuMDAyMzAzNjMgNC4yMTg3NiAtNi43NzU2OWUtMDYgNS41MDAwNUMtNi43NzU2OWUtMDYgMTIuOTQzOCA2LjA1NjI0IDE5LjAwMDEgMTMuNSAxOS4wMDAxQzE0Ljc4MTMgMTkuMDAyMyAxNi4wMTk2IDE4LjUzODIgMTYuOTgzNyAxNy42OTQyQzE3Ljk0NzcgMTYuODUwMiAxOC41NzE2IDE1LjY4NDEgMTguNzM4NyAxNC40MTM4QzE4Ljc3OCAxNC4wOTI3IDE4LjcxMjUgMTMuNzY3NCAxOC41NTE4IDEzLjQ4NjZDMTguMzkxMSAxMy4yMDU4IDE4LjE0MzkgMTIuOTg0NSAxNy44NDcyIDEyLjg1NTdaTTEzLjUgMTcuNTAwMUMxMC4zMTg1IDE3LjQ5NjYgNy4yNjgyMyAxNi4yMzEyIDUuMDE4NTUgMTMuOTgxNUMyLjc2ODg2IDExLjczMTggMS41MDM0NyA4LjY4MTU5IDEuNDk5OTkgNS41MDAwNUMxLjQ5NjQ3IDQuNTg0NTggMS44MjYyOSAzLjY5OTExIDIuNDI3ODcgMy4wMDkwM0MzLjAyOTQ1IDIuMzE4OTUgMy44NjE2NSAxLjg3MTQzIDQuNzY5MDYgMS43NTAwNUM0Ljc2ODY5IDEuNzUzOCA0Ljc2ODY5IDEuNzU3NTYgNC43NjkwNiAxLjc2MTNMNi43Mzc4MSA2LjE2NzU1TDQuNzk5OTkgOC40ODY5M0M0Ljc4MDMyIDguNTA5NTYgNC43NjI0NiA4LjUzMzcgNC43NDY1NiA4LjU1OTEyQzQuNjA1NDggOC43NzU2IDQuNTIyNzEgOS4wMjQ4NiA0LjUwNjI5IDkuMjgyNzRDNC40ODk4NiA5LjU0MDYxIDQuNTQwMzMgOS43OTgzNiA0LjY1MjgxIDEwLjAzMUM1LjUwMjE4IDExLjc2ODIgNy4yNTI0OSAxMy41MDU0IDkuMDA4NDMgMTQuMzUzOEM5LjI0Mjc3IDE0LjQ2NTIgOS41MDIwMSAxNC41MTM5IDkuNzYwODEgMTQuNDk1MkMxMC4wMTk2IDE0LjQ3NjUgMTAuMjY5MSAxNC4zOTA5IDEwLjQ4NSAxNC4yNDY5QzEwLjUwOTEgMTQuMjMwNyAxMC41MzIyIDE0LjIxMzIgMTAuNTU0NCAxNC4xOTQ0TDEyLjgzMzQgMTIuMjUwMUwxNy4yMzk3IDE0LjIyMzVDMTcuMjM5NyAxNC4yMjM1IDE3LjI0NzIgMTQuMjIzNSAxNy4yNSAxNC4yMjM1QzE3LjEzMDEgMTUuMTMyMiAxNi42ODMzIDE1Ljk2NjEgMTUuOTkzIDE2LjU2OTFDMTUuMzAyOCAxNy4xNzIyIDE0LjQxNjUgMTcuNTAzMSAxMy41IDE3LjUwMDFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K) var(--clr-blue) no-repeat center / 35% auto
+      transition: background-color 0.3s, transform 0.3s
+      transform-origin: center
+      will-change: transform
+
+.fixed-header
+  position: fixed
+  inset: 0 0 auto 0
+  z-index: 20
+  background: var(--clr-white)
+  transition: transform 0.2s, box-shadow 0.2s
+  transform: translateY(-100%)
+
+  &.is-active
+    transform: translateY(0)
+    box-shadow: var(--hover-shadow)
+
+  &.is-disabled
+    transform: translateY(-100%) !important
+    box-shadow: none !important
+
+  .header
+    &__bottom, &__top
+      padding: 0.5em 0
+
+    &__top
+      display: none
+
+  .search
+    &__input
+      input
+        border: solid 1px var(--clr-black-20)
+
+  .mini-cart
+    background: var(--clr-black-6)
+
+@media (max-width: 1600px)
+  .header
+    &__bottom-recall
+      display: none
+
+    &__top-recall
+      display: flex
+
+@media (max-width: 1260px)
+  .header
+    &__phone
+      &-text
+        display: none
+
+@media (max-width: 1200px)
+  .header
+    &__top-recall
+      display: none
+
+@media (max-width: 1100px)
+  .menu
+    display: none
+  .header
+    &__burger
+      display: flex
+    .login
+      display: none
+
+@media (max-width: 640px)
+  .header
+    &__fastpay
+      display: none
+
+    .social-network
+      display: none
+
+    &__mobile
+      display: flex
+    &__top
+      .header
+        &__tools
+          display: none
+    &__bottom
+      & .header__phone, .header__burger
+        display: none
+
+      .mini-cart
+        display: none
+
+    &__tools
+      width: 100%
+  .search
+    width: 100%
+
+  .fixed-header
+    .header
+      &__top
+        display: block
+
+      &__bottom
+        display: none
+
+    .social-network
+      display: none
+
+@media (hover: hover)
+  .header
+    &__phone
+
+      &:hover
+        color: var(--clr-blue)
+
+        .header
+          &__phone
+            &-icon
+              background-color: var(--clr-blue-1)
+              transform: scale(0.95)
+
+@media (hover: none)
+  .header
+    &__phone
+
+      &:active
+        color: var(--clr-blue)
+
+        .header
+          &__phone
+            &-icon
+              background-color: var(--clr-blue-1)
+              transform: scale(0.95)

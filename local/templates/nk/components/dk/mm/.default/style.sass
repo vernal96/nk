@@ -1,0 +1,208 @@
+.mm
+  display: none
+
+  &__main, &__overlay
+    position: fixed
+
+  &__main
+    display: flex
+    flex-direction: column
+    z-index: 99999
+    inset: 0 0 0 auto
+    background: var(--clr-white)
+    width: 24em
+    transition: transform 0.3s
+    transform: translateX(100%)
+
+    &.is-mm
+      transform: translateX(0)
+
+  &__overlay
+    background: var(--clr-black)
+    inset: 0
+    z-index: 50
+    opacity: 0
+    visibility: hidden
+    transition: opactity 0.3s, visibility 0.3s
+
+    &.is-mm
+      opacity: 0.2
+      visibility: visible
+
+  &__header, &__footer
+    flex-shrink: 0
+    padding: 1em
+    display: flex
+
+  &__header
+    border-bottom: solid 1px var(--clr-black-20)
+    align-items: center
+    justify-content: space-between
+    gap: 1em
+    padding-top: 1.1em
+    padding-bottom: 1.1em
+
+  &__title
+    font-weight: 600
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    gap: 0.5em
+    overflow: hidden
+    white-space: nowrap
+    text-overflow: ellipsis
+    width: 100%
+
+    &-text
+      overflow: inherit
+      white-space: inherit
+      text-overflow: inherit
+
+    .mm
+      &__icon
+        height: 1.2em
+
+        &--image
+          height: 2.2em
+
+  &__footer
+    border-top: solid 1px var(--clr-black-20)
+    flex-direction: column
+    gap: 0.2em
+
+  &__body
+    height: 100%
+    position: relative
+
+    & li
+      position: relative
+      border-bottom: solid 1px var(--clr-black-6)
+
+  &__icon
+    height: 1em
+    aspect-ratio: 1
+    object-fit: contain
+    flex-shrink: 0
+
+    &--image
+      height: 2em
+      border-radius: 50%
+
+  &__link
+    display: flex
+    white-space: nowrap
+    overflow: hidden
+    gap: 0.8em
+    text-overflow: ellipsis
+    align-items: center
+    height: 3.5em
+    padding: 1em
+    line-height: 1
+    transition: background 0.3s, color 0.3s
+    width: 100%
+    text-decoration: none
+    color: var(--clr-black)
+
+    & > span
+      overflow: inherit
+      text-overflow: inherit
+      white-space: inherit
+
+  &__parent
+    a
+      padding-right: 5em
+
+  &__bold
+    font-weight: 600
+
+  &__show
+    position: absolute
+    width: 4em
+    height: 100%
+    display: flex
+    align-items: center
+    justify-content: center
+    inset: 0 0 auto auto
+    color: var(--clr-black-60)
+    border-left: solid 1px var(--clr-black-6)
+    transition: background 0.3s
+    z-index: 2
+
+    &.is-loading
+      & .icon
+        display: none
+
+    &::before
+      font-size: 0.8em
+
+  &__button
+    width: 2.2em
+    aspect-ratio: 1
+    flex-shrink: 0
+    border-radius: 50%
+    border: solid 1px var(--clr-black-20)
+    display: flex
+    align-items: center
+    justify-content: center
+    line-height: 1
+    color: var(--clr-black-40)
+    transition: background 0.3s
+
+    &::before
+      display: block
+      font-size: 0.8em
+      line-height: 1
+
+  &__empty-button
+    width: 2.2em
+
+  &__contact
+    > *
+      display: flex
+      align-items: center
+      height: var(--input-height)
+      gap: 0.8em
+      text-decoration: none
+      color: var(--clr-black)
+
+@media (max-width: 1100px)
+  .mm
+    display: block
+
+@media (hover: hover)
+  .mm
+    &__link
+      &:hover
+        background: darken(white, 3%)
+
+    &__parent
+      a
+        padding-right: 5em
+
+    &__show
+      &:hover
+        background: var(--clr-black-6)
+
+    &__button
+      &:hover
+        background: var(--clr-black-6)
+        color: var(--clr-orange)
+
+@media (hover: none)
+  .mm
+    &__link
+      &:active
+        background: darken(white, 3%)
+
+    &__parent
+      a
+        padding-right: 5em
+
+    &__show
+      &:active
+        background: var(--clr-black-6)
+
+    &__button
+      &:active
+        background: var(--clr-black-6)
+        color: var(--clr-orange)

@@ -1,0 +1,30 @@
+@import "../../functions"
+
+.checkbox
+  display: flex
+  align-items: flex-start
+  gap: 0.5em
+
+  input
+    display: none
+
+    &:checked + .checkbox
+      &__fake
+        border-width: .4rem
+
+  &__fake
+    content: ""
+    display: block
+    width: #{setCalcSize(18, 14)}
+    aspect-ratio: 1
+    flex-shrink: 0
+    border-radius: 2px
+    border: solid 2px var(--clr-blue)
+    cursor: pointer
+    transition: border .3s
+    margin-top: 0.1em
+
+  &--radio
+    & .checkbox
+      &__fake
+        border-radius: 50%

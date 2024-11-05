@@ -1,0 +1,39 @@
+@import "../functions"
+
+.title
+  display: block
+  flex-shrink: 0
+  position: relative
+  z-index: 2
+  margin-bottom: #{setCalcSize(20, 64)}
+  font-weight: 500
+  line-height: 1.5
+
+  &--min-bottom
+    margin-bottom: #{setCalcSize(16, 29)}
+
+  &--mb-0
+    margin-bottom: 0 !important
+
+  &--h1
+    font-size: #{setCalcSize(26, 48)}
+
+  &--h2
+    font-size: #{setCalcSize(24, 40)}
+
+  &--h3
+    font-size: #{setCalcSize(18, 32)}
+
+  &--page
+    margin-top: #{setCalcSize(16, 30)}
+
+  &--underline
+    display: inline
+    padding-bottom: 0.1em
+    border-bottom: solid 2px var(--clr-orange)
+
+.description
+  margin-top: #{setCalcSize(6, 16, true)}
+  font-size: #{setCalcSize(16, 18)}
+  margin-bottom: #{setCalcSize(12, 24)}
+  color: var(--clr-black-60)

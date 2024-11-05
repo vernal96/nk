@@ -1,0 +1,36 @@
+@import "../functions"
+
+.modal
+  display: none
+  width: min(30rem, 98%)
+  padding: #{setCalcSize(20, 32)} !important
+  background: #fff
+  border-radius: .75em
+  &--visible
+    display: block
+
+  &__header
+    text-align: center
+    margin-bottom: 1em
+
+  &__title
+    font-size: 1.5em
+    font-weight: 600
+
+  &__subtitle
+    margin-top: 0.4em
+
+  &__form
+    display: flex
+    flex-direction: column
+    gap: #{setCalcSize(8, 12)}
+
+  &__footer
+    margin-top: 1em
+    display: flex
+    gap: 1em
+    flex-direction: column
+
+.modal-sizes
+  width: min(80em, 100%)
+  padding: 0 !important
