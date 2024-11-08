@@ -14,6 +14,7 @@ use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Fields\ExpressionField;
 use Bitrix\Main\Type\DateTime as BitrixDateTime;
 use CFile;
+use Exception;
 
 class Main
 {
@@ -114,11 +115,29 @@ class Main
         Option::set(NK_MODULE_NAME, "LAST_UPDATE", new BitrixDateTime());
     }
 
-    public static function getIblockPhotoSrc(bool $isElement, int|string $id, array $arSizes) {
-        $id = is_int($id) ? $id : (int) preg_replace("/\D/", "", $id);
+    public static function getIblockPhotoSrc(bool $isElement, int|string $id, array $arSizes)
+    {
+        $id = is_int($id) ? $id : (int)preg_replace("/\D/", "", $id);
         $arItem = $isElement ? ElementTable::getRowById($id) : SectionTable::getRowById($id);
         $pictureId = $arItem[$isElement ? "PREVIEW_PICTURE" : "PICTURE"] ?: Main::getFileIdBySrc(Option::get(NK_MODULE_NAME, "NOPHOTO"));
         return CFile::ResizeImageGet($pictureId, ["width" => $arSizes[0], "height" => $arSizes[1]], BX_RESIZE_IMAGE_EXACT)["src"];
+    }
+
+    public static function setFormatPhone(string $phone): string
+    {
+        $result = "+d (ddd) ddd-dd-dd";
+        $phone = preg_replace("/\D/", "", $phone);
+        $phone = preg_replace("/^8/", "7", $phone);
+        if (strlen($phone) < 11) {
+            throw new Exception(Loc::getMessage("ERROR_MOBILE_PHONE_TOO_SHORT"));
+        }
+        if (strlen($phone) > 11) {
+            throw new Exception(Loc::getMessage("ERROR_MOBILE_PHONE_TOO_LONG"));
+        }
+        for ($i = 0; $i < strlen($phone); $i++) {
+            $result = preg_replace("/d/", $phone[$i], $result, 1);
+        }
+        return $result;
     }
 
 }
