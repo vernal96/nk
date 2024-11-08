@@ -120,7 +120,11 @@ class Cart
                 "price2" => $item->get("UF_PRICE_2"),
                 "price3" => $item->get("UF_PRICE_3"),
                 "box" => $item->getUfBoxCount(),
-                "name" => $item->get("PRODUCT")->getName()
+                "name" => $item->get("PRODUCT")->getName(),
+                "image" => \CFile::ResizeImageGet(
+                    ($item->get("PRODUCT")->getPreviewPicture() ?: $item->get("PRODUCT")->getDetailPicture()) ?: Main::getFileIdBySrc(Option::get(NK_MODULE_NAME, "NOPHOTO")),
+                    ["width" => 40, "height" => 40]
+                )["src"]
             ];
 
         }

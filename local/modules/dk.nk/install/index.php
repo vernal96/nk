@@ -11,6 +11,7 @@ class dk_nk extends CModule
         ["Main", "OnFileSave"],
         ["Main", "OnBeforeProlog"],
         ["Main", "OnEpilog"],
+        ["Main", "OnProlog"],
         ["Main", "OnAfterUserAuthorize"],
         ["Main", "OnAfterUserUpdate"],
         ["Main", "OnBeforeUserAdd"],

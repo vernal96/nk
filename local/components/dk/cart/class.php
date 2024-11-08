@@ -5,6 +5,7 @@ use Bitrix\Main\Config\Option;
 use Bitrix\Main\Engine\ActionFilter\Csrf;
 use Bitrix\Main\Engine\Contract\Controllerable;
 use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\Mail\Event;
 use DK\NK\Cart;
 use DK\NK\Helper\Main;
 use DK\NK\Services\Bitrix24;
@@ -246,7 +247,41 @@ class DKCartComponent extends CBitrixComponent implements Controllerable
         $dealId = $bx24->batchResult[0]["result"]["result"]["deal"];
         if ($dealId) {
             $cart->setDeal($dealId);
+            $this->sendUserEmail();
         }
+    }
+
+    private function sendUserEmail(): void
+    {
+        $cart = new Cart();
+        $userData = $cart->getUserData();
+        if (!$userData["email"]) return;
+
+        $items = "";
+
+        ob_start();
+        foreach ($cart->getList() as $product) {
+            if (!$product["count"]) continue;
+            ob_start();
+            Main::include("product", [
+                "IMAGE" => $product["image"],
+                "NAME" => $product["name"] . " " . $product["size"],
+                "COUNT" => $product["count"],
+                "SUM" => $product["price" . Main::getUserType()] * $product["count"],
+            ], EMAIL_TEMPLATE_PATH);
+            $items .= ob_get_clean();
+        }
+
+        Event::send([
+            "EVENT_NAME" => "ORDER_SUCCESS",
+            "LID" => SITE_ID,
+            "C_FIELDS" => [
+                "EMAIL" => $userData["email"],
+                "NUMBER" => $cart->getDeal(),
+                "TOTAL_SUM" => $cart->getTotalSum()["format"],
+                "ITEMS" => $items,
+            ]
+        ]);
     }
 
     private function getOrderFile(array $cartItems): array

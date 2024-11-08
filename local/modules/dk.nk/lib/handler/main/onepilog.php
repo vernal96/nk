@@ -7,6 +7,10 @@ class OnEpilog
 
     public static function run(): void
     {
+        self::pageNotFound();
+    }
+
+    private static function pageNotFound(): void {
         $page404 = "/404.php";
         global $APPLICATION;
         if (!str_contains($APPLICATION->GetCurPage(), $page404) && defined("ERROR_404") && ERROR_404 == "Y") {
@@ -16,4 +20,5 @@ class OnEpilog
             include($_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/footer.php");
         }
     }
+
 }

@@ -44,12 +44,12 @@ class NkCatalogProducts extends CBitrixComponent
             ];
             $elements = [];
             $rsElements = CIBlockElement::GetList($arSort, $arFilter, false, $arNavStartParams);
-            if ($rsElements->NavPageCount < $pageNum && $this->arParams["SHOW_404"]) {
-                Tools::process404();
-                $this->abortResultCache();
-                $taggedCache->abortTagCache();
-                return;
-            }
+//            if ($rsElements->NavPageCount < $pageNum && $this->arParams["SHOW_404"]) {
+//                Tools::process404();
+//                $this->abortResultCache();
+//                $taggedCache->abortTagCache();
+//                return;
+//            }
             while ($arElement = $rsElements->GetNextElement(true, false)) {
                 $element = $arElement->fields;
                 $element["PROPERTIES"] = $arElement->GetProperties();

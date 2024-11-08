@@ -50,10 +50,10 @@ class Main
         return $entity->getDataClass();
     }
 
-    public static function include(string $fileName, array $params = []): void
+    public static function include(string $fileName, array $params = [], string $templatePath = SITE_TEMPLATE_PATH): void
     {
         $PARAMS = $params;
-        include $_SERVER["DOCUMENT_ROOT"] . SITE_TEMPLATE_PATH . "/include/$fileName.php";
+        include $_SERVER["DOCUMENT_ROOT"] . $templatePath . "/include/$fileName.php";
     }
 
     public static function getFileIdBySrc(string $strFilename): ?int

@@ -118,24 +118,40 @@ class Catalog
 
     public static function getTree(): array
     {
-        $sectionResult = CIBlockSection::GetList(
-            self::$arSectionOrder,
-            [
-                "ACTIVE" => "Y",
-                "GLOBAL_ACTIVE" => "Y",
-                "IBLOCK_ID" => IBLOCK_CATALOG
-            ],
-            true,
-            self::$arSectionFields,
-        );
-        while ($section = $sectionResult->GetNext()) {
-            $section = Iblock::setResultFields($section, $link, false);
-            if ($section["~UF_ICON"]) {
-                $section["UF_ICON"] = CFile::GetPath($section["~UF_ICON"]);
+        $cache = Cache::createInstance();
+        $taggedCache = Application::getInstance()->getTaggedCache();
+        $cacheUnique = "dk.tree";
+        $cachePath = "tree";
+        $result = [];
+        if ($cache->initCache(CACHE_TIME, $cacheUnique, self::CATALOG_CACHE_PATH . $cachePath)) {
+            $result = $cache->getVars();
+        } elseif ($cache->startDataCache()) {
+            $taggedCache->startTagCache(self::CATALOG_CACHE_PATH . $cachePath);
+
+            $sectionResult = CIBlockSection::GetList(
+                self::$arSectionOrder,
+                [
+                    "ACTIVE" => "Y",
+                    "GLOBAL_ACTIVE" => "Y",
+                    "IBLOCK_ID" => IBLOCK_CATALOG
+                ],
+                true,
+                self::$arSectionFields,
+            );
+            while ($section = $sectionResult->GetNext()) {
+                $section = Iblock::setResultFields($section, $link, false);
+                if ($section["~UF_ICON"]) {
+                    $section["UF_ICON"] = CFile::GetPath($section["~UF_ICON"]);
+                }
+                $result[] = $section;
             }
-            $result[] = $section;
+            $result = self::setTree($result);
+
+            $taggedCache->registerTag("iblock_id_" . IBLOCK_CATALOG);
+            $taggedCache->endTagCache();
+            $cache->endDataCache($result);
         }
-        return self::setTree($result);
+        return $result;
     }
 
     private static function setTree(array &$sections, $parentId = 0): array

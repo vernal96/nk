@@ -15,6 +15,8 @@ const HL_ABOUT_PROPERTIES = 2;
 const HL_DELIVERY_CITIES = 3;
 
 const NK_MODULE_NAME = "dk.nk";
+
+const EMAIL_TEMPLATE_PATH = "/local/templates/nk.mail/";
 const DEFAULT_PRICE_STATUS = 1;
 
 function printR(mixed $array): void

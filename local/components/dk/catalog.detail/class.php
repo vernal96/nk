@@ -58,6 +58,7 @@ class DKCatalogDetail extends CBitrixComponent implements Controllerable
             $APPLICATION->SetPageProperty("TITLE", $iprop["ELEMENT_META_TITLE"]);
             $APPLICATION->SetPageProperty("description", $iprop["ELEMENT_META_DESCRIPTION"]);
             $APPLICATION->SetPageProperty("keywords", $iprop["ELEMENT_META_KEYWORDS"]);
+            $APPLICATION->SetPageProperty("canonical", $this->arResult["CANONICAL_PAGE_URL"]);
         }
 
         $APPLICATION->AddChainItem($this->arResult["NAME"], $this->arResult["DETAIL_PAGE_URL"]);

@@ -8,6 +8,8 @@ class DKCatalogTree extends CBitrixComponent
 {
 
     private static int $activeSectionId = 0;
+    private static array $activeSection;
+
 
     public function __construct($component = null)
     {
@@ -28,9 +30,7 @@ class DKCatalogTree extends CBitrixComponent
 
         $taggedCache = Application::getInstance()->getTaggedCache();
         $sectionCode = $this->arParams["SECTION_CODE"];
-        $fullTree = $this->arParams["FULL"];
-        $depthLevel = $this->arParams["DEPTH_LEVEL"];
-        if ($this->startResultCache(false, [$sectionCode, $fullTree, $depthLevel])) {
+        if ($this->startResultCache(false, $sectionCode)) {
             $taggedCache->startTagCache($this->getCachePath());
 
             if ($sectionCode) {
@@ -45,25 +45,15 @@ class DKCatalogTree extends CBitrixComponent
                 }
             }
 
-            $arSort = \DK\NK\Helper\Catalog::$arSectionOrder;
-            $arFilter = [
-                "ACTIVE" => "Y",
-                "GLOBAL_ACTIVE" => "Y",
-                "IBLOCK_ID" => $this->arParams["IBLOCK_ID"],
-            ];
-            if ($depthLevel !== "0") {
-                $arFilter["DEPTH_LEVEL"] = $depthLevel;
-            }
-            $arSelect = [
-                "*", "UF_*"
-            ];
+            $tree = \DK\NK\Helper\Catalog::getTree();
+            $this->setTree($tree);
+            $this->arResult["TREE"] = $tree;
 
             $chains = [];
             $rsChain = CIBlockSection::GetNavChain($this->arParams["IBLOCK_ID"], self::$activeSectionId, ["ID", "NAME", "SECTION_PAGE_URL"]);
             while ($chain = $rsChain->GetNext(true, false)) {
                 $chains[] = $chain;
             }
-            $chainArray = array_column($chains, "ID");
             $this->arResult["CHAIN"] = array_map(function ($arItem) {
                 return [
                     "ID" => $arItem["ID"],
@@ -72,23 +62,10 @@ class DKCatalogTree extends CBitrixComponent
                 ];
             }, $chains);
 
-            $sections = [];
-            $rsSection = CIBlockSection::GetList($arSort, $arFilter, false, $arSelect);
-            $currentSection = null;
-            while ($section = $rsSection->GetNext(true, false)) {
-                $section = Iblock::setResultFields($section, $this->arResult["ADD_LINK"], false);
-                if (in_array($section["ID"], $chainArray)) {
-                    $section["CURRENT"] = true;
-                    $currentSection = $section;
-                    if ($section["ID"] == self::$activeSectionId) {
-                        $this->arResult["IPROPERTY_VALUES"] = $section["IPROPERTY_VALUES"];
-                    }
-                }
-                $sections[] = $section;
+            if (self::$activeSectionId) {
+                $this->arResult["DESCRIPTION"] = self::$activeSection["DESCRIPTION"];
+                $this->arResult["IPROPERTY_VALUES"] = self::$activeSection["IPROPERTY_VALUES"];
             }
-
-            $this->arResult["TREE"] = self::setTree($sections, 0, $fullTree);
-            $this->arResult["DESCRIPTION"] = $currentSection["DESCRIPTION"];
             $taggedCache->registerTag("iblock_id_" . $this->arParams["IBLOCK_ID"]);
             $taggedCache->endTagCache();
             $this->setResultCacheKeys(["IPROPERTY_VALUES", "CHAIN", "SECTION_ID", "DESCRIPTION"]);
@@ -107,21 +84,21 @@ class DKCatalogTree extends CBitrixComponent
         }
     }
 
-    private static function setTree($array, $parent, $fullTree): array
+    private function setTree(&$sections): void
     {
-        $result = [];
-        $items = array_filter($array, fn($item) => $item["IBLOCK_SECTION_ID"] == $parent);
-        if ($items) {
-            foreach ($items as &$item) {
-                if (!$item["CURRENT"] && $fullTree == "N" && $item["IBLOCK_SECTION_ID"] == 0) {
-                    $item["SECTIONS"] = [];
-                } else {
-                    $item["SECTIONS"] = self::setTree($array, $item["ID"], $fullTree);
-                }
+        foreach ($sections as &$section) {
+            if ($section["ID"] == self::$activeSectionId) {
+                $section["CURRENT"] = true;
+                self::$activeSection = $section;
             }
-            $result = $items;
+            $section["HAVE_CHILDREN"] = !empty($section["CHILDREN"]);
+            $this->setTree($section["CHILDREN"]);
+            if (!array_filter($section["CHILDREN"], fn($child) => $child["CURRENT"]) && !$section["CURRENT"]) {
+                $section["CHILDREN"] = [];
+            } else {
+                $section["CURRENT"] = true;
+            }
         }
-        return $result;
     }
 
 }

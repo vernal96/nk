@@ -12,9 +12,9 @@ $topLevel = $PARAMS["IBLOCK_SECTION_ID"] == 0;
 ?>
 <li
         id="<?= $PARAMS["template"]->GetEditAreaId($PARAMS["ID"]); ?>"
-        class="catalog-category-wrapper<?= !$PARAMS["CURRENT"] ? " closed" : ""; ?>"
+        class="catalog-category-wrapper"
 >
-    <<? if ($PARAMS["SECTIONS"]): ?>div<? else : ?>a href="<?= $PARAMS["SECTION_PAGE_URL"] ?>"<? endif; ?>
+    <a href="<?= $PARAMS["SECTION_PAGE_URL"] ?>"
             class="catalog-category
             <?= $PARAMS["CURRENT"] ? " is-active" : ""; ?>
             <?= $PARAMS["UF_NEW"] ? " is-tagged is-tagged--new" : ""; ?>
@@ -23,7 +23,12 @@ $topLevel = $PARAMS["IBLOCK_SECTION_ID"] == 0;
     >
         <?
         if ($topLevel) {
-            $picture = $PARAMS["UF_ICON"];
+            $picture = [
+                "ID" => $PARAMS["~UF_ICON"],
+                "SRC" => $PARAMS["UF_ICON"],
+                "ALT" => $PARAMS["IPROPERTY_VALUES"]["SECTION_PICTURE_FILE_ALT"],
+                "TITLE" => $PARAMS["IPROPERTY_VALUES"]["SECTION_PICTURE_FILE_TITLE"],
+            ];
         } else {
             $PARAMS["PICTURE"]["SRC"] = $PARAMS["PICTURE"] ? CFile::ResizeImageGet($PARAMS["PICTURE"]["ID"], ["width" => 40, "height" => 40], 2)["src"] : $PARAMS["PICTURE"];
             $picture = $PARAMS["PICTURE"];
@@ -38,21 +43,15 @@ $topLevel = $PARAMS["IBLOCK_SECTION_ID"] == 0;
                     class="catalog-category__<?= $topLevel ? "image" : "picture"; ?>">
         <? endif; ?>
         <span class="catalog-category__label">
-            <? if ($PARAMS["SECTIONS"]): ?>
-                <a href="<?= $PARAMS["SECTION_PAGE_URL"] ?>" class="catalog-category__link">
-                    <?= $PARAMS["NAME"]; ?>
-                </a>
-            <? else : ?>
-                <?= $PARAMS["NAME"]; ?>
-            <? endif; ?>
+            <?= $PARAMS["NAME"]; ?>
         </span>
-        <? if ($PARAMS["SECTIONS"]) : ?>
+        <? if ($PARAMS["HAVE_CHILDREN"]) : ?>
             <span class="catalog-category__arrow catalog-category__arrow--down"></span>
         <? endif; ?>
-    </<? if ($PARAMS["SECTIONS"]): ?>div<? else : ?>a<? endif; ?>>
-    <? if ($PARAMS["SECTIONS"]) : ?>
+    </a>
+    <? if ($PARAMS["HAVE_CHILDREN"]) : ?>
         <ul class="catalog-categories__children">
-            <? foreach ($PARAMS["SECTIONS"] as $arItem) : ?>
+            <? foreach ($PARAMS["CHILDREN"] as $arItem) : ?>
                 <? Main::include("elements/category", [...$arItem, "template" => $PARAMS["template"]]); ?>
             <? endforeach; ?>
         </ul>
