@@ -17,11 +17,7 @@ export const Pagination = {
         }
     },
     data: () => ({
-        maxPage: 5,
-        lang: {
-            start: BX.message.PAGINATION_START,
-            end: BX.message.PAGINATION_END
-        }
+        pageWindow: 5,
     }),
     computed: {
         pageCount() {
@@ -29,41 +25,34 @@ export const Pagination = {
             return Math.ceil(this.elementCount / this.pageSize);
         },
         pages() {
-            const currentPage = this.currentPage;
-            const pages = [currentPage];
-            const max = Math.min(this.pageCount, this.maxPage);
-            let plus = false;
-            let counter = 1;
-            while (pages.length < max) {
-                let newValue = currentPage + (plus ? counter : 0 - counter);
-                if (plus) counter++;
-                plus = !plus;
-                if (newValue > 0 && newValue <= this.pageCount) {
-                    pages.push(newValue);
+            let startPage, endPage;
+            if (this.currentPage > Math.floor(this.pageWindow / 2) + 1 && this.pageCount > this.pageWindow) {
+                startPage = this.currentPage - Math.floor(this.pageWindow / 2);
+            } else {
+                startPage = 1;
+            }
+            if (this.currentPage <= this.pageCount - Math.floor(this.pageWindow / 2) && startPage + this.pageWindow - 1 <= this.pageCount) {
+                endPage = startPage + this.pageWindow - 1;
+            } else {
+                endPage = this.pageCount;
+                if (endPage - this.pageWindow + 1 >= 1) {
+                    startPage = endPage - this.pageWindow + 1;
                 }
             }
-            pages.sort((a, b) => a - b);
-            return pages;
+            return {
+                start: startPage,
+                end: endPage
+            }
         },
-        hidePrev() {
-            return this.currentPage === 1;
-        },
-        hideNext() {
-            return this.currentPage === this.pageCount;
+        middlePages() {
+
         }
     },
     emits: ["onChangePage"],
     methods: {
         goPage(page) {
+            if (page === this.currentPage) return;
             this.$emit("onChangePage", page);
-        },
-        goStart() {
-            if (this.hidePrev) return;
-            this.goPage(1);
-        },
-        goEnd() {
-            if (this.hideNext) return;
-            this.goPage(this.pageCount)
         },
         goPrev() {
             if (this.hidePrev) return;

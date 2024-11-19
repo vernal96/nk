@@ -42,5 +42,6 @@ use DK\NK\Helper\Main;
 </div>
 <? Main::include("modal/recall"); ?>
 <? $APPLICATION->IncludeComponent("dk:mm", "", []); ?>
+
 </body>
 </html>

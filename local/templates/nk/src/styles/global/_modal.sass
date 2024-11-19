@@ -6,6 +6,7 @@
   padding: #{setCalcSize(20, 32)} !important
   background: #fff
   border-radius: .75em
+
   &--visible
     display: block
 
@@ -24,12 +25,19 @@
     display: flex
     flex-direction: column
     gap: #{setCalcSize(8, 12)}
+    box-sizing: border-box
 
   &__footer
     margin-top: 1em
     display: flex
     gap: 1em
+    align-items: flex-start
     flex-direction: column
+    box-sizing: border-box
+
+  &__forms
+    padding: 1em
+    margin: -1em
 
 .modal-sizes
   width: min(80em, 100%)

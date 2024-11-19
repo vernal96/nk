@@ -88,27 +88,10 @@ $arComponentParameters = [
             "DEFAULT" => '',
             "ADDITIONAL_VALUES" => "Y",
         ],
-        "SECTION_DEPTH_LEVEL" => [
-            "PARENT" => "TREE",
-            'NAME' => Loc::getMessage("CATALOG_SECTION_DEPTH_LEVEL"),
-            "TYPE" => "STRING"
-        ],
-        "SECTION_FULL" => [
-            "PARENT" => "TREE",
-            'NAME' => Loc::getMessage("CATALOG_SECTION_FULL"),
-            "TYPE" => "CHECKBOX",
-            "DEFAULT" => "N"
-        ],
         "PRODUCT_COUNT" => [
             "PARENT" => "BASE",
             'NAME' => Loc::getMessage("CATALOG_PRODUCT_COUNT"),
             "TYPE" => "STRING"
-        ],
-        "SHOW_TABS" => [
-            "PARENT" => "BASE",
-            'NAME' => Loc::getMessage("CATALOG_SHOW_TABS"),
-            "TYPE" => "CHECKBOX",
-            "DEFAULT" => "Y"
         ],
         "CACHE_TIME" => ["DEFAULT" => CACHE_TIME],
         "AJAX_MODE" => []

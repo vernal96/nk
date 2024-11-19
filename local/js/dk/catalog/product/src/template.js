@@ -1,10 +1,12 @@
 export const template = `
-<div class="product">
+<div class="product" :class="{'product--section': data.isSection}">
     <a :href="data.url" class="product__header">
-        <img :src="data.picture.src" :alt="data.picture.alt" :title="data.picture.title" class="product__image">
+        <picture class="product__image">
+            <img :src="data.picture.src" :alt="data.picture.alt" :title="data.picture.title">
+        </picture>
         <span class="product__title">{{ data.name }}</span>
     </a>
-    <div>
+    <template v-if="!data.isSection">
         <span class="product__price" :class="{'product__price--min': data.price.from}">
             <template v-if="data.price.from">{{ lang.from }}</template> {{ data.price.cost }} {{ lang.currency }}
         </span>
@@ -16,6 +18,6 @@ export const template = `
         :sizeId="data.price.sizeId"
         :cartCount="data.price.cartCount"
         ></Counter>
-    </div>
+    </template>
 </div>
 `;

@@ -59,18 +59,18 @@ class NkAjaxForm extends CBitrixComponent implements Controllerable
                 ];
             }
         }
-        $dealId = $this->sendBX24($this->request);
-        $formatDealId = str_pad($dealId, 6, "0", STR_PAD_LEFT);
-        ob_start();
-        Main::include("form_success", [
-            "horizontal" => $horizontal,
-            "error" => $error,
-            "formatDealId" => $formatDealId,
-        ]);
-        return [
-            "success" => true,
-            "message" => ob_get_contents()
-        ];
+//        $dealId = $this->sendBX24($this->request);
+//        $formatDealId = str_pad($dealId, 6, "0", STR_PAD_LEFT);
+//        ob_start();
+//        Main::include("form_success", [
+//            "horizontal" => $horizontal,
+//            "error" => $error,
+//            "formatDealId" => $formatDealId,
+//        ]);
+//        return [
+//            "success" => true,
+//            "message" => ob_get_contents()
+//        ];
     }
 
     private function sendBX24($request): ?int

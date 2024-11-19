@@ -7,7 +7,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 $this->setFrameMode(true);
 ?>
 <? $frame = $this->createFrame()->begin(); ?>
-<? if ($arResult["AUTH"]) : ?>
+<? if (!$arResult["AUTH"]) : ?>
     <?php
     $arrClasses = ["login"];
     if (isset($arResult["USER"]["STATUS"]) && $arResult["USER"]["STATUS"] > 1) {
@@ -24,48 +24,125 @@ $this->setFrameMode(true);
         </span>
     </a>
 <? else : ?>
-    <button class="login" onclick="openAuth(event)">
+    <button class="login modal-trigger" data-src="#authorize">
         <span class="login__image login__image--auth"></span>
         <span class="login__title"><?= Loc::getMessage("LOGIN_START"); ?></span>
     </button>
-    <script>
-        function openAuth(event) {
-            BX.ajax.get("/personal/", {FRAME: "Y"}, response => {
-                const modal = DK.Methods.createStructure({
-                    classes: ["modal", "modal--visible"],
-                    children: [
+    <div id="authorize" class="modal">
+        <script>
+            const Registration = {
+                name: "Registration",
+                template: "Регистрация"
+            };
+            const Authorize = {
+                name: "Authorize",
+                template: `
+                    <div class="modal__form">
+                        <label class="input">
+                            <span class="input__title">Логин</span>
+                            <input type="text" name="USER_LOGIN" maxlength="50" value=""
+                                   placeholder="Введите номер телефона или почту"/>
+                        </label>
+<label class="input">
+                            <span class="input__title">Логин</span>
+                            <input type="text" name="USER_LOGIN" maxlength="50" value=""
+                                   placeholder="Введите пароль"/>
+                        </label>
+<label class="checkbox">
+                    <input type="checkbox" name="USER_REMEMBER" value="1">
+                    <span class="checkbox__fake"></span>
+                    <span class="checkbox__content">Запомнить меня</span>
+                </label>
+                    </div>
+<div class="modal__footer">
+                    <button type="submit" class="button button--orange button--100">Войти</button>
+                </div>
+                <?
+                $APPLICATION->IncludeComponent("bitrix:socserv.auth.form", "flat",
+                    [
+                        "AUTH_SERVICES" => $arResult["AUTH_SERVICES"],
+                        "AUTH_URL" => $arResult["AUTH_URL"],
+                        "POST" => $arResult["POST"],
+                        "POPUP" => "Y",
+                        "SUFFIX" => "form",
+                    ],
+                    $component,
+                    ["HIDE_ICONS" => "Y"]
+                );
+                ?>
+                `
+            };
+            const Login = {
+                name: "login",
+                data: () => ({
+                    swiper: null,
+                    tabs: [
                         {
-                            classes: "modal__header",
-                            children: [
-                                {
-                                    classes: "modal__title",
-                                    content: "Вход в личный кабинет"
-                                }
-                            ]
+                            id: "auth",
+                            title: "Авторизация",
                         },
                         {
-                            classes: "modal__form",
-                            inner: response
+                            id: "reg",
+                            title: "Регистрация"
                         }
-                    ]
-                });
-                new Fancybox([
-                    {
-                        src: modal,
-                        type: "html"
+                    ],
+                    activeTab: "auth"
+                }),
+                components: {
+                    Authorize,
+                    Registration
+                },
+                methods: {
+                    toggleSlide(slideIndex, tabId) {
+                        if (!this.swiper) return;
+                        this.swiper.slideTo(slideIndex);
+                        this.activeTab = tabId;
                     }
-                ], {
-                    dragToClose: false,
-                    Hash: false,
-                    autoFocus: false
-                });
-            });
-        }
-    </script>
+                },
+                mounted() {
+                    this.swiper = new Swiper(this.$refs.swiper, {
+                        autoHeight: true,
+                        slidesPerView: 1,
+                        effect: 'fade',
+                        fadeEffect: {
+                            crossFade: true
+                        },
+                    });
+                },
+                template: `
+                <div class="modal__header">
+                    <div class="modal__title">Войти в личный кабинет</div>
+                    <div class="modal__subtitle">
+                        <div class="inline-links">
+                            <div
+                                v-for="tab, index in tabs"
+                                class="inline-link"
+                                :class="{'inline-link--is-active': tab.id === activeTab}"
+                                :key="tab.id"
+                                @click="toggleSlide(index, tab.id)"
+                            >{{ tab.title }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal__forms swiper" ref="swiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <Authorize></Authorize>
+                        </div>
+                        <div class="swiper-slide">
+                            <Registration></Registration>
+                        </div>
+                    </div>
+                </div>
+                `
+            };
+            BX.Vue3.createApp(Login).mount("#authorize");
+        </script>
+    </div>
 <? endif; ?>
 <? $frame->beginStub(); ?>
-    <div class="login">
-        <span class="login__image loader-fill"></span>
-        <span class="login__title content-loader content-loader--9"></span>
-    </div>
+<div class="login">
+    <span class="login__image loader-fill"></span>
+    <span class="login__title content-loader content-loader--9"></span>
+</div>
 <? $frame->end(); ?>

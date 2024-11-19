@@ -14,6 +14,7 @@ $MESS["AUTH_OPENID"] = "OpenID";
 $MESS["AUTH_A_LIVEID"] = "LiveID";
 $MESS["AUTH_LIVEID_LOGIN"] = "Log In";
 $MESS["AUTH_CAPTCHA_PROMT"] = "Введите слово на картинке";
+$MESS["AUTH_CAPTCHA_LABEL"] = "Слово на картинке";
 $MESS["AUTH_REMEMBER_SHORT"] = "Запомнить меня";
 $MESS["socserv_as_user_form"] = "Войти как пользователь:";
 $MESS["AUTH_SECURE_NOTE"]="Перед отправкой формы авторизации пароль будет зашифрован в браузере. Это позволит избежать передачи пароля в открытом виде.";

@@ -16,7 +16,15 @@ class Catalog
 
     private const CATALOG_CACHE_PATH = SITE_ID . "/dk/catalog/";
     public const PRODUCT_IMAGE_SIZE = ["width" => 400, "height" => 280];
-    public static array $arSectionOrder = ["UF_NEW" => "DESC", "SORT" => "ASC", "NAME" => "ASC", "ID" => "ASC"];
+    public const PRODUCT_IMAGE_SIZE_SOURCES = [
+        1440 => [324, 220],
+        1024 => [219, 190],
+        768 => [362, 171],
+        425 => [203, 146],
+        375 => [180, 142]
+    ];
+    public const PRODUCT_SECTION_IMAGE_SIZE = ["width" => 400, "height" => 350];
+    public static array $arSectionOrder = ["SORT" => "ASC", "NAME" => "ASC", "ID" => "ASC"];
     public static array $arSectionFields = ["ID", "IBLOCK_ID", "IBLOCK_SECTION_ID", "NAME", "PICTURE", "DETAIL_PICTURE", "UF_ICON", "UF_NEW", "SECTION_PAGE_URL"];
     public static array $arProductOrder = ["SORT" => "ASC", "NAME" => "ASC", "ID" => "ASC"];
     public static array $arProductFields = ["ID", "NAME", "IBLOCK_ID", "CODE", "IBLOCK_SECTION_ID", "PREVIEW_PICTURE", "DETAIL_PAGE_URL"];
@@ -176,7 +184,13 @@ class Catalog
         } elseif ($cache->startDataCache()) {
             $taggedCache->startTagCache(self::CATALOG_CACHE_PATH . $cachePath);
 
-            $result = self::getProducts($sectionId, $pageSize, $page);
+            $products = self::getProducts($sectionId, $pageSize, $page);
+
+            if (!$products) {
+                $cache->abortDataCache();
+                $taggedCache->abortTagCache();
+                return [];
+            }
 
             $result = array_map(function ($product) {
                 $picture = $product["PREVIEW_PICTURE"] ?: Main::getFileIdBySrc(Option::get(NK_MODULE_NAME, "NOPHOTO"));
@@ -185,14 +199,18 @@ class Catalog
                     "id" => (int)$product["ID"],
                     "name" => $product["~NAME"],
                     "picture" => [
-                        "src" => CFile::ResizeImageGet($picture, self::PRODUCT_IMAGE_SIZE, BX_RESIZE_IMAGE_EXACT)["src"],
-                        "alt" => $product["PREVIEW_PICTURE"]["ALT"] ?: "",
-                        "title" => $product["PREVIEW_PICTURE"]["TITLE"] ?: "",
+                        "src" => CFile::ResizeImageGet(
+                            $picture,
+                            $product["IS_SECTION"] ? self::PRODUCT_SECTION_IMAGE_SIZE : self::PRODUCT_IMAGE_SIZE,
+                            BX_RESIZE_IMAGE_EXACT)["src"],
+                        "alt" => $product[$product["IS_SECTION"] ? "PICTURE" : "PREVIEW_PICTURE"]["ALT"] ?: "",
+                        "title" => $product[$product["IS_SECTION"] ? "PICTURE" : "PREVIEW_PICTURE"]["TITLE"] ?: "",
                     ],
-                    "url" => $product["DETAIL_PAGE_URL"],
+                    "url" => $product["IS_SECTION"] ? $product["SECTION_PAGE_URL"] : $product["DETAIL_PAGE_URL"],
+                    "isSection" => $product["IS_SECTION"],
                     "price" => []
                 ];
-            }, $result);
+            }, $products["ELEMENTS"]);
 
             $taggedCache->registerTag("iblock_id_" . IBLOCK_CATALOG);
             $taggedCache->endTagCache();
@@ -219,35 +237,72 @@ class Catalog
         }, $result);
     }
 
-    public static function getProducts(int $sectionId, int $pageSize, int $page = 1): array
+    public static function getProducts(int $sectionId, int $pageSize, int $page = 1): ?array
     {
-        $navigation = new PageNavigation("productPage");
-        $navigation->allowAllRecords(false)->setCurrentPage($page)->setPageSize($pageSize);
+        $result = [
+            "ADD_LINKS" => [
+                "SECTION" => [],
+                "ELEMENT" => []
+            ],
+            "ELEMENTS" => []
+        ];
 
-        $queryResult = CIBlockElement::GetList(
-            self::$arProductOrder,
+        $elementFilter = [
+            "ACTIVE" => "Y",
+            "IBLOCK_ID" => IBLOCK_CATALOG,
+            "SECTION_ID" => $sectionId,
+            "INCLUDE_SUBSECTIONS" => "Y",
+        ];
+
+        $navigation = new PageNavigation("pagination");
+        $navigation
+            ->allowAllRecords(true)
+            ->setPageSize($pageSize)
+            ->allowAllRecords(false)
+            ->setCurrentPage($page);
+
+        $rsSections = CIBlockSection::GetList(self::$arSectionOrder, [
+            "IBLOCK_ID" => IBLOCK_CATALOG,
+            "ACTIVE" => "Y",
+            "SECTION_ID" => $sectionId,
+        ], false, self::$arSectionFields, [
+            "iNumPage" => $navigation->getCurrentPage(),
+            "nPageSize" => $navigation->getPageSize(),
+            "checkOutOfRange" => true
+        ]);
+
+        $elementsCount = CIBlockElement::GetList(self::$arProductOrder, $elementFilter, []);
+        $rsElements = CIBlockElement::GetList(self::$arProductOrder, $elementFilter, false,
             [
-                "ACTIVE" => "Y",
-                "SECTION_ID" => $sectionId,
-                "IBLOCK_ID" => IBLOCK_CATALOG,
-                "INCLUDE_SUBSECTIONS" => "Y"
-            ],
-            false,
-            [
-                "nOffset" => $navigation->getOffset(),
-                "iNumPage" => $navigation->getCurrentPage(),
-                "nPageSize" => $navigation->getPageSize(),
-            ],
-            self::$arProductFields
+                "nTopCount" => $navigation->getPageSize() - $rsSections->result->num_rows,
+                "nOffset" => max(0, ($navigation->getCurrentPage() - 1) * $navigation->getPageSize() - $rsSections->NavRecordCount),
+                "nPageSize" => $navigation->getPageSize() - $rsSections->result->num_rows,
+            ]
         );
-        $navigation->setRecordCount($queryResult->SelectedRowsCount());
-        $result = [];
-        while ($element = $queryResult->GetNextElement()) {
-            $arElement = $element->fields;
-            $arElement["PROPERTIES"] = $element->GetProperties();
-            $arElement = Iblock::setResultFields($arElement);
-            $result[] = $arElement;
+
+        $navigation->setRecordCount($rsSections->NavRecordCount + $elementsCount);
+
+        while ($arSection = $rsSections->GetNextElement()) {
+            $section = $arSection->fields;
+            $section["IS_SECTION"] = true;
+            $section["NO_PHOTO"] = Main::getFileIdBySrc(Option::get(NK_MODULE_NAME, "NOPHOTO"));
+            $section = Iblock::setResultFields($section, $result["ADD_LINKS"]["SECTION"], false);
+            $result["ELEMENTS"][] = $section;
         }
+        if ($navigation->getPageSize() - $rsSections->result->num_rows) {
+            while ($arElement = $rsElements->GetNextElement()) {
+                $element = $arElement->fields;
+                $element["PROPERTIES"] = $arElement->GetProperties();
+                $element["NO_PHOTO"] = Main::getFileIdBySrc(Option::get(NK_MODULE_NAME, "NOPHOTO"));
+                $element = Iblock::setResultFields($element, $result["ADD_LINKS"]["ELEMENT"]);
+                $result["ELEMENTS"][] = $element;
+            }
+        }
+        if ($page > $navigation->getPageCount()) {
+            return null;
+        }
+
+        $result["NAV_OBJECT"] = $navigation;
 
         return $result;
     }

@@ -31,7 +31,7 @@ class DKCatalogTree extends CBitrixComponent
         $taggedCache = Application::getInstance()->getTaggedCache();
         $sectionCode = $this->arParams["SECTION_CODE"];
         if ($this->startResultCache(false, $sectionCode)) {
-            $taggedCache->startTagCache($this->getCachePath());
+            $taggedCache->startTagCache(Iblock::getCachePath($this->getName()));
 
             if ($sectionCode) {
                 $activeSection = CIBlockSection::GetList([], ["CODE" => $sectionCode], false, ["ID"])->Fetch();

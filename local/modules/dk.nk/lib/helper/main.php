@@ -24,7 +24,7 @@ class Main
         return preg_replace("/[^\d+]/", "", $phone);
     }
 
-    public static function getPictureSrcSet($file, $sizesList): void
+    public static function getPictureSrcSet($file, $sizesList, $resizeType = BX_RESIZE_IMAGE_EXACT): void
     {
         ksort($sizesList);
         foreach ($sizesList as $screenSize => $sizes) {

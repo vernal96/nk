@@ -8,7 +8,6 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 /** @var CBitrixComponentTemplate $this */
 /** @var array $arParams */
 /** @var array $arResult */
-
 ?>
 
 <section class="section main-catalog container section--pt0" data-page-loader-container>
@@ -40,7 +39,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
         <? $this->EndViewTarget(); ?>
         <div class="catalog-products catalog-main">
             <div class="content-blocks">
-                <? $APPLICATION->IncludeComponent(
+                <? $productsResult = $APPLICATION->IncludeComponent(
                     "dk:catalog.products",
                     "",
                     [
@@ -70,9 +69,21 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
                         "AJAX_OPTION_HISTORY" => $arParams["AJAX_OPTION_HISTORY"],
                         "AJAX_OPTION_JUMP" => $arParams["AJAX_OPTION_JUMP"],
                         "AJAX_OPTION_STYLE" => $arParams["AJAX_OPTION_STYLE"],
+                        "PAGE" => $arResult["VARIABLES"]["PAGE"] ?? 1
                     ],
-                    $component
+                    $component,
+                    [],
+                    true
                 ); ?>
+                <div class="catalog-products__footer">
+                    <? $APPLICATION->IncludeComponent("bitrix:main.pagenavigation", "",
+                        [
+                            "NAV_OBJECT" => $productsResult["NAV_OBJECT"],
+                            "SEF_MODE" => "Y"
+                        ],
+                        $this
+                    ); ?>
+                </div>
                 <? if (!$arResult["VARIABLES"]["SECTION_CODE"] && Loc::getMessage("CATALOG_DESCRIPTION")) : ?>
                     <div class="white-block text-content">
                         <?= (new CTextParser())->convertText(Loc::getMessage("CATALOG_DESCRIPTION")); ?>

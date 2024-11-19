@@ -46,6 +46,7 @@ class Valid
             "response" => $token,
             "remoteip" => Application::getInstance()->getContext()->getRequest()->getRemoteAddress()
         ]);
+        logToFile(Json::decode($httpClient->getResult()));
         return Json::decode($httpClient->getResult())["success"];
     }
 

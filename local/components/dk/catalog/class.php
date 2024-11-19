@@ -1,5 +1,6 @@
 <?php
 
+use Bitrix\Iblock\Component\Tools;
 use Bitrix\Main\Application;
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\Engine\ActionFilter\Csrf;
@@ -14,7 +15,8 @@ class DKCatalogComponent extends CBitrixComponent implements Controllerable
 
 
     protected array $arComponentVariables = [
-        'CODE_SECTION'
+        'CODE_SECTION',
+        'PAGE'
     ];
 
     public function __construct($component = null)
@@ -29,8 +31,13 @@ class DKCatalogComponent extends CBitrixComponent implements Controllerable
         $componentPage = $this->arParams["SEF_MODE"] === "Y" ? $this->sefMode() : $this->noSefMode();
         if (!$componentPage && $APPLICATION->GetCurPage() != $this->arParams["SEF_FOLDER"]) {
             $componentPage = "template";
+        } elseif ($componentPage == "sectionStart" || $componentPage == "root") {
+            $componentPage = "section";
         } elseif (!$componentPage) {
             $componentPage = "section";
+        }
+        if ($this->arResult["VARIABLES"]["PAGE"] == 1) {
+            Tools::process404();
         }
         $this->IncludeComponentTemplate($componentPage);
     }
@@ -38,8 +45,11 @@ class DKCatalogComponent extends CBitrixComponent implements Controllerable
     protected function sefMode(): false|string
     {
         $arDefaultVariableAliases404 = [];
+
         $arDefaultUrlTemplates404 = [
-            "section" => "#SECTION_CODE#/",
+            "section" => "#SECTION_CODE#/page-#PAGE#/",
+            "root" => "page-#PAGE#/",
+            "sectionStart" => "#SECTION_CODE#/",
             "element" => "#SECTION_CODE#/#ELEMENT_CODE#",
         ];
         $arVariables = [];
@@ -109,13 +119,14 @@ class DKCatalogComponent extends CBitrixComponent implements Controllerable
         return Catalog::getCompactTree();
     }
 
-    public function getProductsAction(): array
+    public function getProductsAction(): ?array
     {
         return Catalog::getCompactProducts(
             $this->request->get("sectionId"),
             $this->request->get("pageSize"),
             $this->request->get("page")
         );
+
     }
 
     public function getPricesAction(): array

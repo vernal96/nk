@@ -114,7 +114,7 @@ BX.ready(() => {
                                         this.products = response.data;
                                         this.page.current = page;
                                         this.loading = false;
-                                        Methods.scrollToHeaderElement();
+                                        // Methods.scrollToHeaderElement();
                                     }
                                 );
                             },

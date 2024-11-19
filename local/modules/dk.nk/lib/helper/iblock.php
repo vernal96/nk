@@ -67,4 +67,10 @@ class Iblock
         }
         return $arResult;
     }
+
+    public static function getCachePath(string $componentName): string {
+        $componentNameParts = explode(":", $componentName);
+        return SITE_ID . "/$componentNameParts[0]/$componentNameParts[1]/";
+    }
+
 }

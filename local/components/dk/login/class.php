@@ -9,16 +9,15 @@ class DKLoginComponent extends CBitrixComponent
     public function executeComponent(): void
     {
         global $USER, $APPLICATION;
-        if (!$USER->IsAdmin()) return;
         if ($USER->IsAuthorized()) {
             $this->setUserData();
-            $this->arResult["AUTH"] = false;
+            $this->arResult["AUTH"] = $USER->IsAuthorized();
+        } else {
+            if ($this->request->get("FRAME") == "Y") {
+                $APPLICATION->RestartBuffer();
+            }
         }
-        $this->includeComponentTemplate();
-    }
-
-    private function setGuestData(): void {
-
+//        $this->includeComponentTemplate();
     }
 
     private function setUserData(): void

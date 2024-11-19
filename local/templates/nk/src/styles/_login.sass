@@ -1,0 +1,26 @@
+.inline-links
+  display: flex
+.inline-link
+  width: 100%
+  border-bottom: solid 2px var(--clr-black-15)
+  color: var(--clr-black-40)
+  font-weight: 600
+  cursor: pointer
+  padding: 0.5em
+  transition: color 0.3s, border-color 0.3s
+  &--is-active
+    color: var(--clr-blue) !important
+    border-color: var(--clr-blue) !important
+    cursor: default
+
+@media (hover: hover)
+  .inline-link
+    &:hover
+      color: var(--clr-black-60)
+      border-color: var(--clr-black-20)
+
+@media (hover: none)
+  .inline-link
+    &:active
+      color: var(--clr-black-60)
+      border-color: var(--clr-black-20)

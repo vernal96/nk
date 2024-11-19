@@ -29,7 +29,7 @@ class Parser
     private static array $fileSections;
     private static array $fileElements;
     private static array $structure;
-    private static string $filePath = "/upload/integration/tovar_out.xml";
+    private static string $filePath = "/upload/integration/tovar_out2.xml";
     private static string $fileSectionName = "Разделы";
     private static string $fileElementName = "Элементы";
     private static string $guidFieldName = "КодWeb";
