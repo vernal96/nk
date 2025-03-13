@@ -2,11 +2,16 @@
 
 /** @var CModule $APPLICATION */
 
+/** @var CModule $USER */
+
 use Bitrix\Main\Application;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\UI\Extension;
 use DK\NK\Parser;
+
+
+$canPermissions = \DK\NK\Helper\Main::checkUserGroup($USER->GetID(), 'PARSER');
 
 Extension::load([
     "ui.buttons",
@@ -23,6 +28,13 @@ if ($request->get("PARSER_UPDATE")) {
 
 ?>
 
+<? if (!$canPermissions) : ?>
+    <div class="ui-alert ui-alert-warning">
+        <span class="ui-alert-message">
+            <?= (new CTextParser())->convertText(Loc::getMessage("NK_PARSER_HAS_NOT_PERMISSIONS")); ?>
+        </span>
+    </div>
+<? else: ?>
 <form action="" method="post">
     <? if (isset($result)) : ?>
         <div class="ui-alert ui-alert-<?= ($result === true) ? "success" : "danger"; ?>">
@@ -52,3 +64,4 @@ if ($request->get("PARSER_UPDATE")) {
         </div>
     </div>
 </form>
+<? endif; ?>

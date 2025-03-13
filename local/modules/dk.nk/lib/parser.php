@@ -87,7 +87,7 @@ class Parser
         self::disableAllEmpty();
         self::deactivateEmptyProducts();
         Cache::clearCache(true);
-//        self::updateDBBitrix24();
+        self::updateDBBitrix24();
         return true;
     }
 
@@ -313,13 +313,6 @@ class Parser
             ->registerRuntimeField("PRODUCT", new Reference("PRODUCT", ElementTable::class, Join::on("this.UF_PRODUCT", "ref.ID")))
             ->fetchAll();
         $actualItems = array_map(function ($item) {
-            if ($item["PHOTO"]) {
-                $item["PHOTO"] = CFile::GetFileArray($item["PHOTO"]);
-                $item["PHOTO"] = ["fileData" => [
-                    $item["PHOTO"]["FILE_NAME"],
-                    base64_encode(file_get_contents($_SERVER["DOCUMENT_ROOT"] . $item["PHOTO"]["SRC"]))
-                ]];
-            }
             $item["NAME"] = $item["NAME"] . " " . $item["UF_SIZE"];
             return $item;
         }, $actualItems);

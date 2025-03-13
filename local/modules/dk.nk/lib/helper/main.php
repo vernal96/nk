@@ -4,15 +4,20 @@ namespace DK\NK\Helper;
 
 use Bitrix\Highloadblock\HighloadBlockTable as HL;
 use Bitrix\Iblock\ElementTable;
+use Bitrix\Iblock\ORM\Query;
 use Bitrix\Iblock\SectionTable;
 use Bitrix\Main\Application;
+use Bitrix\Main\ArgumentException;
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\FileTable;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Fields\ExpressionField;
+use Bitrix\Main\SystemException;
 use Bitrix\Main\Type\DateTime as BitrixDateTime;
+use Bitrix\Main\UserGroupTable;
 use CFile;
 use Exception;
 
@@ -138,6 +143,32 @@ class Main
             $result = preg_replace("/d/", $phone[$i], $result, 1);
         }
         return $result;
+    }
+
+    /**
+     * @throws ArgumentException
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     */
+    public static function checkUserGroup(int $userId, array|int|string $groups): bool {
+        if (!is_array($groups)) $groups = [$groups];
+
+        $groupQuery = Query::filter()
+            ->logic('or')
+            ->where('GROUP_ID', 1);
+
+        foreach ($groups as $group) {
+            if (is_int($group)) {
+                $groupQuery->where('GROUP_ID', $group);
+            } else {
+                $groupQuery->where('GROUP.STRING_ID', $group);
+            }
+        }
+
+        return (bool)UserGroupTable::query()
+            ->where('USER_ID', $userId)
+            ->where($groupQuery)
+            ->fetchAll();
     }
 
 }
