@@ -330,7 +330,7 @@ class Catalog
                 "detail" => $section["DETAIL_PICTURE"] ? [
                     "src" => CFile::ResizeImageGet(
                         $section["DETAIL_PICTURE"],
-                        ["width" => 300, "height" => 340]
+                        ["width" => 300, "height" => 520]
                     )["src"],
                     "alt" => $section["DETAIL_PICTURE"]["ALT"],
                     "title" => $section["DETAIL_PICTURE"]["TITLE"],
