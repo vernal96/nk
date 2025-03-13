@@ -15,7 +15,7 @@ class Catalog
 {
 
     private const CATALOG_CACHE_PATH = SITE_ID . "/dk/catalog/";
-    public const PRODUCT_IMAGE_SIZE = ["width" => 400, "height" => 280];
+    public const PRODUCT_IMAGE_SIZE = ["width" => 440, "height" => 320];
     public const PRODUCT_IMAGE_SIZE_SOURCES = [
         1440 => [324, 220],
         1024 => [219, 190],
@@ -23,7 +23,7 @@ class Catalog
         425 => [203, 146],
         375 => [180, 142]
     ];
-    public const PRODUCT_SECTION_IMAGE_SIZE = ["width" => 400, "height" => 350];
+    public const PRODUCT_SECTION_IMAGE_SIZE = ["width" => 440, "height" => 390];
     public static array $arSectionOrder = ["SORT" => "ASC", "NAME" => "ASC", "ID" => "ASC"];
     public static array $arSectionFields = ["ID", "IBLOCK_ID", "IBLOCK_SECTION_ID", "NAME", "PICTURE", "DETAIL_PICTURE", "UF_ICON", "UF_NEW", "SECTION_PAGE_URL"];
     public static array $arProductOrder = ["SORT" => "ASC", "NAME" => "ASC", "ID" => "ASC"];
@@ -98,16 +98,16 @@ class Catalog
             ->setSelect(["ID", "UF_SIZE", "UF_BOX_COUNT", "UF_PRICE_1", "UF_PRICE_2", "UF_PRICE_3", "UF_PRODUCT"])
             ->where("UF_PRODUCT", $productId)
             ->whereIn("ID", $arId)
-            ->setOrder(["UF_SORT" => "ASC", "UF_PRICE_3" => "ASC", "UF_PRICE_2" => "ASC", "UF_PRICE_1" => "ASC", "UF_SIZE" => "ASC"])
+            ->setOrder(["UF_SORT" => "ASC", "UF_SIZE" => "ASC", "UF_PRICE_3" => "ASC", "UF_PRICE_2" => "ASC", "UF_PRICE_1" => "ASC"])
             ->setCacheTtl(CACHE_TIME)
             ->fetchAll();
     }
 
-    public static function getCompactTree(): array
+    public static function getCompactTree($isHeader = false): array
     {
         $cache = Cache::createInstance();
         $taggedCache = Application::getInstance()->getTaggedCache();
-        $cacheUnique = "dk.compact.tree";
+        $cacheUnique = "dk.compact.tree" . $isHeader;
         $cachePath = "tree";
         $result = [];
         if ($cache->initCache(CACHE_TIME, $cacheUnique, self::CATALOG_CACHE_PATH . $cachePath)) {
@@ -115,7 +115,7 @@ class Catalog
         } elseif ($cache->startDataCache()) {
             $taggedCache->startTagCache(self::CATALOG_CACHE_PATH . $cachePath);
 
-            $result = array_map(self::class . "::setCompactTree", self::getTree());
+            $result = array_map(self::class . "::setCompactTree", self::getTree($isHeader));
 
             $taggedCache->registerTag("iblock_id_" . IBLOCK_CATALOG);
             $taggedCache->endTagCache();
@@ -124,24 +124,24 @@ class Catalog
         return $result;
     }
 
-    public static function getTree(): array
+    public static function getTree($isHeader = false): array
     {
         $cache = Cache::createInstance();
         $taggedCache = Application::getInstance()->getTaggedCache();
-        $cacheUnique = "dk.tree";
+        $cacheUnique = "dk.tree". $isHeader;
         $cachePath = "tree";
         $result = [];
         if ($cache->initCache(CACHE_TIME, $cacheUnique, self::CATALOG_CACHE_PATH . $cachePath)) {
             $result = $cache->getVars();
         } elseif ($cache->startDataCache()) {
             $taggedCache->startTagCache(self::CATALOG_CACHE_PATH . $cachePath);
-
             $sectionResult = CIBlockSection::GetList(
-                self::$arSectionOrder,
+                $isHeader ? ['UF_HEADER_SORT' => 'ASC', ...self::$arSectionOrder] : self::$arSectionOrder,
                 [
                     "ACTIVE" => "Y",
                     "GLOBAL_ACTIVE" => "Y",
-                    "IBLOCK_ID" => IBLOCK_CATALOG
+                    "IBLOCK_ID" => IBLOCK_CATALOG,
+                    'ELEMENT_SUBSECTIONS' => 'N'
                 ],
                 true,
                 self::$arSectionFields,
@@ -193,7 +193,7 @@ class Catalog
             }
 
             $result = array_map(function ($product) {
-                $picture = $product["PREVIEW_PICTURE"] ?: Main::getFileIdBySrc(Option::get(NK_MODULE_NAME, "NOPHOTO"));
+                $picture = $product[$product["IS_SECTION"] ? "PICTURE" : "PREVIEW_PICTURE"] ?: Main::getFileIdBySrc(Option::get(NK_MODULE_NAME, "NOPHOTO"));
 
                 return [
                     "id" => (int)$product["ID"],
@@ -202,7 +202,7 @@ class Catalog
                         "src" => CFile::ResizeImageGet(
                             $picture,
                             $product["IS_SECTION"] ? self::PRODUCT_SECTION_IMAGE_SIZE : self::PRODUCT_IMAGE_SIZE,
-                            BX_RESIZE_IMAGE_EXACT)["src"],
+                            3)["src"],
                         "alt" => $product[$product["IS_SECTION"] ? "PICTURE" : "PREVIEW_PICTURE"]["ALT"] ?: "",
                         "title" => $product[$product["IS_SECTION"] ? "PICTURE" : "PREVIEW_PICTURE"]["TITLE"] ?: "",
                     ],
@@ -251,7 +251,7 @@ class Catalog
             "ACTIVE" => "Y",
             "IBLOCK_ID" => IBLOCK_CATALOG,
             "SECTION_ID" => $sectionId,
-            "INCLUDE_SUBSECTIONS" => "Y",
+//            "INCLUDE_SUBSECTIONS" => "Y",
         ];
 
         $navigation = new PageNavigation("pagination");
@@ -338,7 +338,7 @@ class Catalog
                 ] : false
             ],
             "children" => array_map(self::class . "::setCompactTree", $section["CHILDREN"]),
-            "elCount" => (int)$section["ELEMENT_CNT"],
+            "elCount" => (int)$section["ELEMENT_CNT"] + count($section["CHILDREN"]),
             "products" => []
         ];
     }

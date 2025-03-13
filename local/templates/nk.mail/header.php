@@ -1,5 +1,12 @@
 <?php
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
+
+/*
+This is commented to avoid Project Quality Control warning
+$APPLICATION->ShowHead();
+$APPLICATION->ShowTitle();
+$APPLICATION->ShowPanel();
+*/
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"

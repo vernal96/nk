@@ -85,11 +85,6 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
                                 "CACHE_TYPE" => "A"
                             ]
                         ); ?>
-                        <? $APPLICATION->IncludeComponent(
-                            "dk:login",
-                            "",
-                            []
-                        ); ?>
                     </div>
                     <div class="header__mobile">
                         <? $APPLICATION->IncludeComponent(
@@ -149,7 +144,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
                                 "SHOW_INPUT" => "Y",
                                 "SHOW_OTHERS" => "N",
                                 "TOP_COUNT" => "15",
-                                "USE_LANGUAGE_GUESS" => "Y",
+                                "USE_LANGUAGE_GUESS" => "N",
                                 "COMPONENT_TEMPLATE" => ".default",
                                 "CATEGORY_0_iblock_catalog" => [
                                     0 => "2",

@@ -13,16 +13,17 @@ class OnFileSave
     public static function run(&$arFile): void
     {
         $request = Application::getInstance()->getContext()->getRequest()->getPost("controlID");
-        if ($request !== "parser_images") return;
-        $arFile["MODULE_ID"] = NK_MODULE_NAME;
-        $files = FileTable::getList([
-            "filter" => [
-                "MODULE_ID" => NK_MODULE_NAME,
-                "ORIGINAL_NAME" => $arFile["ORIGINAL_NAME"]
-            ]
-        ])->fetchAll();
-        if (count($files) > 0) {
-            throw new ErrorException(Loc::getMessage("NK_ONFILESAVE_FILE_EXISTS"));
+        if ($request === "parser_images") {
+            $arFile["MODULE_ID"] = NK_MODULE_NAME;
+            $files = FileTable::getList([
+                "filter" => [
+                    "MODULE_ID" => NK_MODULE_NAME,
+                    "ORIGINAL_NAME" => $arFile["ORIGINAL_NAME"]
+                ]
+            ])->fetchAll();
+            if (count($files) > 0) {
+                throw new ErrorException(Loc::getMessage("NK_ONFILESAVE_FILE_EXISTS"));
+            }
         }
     }
 

@@ -7,7 +7,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die(); ?>
 /** @var array $arParams */
 /** @var array $arResult */
 ?>
-<section class="section main-catalog container section--pt0" data-page-loader-container>
+<div class="section main-catalog container section--pt0" data-page-loader-container>
     <div class="catalog-wrapper">
         <? $section = $APPLICATION->IncludeComponent(
             "dk:catalog.categories",
@@ -77,4 +77,4 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die(); ?>
         </div>
 
     </div>
-</section>
+</div>

@@ -1,7 +1,9 @@
 <?php
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
+
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\Type\DateTime as BitrixDateTime;
+
 ?>
 <tr>
     <td align="left"

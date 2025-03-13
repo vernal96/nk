@@ -15,6 +15,8 @@ use DK\NK\Valid;
 class DKCartComponent extends CBitrixComponent implements Controllerable
 {
 
+    private ?int $orderFileId = null;
+
     public function __construct($component = null)
     {
         parent::__construct($component);
@@ -22,6 +24,18 @@ class DKCartComponent extends CBitrixComponent implements Controllerable
 
     public function executeComponent(): void
     {
+        if ($this->startResultCache()) {
+            $this->arResult['ITEMS'] = $this->arParams['ITEMS']
+                ? Main::getHLObject(HL_DELIVERY_INFO)::query()
+                    ->setSelect(['title' => 'UF_TITLE', 'description' => 'UF_DESCRIPTION'])
+                    ->addOrder('UF_SORT')
+                    ->whereIn('ID', $this->arParams['ITEMS'])
+                    ->fetchAll()
+                : [];
+
+            $this->setResultCacheKeys([]);
+            $this->endResultCache();
+        }
         $this->includeComponentTemplate();
     }
 
@@ -208,7 +222,7 @@ class DKCartComponent extends CBitrixComponent implements Controllerable
         ], $bx24);
 
         $filesData = [];
-        if ($_FILES["files"] && $_FILES["files"]["size"] < Option::get(NK_MODULE_NAME, "MAX_FILE_SIZE") * 1000000) {
+        if ($_FILES["files"] && !$_FILES["files"]["error"] && $_FILES["files"]["size"] < Option::get(NK_MODULE_NAME, "MAX_FILE_SIZE") * 1000000) {
             $filesData["UF_CRM_1729236355"] = [
                 "fileData" => [
                     $_FILES["files"]["name"],
@@ -221,8 +235,10 @@ class DKCartComponent extends CBitrixComponent implements Controllerable
             "COMMENTS" => $userData["comment"] ?? "",
             "IS_NEW" => "Y",
             "SOURCE_ID" => "WEB",
+            "CATEGORY_ID" => 7,
+            "STAGE_ID" => "C7:UC_Y3ERIM",
             "ASSIGNED_BY_ID" => $responsibleId,
-            "OPPORTUNITY" => $cart->getTotalSum()["value"],
+            "OPPORTUNITY" => $fastPay ? 0 : $cart->getTotalSum()["value"],
             "IS_MANUAL_OPPORTUNITY" => "Y",
             "OPENED" => "Y", // заменить
             "UF_CRM_1700415164161" => $fastPay ? null : $this->getOrderFile($cartItems),
@@ -247,8 +263,31 @@ class DKCartComponent extends CBitrixComponent implements Controllerable
         $dealId = $bx24->batchResult[0]["result"]["result"]["deal"];
         if ($dealId) {
             $cart->setDeal($dealId);
-            $this->sendUserEmail();
+            if (!$fastPay) {
+                $this->sendUserEmail();
+            }
+            $this->sendManagerEmail();
         }
+    }
+
+    private function sendManagerEmail(): void {
+        $cart = new Cart();
+
+        Event::send([
+            "EVENT_NAME" => "ORDER_NEW",
+            "LID" => SITE_ID,
+            "C_FIELDS" => [
+                "NUMBER" => $cart->getDeal(),
+                "TOTAL_SUM" => $cart->getTotalSum()["format"],
+                "ITEMS" => $this->getEmailItems(),
+                "USER_DATA" => $this->getEmailUserData(),
+                "DELIVERY_DATA" => $this->getEmailDeliveryData(),
+                'DEAL_ID' => (int)$cart->getDeal()
+            ],
+            'FILE' => [
+                $this->orderFileId
+            ]
+        ]);
     }
 
     private function sendUserEmail(): void
@@ -257,8 +296,73 @@ class DKCartComponent extends CBitrixComponent implements Controllerable
         $userData = $cart->getUserData();
         if (!$userData["email"]) return;
 
-        $items = "";
+        Event::send([
+            "EVENT_NAME" => "ORDER_SUCCESS",
+            "LID" => SITE_ID,
+            "C_FIELDS" => [
+                "EMAIL_TO" => $userData["email"],
+                "NUMBER" => $cart->getDeal(),
+                "TOTAL_SUM" => $cart->getTotalSum()["format"],
+                "ITEMS" => $this->getEmailItems(),
+            ]
+        ]);
+    }
 
+    private function getEmailUserData(): string {
+        return $this->getEmailData([
+            'name' => 'Имя',
+            'email' => 'Email',
+            'phone' => 'Телефон',
+            'inn' => 'ИНН',
+            'ft' => 'Тип',
+            'comment' => 'Комментарий'
+        ]);
+    }
+
+    private function getEmailDeliveryData(): string {
+        return $this->getEmailData([
+            'delivery' => 'Способ получения',
+            'marketId' => 'Самовывоз с адреса',
+            'city' => 'Город',
+            'street' => 'Улица',
+            'house' => 'Дом',
+            'corpus' => 'Корпус',
+            'entrance' => 'Подъезд',
+            'office' => 'Квартира/офис'
+        ]);
+    }
+
+    private function getEmailData(array $keyAssoc): string {
+        $result = '';
+        $cart = new Cart();
+        $userData = $cart->getUserData();
+
+        foreach ($keyAssoc as $key => $label) {
+            if (isset($userData[$key]) && $userData[$key]) {
+                if ($key == 'ft') {
+                    $value = $userData[$key] == 'jur' ? 'юридическое лицо' : 'физическое лицо';
+                }
+                elseif ($key == 'delivery') {
+                    $value = $userData[$key] == 'self' ? 'самовывоз' : 'доставка';
+                }
+                elseif ($key == 'marketId') {
+                    $value = ElementTable::query()
+                        ->addSelect('NAME')
+                        ->where('ID', $userData[$key])
+                        ->fetchObject()?->getName();
+                }
+                else {
+                    $value = $userData[$key];
+                }
+                $result .= "<p><b>$label:</b> $value</p>";
+            }
+        }
+        return $result;
+    }
+
+    private function getEmailItems(): string {
+        $items = "";
+        $cart = new Cart();
         ob_start();
         foreach ($cart->getList() as $product) {
             if (!$product["count"]) continue;
@@ -271,22 +375,13 @@ class DKCartComponent extends CBitrixComponent implements Controllerable
             ], EMAIL_TEMPLATE_PATH);
             $items .= ob_get_clean();
         }
-
-        Event::send([
-            "EVENT_NAME" => "ORDER_SUCCESS",
-            "LID" => SITE_ID,
-            "C_FIELDS" => [
-                "EMAIL" => $userData["email"],
-                "NUMBER" => $cart->getDeal(),
-                "TOTAL_SUM" => $cart->getTotalSum()["format"],
-                "ITEMS" => $items,
-            ]
-        ]);
+        return $items;
     }
 
     private function getOrderFile(array $cartItems): array
     {
         $result = "Array\n(\n";
+        $fileName = 'Заказ.csv';
 
         foreach ($cartItems as $index => $item) {
             if (!$item["count"]) continue;
@@ -294,11 +389,14 @@ class DKCartComponent extends CBitrixComponent implements Controllerable
             $result .= "\t[$index] => ;$item[xml] ; $item[name] ; $item[size] ; $item[price1] ; $item[price2] ; $item[price3] ; $item[count] ; $sum ;\n";
         }
         $result .= ")";
+
+        $this->saveFileFromText($result, $fileName);
+
         $result = iconv("utf-8", "cp1251", $result);
 
         return [
             "fileData" => [
-                "Заказ.csv",
+                $fileName,
                 base64_encode($result)
             ]
         ];
@@ -332,6 +430,24 @@ class DKCartComponent extends CBitrixComponent implements Controllerable
         }
 
         return $rows;
+    }
+
+    private function saveFileFromText(string $fileData, string $fileName): void
+    {
+
+        $fileArray = [
+            'name' => $fileName,
+            'size' => strlen($fileData),
+            'content' => $fileData,
+            'type' => 'text/csv',
+            'description' => 'order',
+            'MODULE_ID' => NK_MODULE_NAME
+        ];
+
+        $fileId = CFile::SaveFile($fileArray, 'tmp');
+
+        $this->orderFileId = $fileId;
+
     }
 
     public function configureActions(): array

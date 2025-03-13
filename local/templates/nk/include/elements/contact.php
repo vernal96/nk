@@ -31,3 +31,4 @@ $PARAMS["template"]->AddDeleteAction($PARAMS["ID"], $PARAMS["LINKS"]["DELETE"]["
             : <?= $value; ?></div>
     <? endforeach; ?>
 </div>
+<? Main::include("schema/contact", $PARAMS); ?>

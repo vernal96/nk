@@ -9,8 +9,8 @@ BX.addCustomEvent('OnEditorInitedAfter', function (BXEditor) {
             editor = tinymce.init({
                 language: 'ru',
                 target: BXEditor.dom.pValueInput,
-                plugins: ['anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount', 'checklist', 'mediaembed', 'casechange', 'export', 'formatpainter', 'pageembed', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'editimage', 'advtemplate', 'mentions', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown', 'importword', 'exportword', 'exportpdf'],
-                toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+                plugins: ['anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount'],
+                toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
             });
             const selectorName = BXEditor.id.startsWith('PROP') ? BXEditor.id.replace(/TEXT/g, 'TYPE') : BXEditor.id + '_TYPE';
             document.querySelectorAll('input[name=\'' + selectorName + '\']').forEach(function (element) {

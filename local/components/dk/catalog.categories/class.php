@@ -8,7 +8,7 @@ class DKCatalogTree extends CBitrixComponent
 {
 
     private static int $activeSectionId = 0;
-    private static array $activeSection;
+    private static array $activeSection = [];
 
 
     public function __construct($component = null)

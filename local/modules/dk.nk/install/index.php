@@ -16,6 +16,7 @@ class dk_nk extends CModule
         ["Main", "OnAfterUserUpdate"],
         ["Main", "OnBeforeUserAdd"],
         ["Main", "OnBeforeUserUpdate"],
+        ["Main", "OnBeforeUserLogin"],
         ["Rest", "OnRestServiceBuildDescription"],
         ["Iblock", "OnAfterIBlockElementAdd"],
         ["Iblock", "OnAfterIBlockElementDelete"],

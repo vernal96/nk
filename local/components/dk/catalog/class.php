@@ -116,7 +116,8 @@ class DKCatalogComponent extends CBitrixComponent implements Controllerable
 
     public function getTreeAction(): array
     {
-        return Catalog::getCompactTree();
+        $isHeader = (bool)$this->request->get('header');
+        return Catalog::getCompactTree($isHeader);
     }
 
     public function getProductsAction(): ?array

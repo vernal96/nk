@@ -10,7 +10,7 @@ use DK\NK\Helper\Main;
         <h3 class="title title--h2 title--mb-0">
             <?= Loc::getMessage("DK_NK_FEEDBACK_TITLE"); ?>
         </h3>
-        <form action="" class="form feedback__form ajax_form">
+        <form action="?" class="form feedback__form ajax_form">
             <?= bitrix_sessid_post(); ?>
             <input type="hidden" name="st" value="1">
             <input type="hidden" name="g-token" value="">

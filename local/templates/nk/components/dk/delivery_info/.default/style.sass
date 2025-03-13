@@ -1,0 +1,44 @@
+@import "../../../../src/styles/functions"
+
+\:root
+  --delivery-info-item-row-count: 3
+
+.delivery-info
+  &-items
+    display: flex
+    flex-wrap: wrap
+    justify-content: center
+    gap: #{setCalcSize(40, 80)} #{setCalcSize(20, 60)}
+  &-item
+    text-align: center
+    width: calc((100% - #{setCalcSize(20, 60)} * (var(--delivery-info-item-row-count) - 1)) / var(--delivery-info-item-row-count))
+    &__image
+      width: 100%
+      height: #{setCalcSize(100, 250)}
+      object-fit: contain
+      object-position: center
+    &__title, &__description
+      margin-top: #{setCalcSize(10, 20)}
+    &__title
+      font-size: 1.5em
+      font-width: 500
+    &__description
+      line-height: 1.65
+      padding-top: #{setCalcSize(10, 20)}
+      position: relative
+      &::before
+        content: ''
+        display: block
+        position: absolute
+        top: 0
+        left: 30%
+        width: 40%
+        border-top: solid 1px var(--clr-black-15)
+
+@media (max-width: 768px)
+  \:root
+    --delivery-info-item-row-count: 2
+
+@media (max-width: 550px)
+  \:root
+    --delivery-info-item-row-count: 1

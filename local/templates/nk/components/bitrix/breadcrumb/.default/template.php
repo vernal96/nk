@@ -10,7 +10,7 @@ global $APPLICATION;
 $result = "<ul class=\"breadcrumbs__wrapper\" itemprop=\"http://schema.org/breadcrumb\" itemscope itemtype=\"http://schema.org/BreadcrumbList\">";
 foreach ($arResult as $index => $arItem) {
     $title = htmlspecialcharsex($arItem["TITLE"]);
-    $result .= "<li itemprop=\"itemListElement\" itemscope itemtype=\"http://schema.org/ListItem\"";
+    $result .= "<li itemprop=\"itemListElement\" itemscope itemtype=\"http://schema.org/ListItem\" ";
     $result .= "class=\"breadcrumbs__item" . (($arItem["LINK"] == "/") ? " breadcrumbs__item--home" : "") . "\"";
     $result .= ">";
     if ($arItem["LINK"] && $APPLICATION->GetCurPage() != $arItem["LINK"]) {
@@ -20,7 +20,7 @@ foreach ($arResult as $index => $arItem) {
     } else {
         $result .= "<span itemprop=\"name\">" . $title . "</span>";
     }
-    $result .= "<meta itemprop=\"position\" content=\"" . ($index + 1) . "\"";
+    $result .= "<meta itemprop=\"position\" content=\"" . ($index + 1) . "\">";
     $result .= "</li>";
 }
 $result .= "</ul>";

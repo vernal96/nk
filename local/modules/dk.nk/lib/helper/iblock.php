@@ -9,6 +9,7 @@ use Bitrix\Main\Config\Option;
 use CFile;
 use CIBlock;
 use CTextParser;
+use DK\NK\Services\DaData;
 
 class Iblock
 {
@@ -71,6 +72,23 @@ class Iblock
     public static function getCachePath(string $componentName): string {
         $componentNameParts = explode(":", $componentName);
         return SITE_ID . "/$componentNameParts[0]/$componentNameParts[1]/";
+    }
+
+    public static function setMarketInfo(int $id): void {
+        $market = \Bitrix\Iblock\Iblock::wakeUp(IBLOCK_MARKET)->getEntityDataClass()::query()
+            ->setSelect(["COORD"])
+            ->where("ID", $id)
+            ->fetchObject();
+        if (!$market->getCoord()->getValue()) return;
+        $data = DaData::getAddressInfoByCoord($market->getCoord()->getValue());
+        $market
+            ->setCountry($data["country"])
+            ->setCity($data["city"])
+            ->setStreet($data["street_with_type"])
+            ->setPostIndex($data["postal_code"])
+            ->setHouse($data["house"])
+            ->setRegion($data["region"])
+            ->save();
     }
 
 }

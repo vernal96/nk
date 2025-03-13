@@ -80,6 +80,8 @@ class Cart
                         "email" => $userData["EMAIL"],
                         "phone" => $userData["PERSONAL_MOBILE"],
                         "inn" => $userData["WORK_COMPANY"],
+                        "delivery" => "delivery",
+                        "ft" => "pht",
                         "city" => $userData["PERSONAL_CITY"],
                         "street" => $userData["UF_STREET"],
                         "house" => $userData["UF_HOME"],
@@ -308,7 +310,7 @@ class Cart
         return $result;
     }
 
-    public function getSizeCount(int $id, int $productId): int
+    public function getSizeCount(?int $id, int $productId): int
     {
         return $this->cart[$productId][$id] ?? 0;
     }

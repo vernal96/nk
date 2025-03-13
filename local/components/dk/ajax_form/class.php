@@ -59,18 +59,18 @@ class NkAjaxForm extends CBitrixComponent implements Controllerable
                 ];
             }
         }
-//        $dealId = $this->sendBX24($this->request);
-//        $formatDealId = str_pad($dealId, 6, "0", STR_PAD_LEFT);
-//        ob_start();
-//        Main::include("form_success", [
-//            "horizontal" => $horizontal,
-//            "error" => $error,
-//            "formatDealId" => $formatDealId,
-//        ]);
-//        return [
-//            "success" => true,
-//            "message" => ob_get_contents()
-//        ];
+        $dealId = $this->sendBX24($this->request);
+        $formatDealId = str_pad($dealId, 6, "0", STR_PAD_LEFT);
+        ob_start();
+        Main::include("form_success", [
+            "horizontal" => $horizontal,
+            "error" => $error,
+            "formatDealId" => $formatDealId,
+        ]);
+        return [
+            "success" => true,
+            "message" => ob_get_contents()
+        ];
     }
 
     private function sendBX24($request): ?int
@@ -85,11 +85,12 @@ class NkAjaxForm extends CBitrixComponent implements Controllerable
         $bx24->batchAdd("deal", "crm.deal.add", ["fields" => [
             "TITLE" => Loc::getMessage("NEW_DEAL") . ". " . date('d.m.Y H:i'),
             "TYPE_ID" => "SERVICE",
-            "STAGE_ID" => "NEW",
+            "CATEGORY_ID" => 7,
+            "STAGE_ID" => "C7:NEW",
             "ASSIGNED_BY_ID" => Option::get(NK_MODULE_NAME, "BX24_FEEDBACK_RESPONSIBLE"),
             "COMMENTS" => $comment,
             "OPENED" => "Y", // Заменить на Y доступно для всех
-            "SOURCE_ID" => "WEB"
+            "SOURCE_ID" => "WEB",
         ]], 20);
         $bx24->batchAdd("deal.contact", "crm.deal.contact.add", [
             "id" => '$result[deal]',

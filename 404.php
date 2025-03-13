@@ -7,14 +7,17 @@ use Bitrix\Main\Localization\Loc;
 include_once($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/urlrewrite.php');
 
 CHTTP::SetStatus("404 Not Found");
-@define("ERROR_404", "Y");
 
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 
-$APPLICATION->SetTitle(Loc::getMessage("PAGE_NOT_FOUND_TITLE"));
-$APPLICATION->SetPageProperty("TITLE", Loc::getMessage("PAGE_NOT_FOUND_TITLE"));
-$APPLICATION->SetPageProperty("h1", Loc::getMessage("PAGE_NOT_FOUND_TITLE"));
-$APPLICATION->AddChainItem(Loc::getMessage("PAGE_NOT_FOUND_TITLE"));
+if (!defined('ERROR_404')) {
+    $APPLICATION->SetTitle(Loc::getMessage("PAGE_NOT_FOUND_TITLE"));
+    $APPLICATION->SetPageProperty("TITLE", Loc::getMessage("PAGE_NOT_FOUND_TITLE"));
+    $APPLICATION->SetPageProperty("h1", Loc::getMessage("PAGE_NOT_FOUND_TITLE"));
+    $APPLICATION->AddChainItem("Страница не найдена", "", false);
+}
+
+@define("ERROR_404", "Y");
 
 ?>
 <section class="section section--pt0">
@@ -40,11 +43,15 @@ $APPLICATION->AddChainItem(Loc::getMessage("PAGE_NOT_FOUND_TITLE"));
             <div class="content-blocks">
                 <div class="text-content white-block">
                     <p>
-                        <?= (new CTextParser())->convertText(Loc::getMessage("PAGE_NOT_FOUND")); ?>
+                        Ошибка <strong>404</strong> или <strong>Not Found</strong> («не найдено») — стандартный код
+                        ответа HTTP о том, что клиент был в состоянии общаться с сервером, но сервер не может найти
+                        данные согласно запросу. Ошибку 404 не следует путать с ошибкой «Сервер не найден» или иными
+                        ошибками, указывающими на ограничение доступа к серверу. Ошибка 404 означает, что запрашиваемый
+                        ресурс может быть доступен в будущем, что однако не гарантирует наличие прежнего содержания.
                     </p>
                 </div>
                 <div>
-                    <h2 class="title title--h3 title--min-bottom"><?= Loc::getMessage("SITE_MAP_TITLE"); ?>:</h2>
+                    <h2 class="title title--h3 title--min-bottom">Карта сайта:</h2>
                     <div class="text-content white-block">
                         <? $APPLICATION->IncludeComponent("bitrix:main.map", ".default", [
                                 "LEVEL" => "3",

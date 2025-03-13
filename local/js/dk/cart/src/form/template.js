@@ -94,6 +94,15 @@ export const template = `
         </div>
     </div>
     <template v-if="form.delivery == 'delivery'">
+        <div class="cart__form-item cart__form-item--full" v-if="!fastpay">
+            <div class="note note--info text-content">
+                <p v-for="deliveryInfoItem in deliveryInfo">
+                    <b>{{ deliveryInfoItem.title }}</b>
+                    <br>
+                    {{ deliveryInfoItem.description }}
+                </p>
+            </div>
+        </div>
         <Selector
         :options="deliveryCities"
         mainClass="cart__form-item"

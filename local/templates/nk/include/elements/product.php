@@ -54,7 +54,7 @@ $PARAMS["template"]->AddDeleteAction($PARAMS["ID"], $PARAMS["LINKS"]["DELETE"]["
                 <? if ($sizeTable) : ?>
                 BX.Vue3.createApp(DK.SizesButton, {productId: <?=$PARAMS["ID"];?>}).mount("#<?=$placementId;?>");
                 <? else: ?>
-                <? $sizeId = $arPrice[0]["ID"];?>
+                <? $sizeId = $arPrice[0]["ID"] ?: 0;?>
                 BX.Vue3.createApp(DK.Counter, {
                         productId: <?=$PARAMS["ID"]?>,
                         sizeId: <?=$sizeId;?>,

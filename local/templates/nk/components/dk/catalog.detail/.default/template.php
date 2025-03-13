@@ -143,7 +143,9 @@ $this->AddEditAction("edit_$arResult[ID]", $arResult["LINKS"]["DELETE"]["URL"], 
                          <? if ($arResult["DETAIL_TEXT"] || $index) : ?>style="display:none;"<? endif; ?>>
                         <div class="slide-text-content">
                             <div class="slide-text__content">
-                                <?= $value["TEXT"]; ?>
+                                <div class="text-content">
+                                    <?= $value["TEXT"]; ?>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -35,5 +35,6 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
                     <? if ($previousLevel > 1): ?>
                         <?= str_repeat("</ul></li>", ($previousLevel - 1)); ?>
                     <? endif ?>
+                </ul>
     </nav>
 <? endif; ?>

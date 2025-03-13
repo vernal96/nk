@@ -35,7 +35,10 @@ export const component = {
     },
     mounted() {
         BX.ajax.runComponentAction("dk:catalog", "getTree", {
-            mode: "class"
+            mode: "class",
+            data: {
+                header: true
+            }
         }).then(
             response => {
                 this.tree = response.data.map(category => {

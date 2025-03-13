@@ -3,6 +3,7 @@
 use Bitrix\Main\Localization\Loc;
 use DK\NK\Cart;
 
+/** @var array $arResult */
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 $this->setFrameMode(true);
 ?>
@@ -29,6 +30,7 @@ $this->setFrameMode(true);
             </div>
             <div id="cart" class="cart"></div>
             <script>
+                DK.deliveries = <?=CUtil::PhpToJSObject($arResult['ITEMS']);?>;
                 BX.Vue3.createApp(DK.Cart).mount("#cart");
             </script>
         <? else : ?>

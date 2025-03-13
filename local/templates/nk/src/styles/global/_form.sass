@@ -76,6 +76,9 @@
     &--wrap
       flex-wrap: wrap
 
+    &--min-gap
+      gap: inherit
+
   &-label
     font-weight: 600
     margin-bottom: 1em
@@ -84,6 +87,9 @@
 .captcha
   height: var(--input-height)
   border-radius: 0.75em
+  object-fit: cover
+  object-position: left center
+  width: 11em
 
 @media (max-width: 450px)
   .form-success--horizontal

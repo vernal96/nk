@@ -74,6 +74,7 @@ export const Form = {
             },
             fileError: BX.message.CART_FILE_ERROR
         },
+        deliveryInfo: DK.deliveries,
         agree: false,
         form: {
             name: "",

@@ -110,7 +110,7 @@
   -webkit-flex-direction: column;
       -ms-flex-direction: column;
           flex-direction: column;
-  gap: 0.2em;
+  gap: 0.4em;
 }
 .mm__body {
   height: 100%;

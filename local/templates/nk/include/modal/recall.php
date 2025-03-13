@@ -7,7 +7,7 @@ use DK\NK\Helper\Main;
 ?>
 
 <div class="modal" id="recall">
-    <form action="" class="form ajax_form">
+    <form action="?" class="form ajax_form">
         <input type="hidden" name="st" value="0">
         <input type="hidden" name="g-token" value="">
         <div class="form-content">

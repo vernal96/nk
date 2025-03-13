@@ -16,3 +16,6 @@ $MESS["DK_NK_SUBMIT"] = "Отправить";
 $MESS["FROM"] = "от";
 $MESS["CURRENCY"] = "руб.";
 $MESS["POINT"] = "шт.";
+
+$MESS["CAPTCHA_TITLE"] = "Текст на картинке";
+$MESS["CAPTCHA_PLACEHOLDER"] = "Текст с картинки";

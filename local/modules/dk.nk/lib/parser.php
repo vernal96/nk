@@ -3,6 +3,7 @@
 namespace DK\NK;
 
 use Bitrix\Iblock\ElementTable;
+use Bitrix\Iblock\Iblock;
 use Bitrix\Main\Application;
 use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ArgumentNullException;
@@ -83,6 +84,8 @@ class Parser
             CFile::Delete($loadedImage["ID"]);
         }
 
+        self::disableAllEmpty();
+        self::deactivateEmptyProducts();
         Cache::clearCache(true);
 //        self::updateDBBitrix24();
         return true;
@@ -428,6 +431,49 @@ class Parser
         $title = preg_replace("/\s{2,}/", " ", $title);
         $title = preg_replace("/'/", "\"", $title);
         return trim($title);
+    }
+
+    private static function disableAllEmpty(): void
+    {
+        $elementCollection = Iblock::wakeUp(IBLOCK_CATALOG)->getEntityDataClass()::query()
+            ->setSelect(["PRICE", "IBLOCK_SECTION_ID"])
+            ->where("ACTIVE", true)
+            ->registerRuntimeField("PRICE", new Reference("PRICE", Main::getHLObject(HL_SIZES), Join::on("this.ID", "ref.UF_PRODUCT")))
+            ->fetchCollection();
+
+        foreach ($elementCollection as $element) {
+            if(!$element->get("PRICE")) {
+                $element->set("ACTIVE", false)->save();
+            }
+        }
+
+        $rsSections = CIBlockSection::GetList([], [
+            "IBLOCK_ID" =>IBLOCK_CATALOG,
+            "ACTIVE" => "Y",
+        ], true, ["ID"]);
+
+        while ($section = $rsSections->Fetch()) {
+            if (!$section["ELEMENT_CNT"]) (new CIBlockSection())->Update($section["ID"], ["ACTIVE" => "N"]);
+        }
+    }
+
+    private static function deactivateEmptyProducts(): void {
+        $elements = Iblock::wakeUp(IBLOCK_CATALOG)
+            ->getEntityDataClass()::query()
+            ->addSelect('ID')
+            ->where('ACTIVE', 'Y')
+            ->fetchCollection()->getAll();
+
+        $sizes = Main::getHLObject(HL_SIZES)::query()
+            ->addSelect('UF_PRODUCT')
+            ->fetchCollection()->getAll();
+
+        foreach ($elements as $element) {
+            $hasSizes = (int)array_filter($sizes, fn($size) => $size->getUfProduct() == $element->getId());
+            if (!$hasSizes) {
+                $element->setActive(false)->save();
+            }
+        }
     }
 
 }

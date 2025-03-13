@@ -1,9 +1,11 @@
 <?php
 
 use Bitrix\Main\Config\Option;
+use Bitrix\Main\Engine\ActionFilter\Csrf;
+use Bitrix\Main\Engine\Contract\Controllerable;
 use DK\NK\Helper\Main;
 
-class DKLoginComponent extends CBitrixComponent
+class DKLoginComponent extends CBitrixComponent implements Controllerable
 {
 
     public function executeComponent(): void
@@ -17,7 +19,9 @@ class DKLoginComponent extends CBitrixComponent
                 $APPLICATION->RestartBuffer();
             }
         }
-//        $this->includeComponentTemplate();
+        if ($APPLICATION->GetCurPage() == "/test.php") {
+            $this->includeComponentTemplate();
+        }
     }
 
     private function setUserData(): void
@@ -47,4 +51,63 @@ class DKLoginComponent extends CBitrixComponent
         ];
     }
 
+    public function authAction(): array
+    {
+        global $APPLICATION;
+        $arResult = $APPLICATION->IncludeComponent("bitrix:system.auth.form", "", [
+            "SHOW_ERRORS" => "Y",
+        ], $this, [], true);
+        $post = [];
+        $get = [];
+        foreach ($arResult["POST"] as $key => $value) {
+            $post[] = ["key" => $key, "value" => $value];
+        }
+        foreach ($arResult["GET"] as $key => $value) {
+            $get[] = ["key" => $key, "value" => $value];
+        }
+        return [
+            "formType" => $arResult["FORM_TYPE"],
+            "errorMessage" => $arResult["ERROR_MESSAGE"]["MESSAGE"],
+            "storePassword" => $arResult["STORE_PASSWORD"] == "Y",
+            "post" => $post,
+            "get" => $get,
+            "rememberOtp" => $arResult["REMEMBER_OTP"] == "Y",
+            "captchaCode" => $arResult["CAPTCHA_CODE"],
+        ];
+    }
+
+    public function forgotpasswdAction() {
+        global $APPLICATION;
+        $arResult = $APPLICATION->IncludeComponent("bitrix:main.auth.forgotpasswd", "", [], $this, [], true);
+        return [
+            "phoneReg" => (bool)$arResult["PHONE_REGISTRATION"],
+            "captchaCode" => $arResult["CAPTCHA_CODE"],
+            "errors" => implode("<br>", $arResult["ERRORS"]),
+            "success" => $arResult["SUCCESS"],
+            "fields" => $arResult["FIELDS"],
+            "original" => $arResult
+        ];
+    }
+
+    public function registrationAction(): mixed
+    {
+        global $APPLICATION;
+        $arResult = $APPLICATION->IncludeComponent("bitrix:main.auth.registration", "", [], $this, [], true);
+        return $arResult;
+    }
+
+    public function configureActions(): array
+    {
+        return [
+            "auth" => [
+                "prefilters" => [new Csrf()]
+            ],
+            "forgotpasswd" => [
+                "prefilters" => [new Csrf()]
+            ],
+            "registration" => [
+                "prefilters" => [new Csrf()]
+            ]
+        ];
+    }
 }
