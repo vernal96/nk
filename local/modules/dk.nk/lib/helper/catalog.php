@@ -334,8 +334,7 @@ class Catalog
                         BX_RESIZE_IMAGE_EXACT
                     )["src"],
                     "alt" => $section["DETAIL_PICTURE"]["ALT"],
-                    "title" => $section["DETAIL_PICTURE"]["TITLE"],
-                    BX_RESIZE_IMAGE_EXACT
+                    "title" => $section["DETAIL_PICTURE"]["TITLE"]
                 ] : false
             ],
             "children" => array_map(self::class . "::setCompactTree", $section["CHILDREN"]),
