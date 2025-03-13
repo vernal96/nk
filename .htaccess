@@ -1,5 +1,3 @@
-AddHandler fcgid-script .php
-FCGIWrapper /var/www/php-bin-php81/u1364127/php .php
 Header always set Strict-Transport-Security "max-age=31536000"
 Header always set X-Content-Type-Options nosniff
 Options -Indexes
@@ -10,15 +8,10 @@ RewriteEngine On
 RewriteCond %{REQUEST_URI} /+[^\.]+$
 RewriteRule ^(.+[^/])$ %{REQUEST_URI}/ [R=301,L]
 
-RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
-RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
-
-
 Options +FollowSymlinks
 RewriteEngine On
-RewriteCond %{HTTP_REFERER} !^$
-RewriteCond %{HTTP_REFERER} !^https://(www.)?dev2.n-krep.ru/ [nc]
-RewriteRule .*.(gif|jpg|png|svg)$ https://dev2.n-krep.ru/upload/medialibrary/418/6en2rf61xmbmihd5q08jdcm88x238xdp.jpg[nc]
+
+RewriteRule .*.(gif|jpg|png|svg)$ https://n-krep.ru/upload/medialibrary/418/6en2rf61xmbmihd5q08jdcm88x238xdp.jpg[nc]
 
 RewriteRule ^index.php$ / [NC,R=301,L]
 
