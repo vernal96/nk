@@ -18,7 +18,7 @@ class DeliveryCitiesTable extends DataManager
         return [
             (new Fields\IntegerField('ID'))->configurePrimary()->configureAutocomplete(),
             (new Fields\StringField('UF_NAME')),
-            (new Fields\IntegerField('UF_NAME'))->configureDefaultValue(100)
+            (new Fields\IntegerField('UF_SORT'))->configureDefaultValue(100)
         ];
     }
 }
