@@ -193,7 +193,7 @@ class OrderBitrix24
         $fileName = 'Заказ.csv';
 
         $items = $this->order->getItems();
-        if (!$items) return null;
+        if (!$items->count()) return null;
 
         foreach ($this->order->getItems() as $index => $item) {
             $size = $item->fillSize();
