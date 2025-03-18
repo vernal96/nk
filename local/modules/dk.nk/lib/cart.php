@@ -342,6 +342,7 @@ class Cart
         $this->session->remove($this->orderSessionName);
         $this->cart = [];
         $this->order = [];
+        $this->setUserField('delivery', 'delivery');
         $this->setTotalSum();
         $this->setTotalCount();
         if ($USER->IsAuthorized()) {
