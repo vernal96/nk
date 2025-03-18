@@ -15,7 +15,7 @@ use Bitrix\Rest\RestException;
 use CFile;
 use DK\NK\Entity\OrderItemsTable;
 use DK\NK\Entity\OrderTable;
-use DK\NK\Helper\Main;
+use DK\NK\Helper\Main as MainHelper;
 use DK\NK\Object\Order as ObjectOrder;
 use DK\NK\Services\DaData;
 use Throwable;
@@ -63,6 +63,7 @@ class Order
             'EVENT_NAME' => 'ORDER_NEW',
             'C_FIELDS' => [
                 'ORDER_ID' => $this->order->getId(),
+                'NUMBER' => MainHelper::getApplicationFormat($this->order->getId())
             ],
             'LID' => SITE_ID
         ];
@@ -82,6 +83,7 @@ class Order
             'C_FIELDS' => [
                 'ORDER_ID' => $this->order->getId(),
                 'EMAIL_TO' => $userEmail,
+                'NUMBER' => MainHelper::getApplicationFormat($this->order->getId())
             ],
             'LID' => SITE_ID
         ]);
