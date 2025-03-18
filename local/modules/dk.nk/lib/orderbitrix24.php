@@ -54,7 +54,7 @@ class OrderBitrix24
         }
         $this->bx24->batchAdd('deal', 'crm.deal.add', ['fields' => [
             'TITLE' => MainHelper::getApplicationFormat($this->order->getId()),
-            'COMMENTS' => $userData['comment'] ?? '',
+            'COMMENTS' => $this->order->getComment(),
             'IS_NEW' => 'Y',
             'SOURCE_ID' => 'WEB',
             'CATEGORY_ID' => 7,
