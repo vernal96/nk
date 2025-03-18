@@ -6,10 +6,13 @@ use Bitrix\Iblock\Component\Tools;
 use Bitrix\Iblock\InheritedProperty\ElementValues;
 use Bitrix\Iblock\InheritedProperty\SectionValues;
 use Bitrix\Main\Config\Option;
+use Bitrix\Main\UserFieldTable;
 use CFile;
 use CIBlock;
 use CTextParser;
+use CUserFieldEnum;
 use DK\NK\Services\DaData;
+use Throwable;
 
 class Iblock
 {
@@ -89,6 +92,25 @@ class Iblock
             ->setHouse($data["house"])
             ->setRegion($data["region"])
             ->save();
+    }
+
+    public static function getUfEnumId(int $iblockId, string $ufName, string $xmlId): ?int
+    {
+        try {
+            $userFieldId = UserFieldTable::query()
+                ->addSelect('ID')
+                ->where('ENTITY_ID', "IBLOCK_{$iblockId}_SECTION")
+                ->where('FIELD_NAME', $ufName)
+                ->fetchObject()?->getId();
+            if (!$userFieldId) return null;
+            $userFieldEnumResult = CUserFieldEnum::GetList([], [
+                'USER_FIELD_ID' => $userFieldId,
+                'XML_ID' => $xmlId
+            ])->Fetch();
+            return $userFieldEnumResult ? (int)$userFieldEnumResult['ID'] : null;
+        } catch (Throwable) {
+            return null;
+        }
     }
 
 }

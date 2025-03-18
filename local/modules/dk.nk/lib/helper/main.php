@@ -19,7 +19,6 @@ use Bitrix\Main\SystemException;
 use Bitrix\Main\Type\DateTime as BitrixDateTime;
 use Bitrix\Main\UserGroupTable;
 use CFile;
-use Exception;
 
 class Main
 {
@@ -56,10 +55,18 @@ class Main
         return $entity->getDataClass();
     }
 
-    public static function include(string $fileName, array $params = [], string $templatePath = SITE_TEMPLATE_PATH): void
+    public static function include(
+        string $fileName,
+        array $params = [],
+        string $templatePath = SITE_TEMPLATE_PATH,
+        bool $returnString = false
+    ): ?string
     {
+        if ($returnString) ob_start();
         $PARAMS = $params;
         include $_SERVER["DOCUMENT_ROOT"] . $templatePath . "/include/$fileName.php";
+        if ($returnString) return ob_end_clean();
+        return null;
     }
 
     public static function getFileIdBySrc(string $strFilename): ?int
@@ -128,16 +135,19 @@ class Main
         return CFile::ResizeImageGet($pictureId, ["width" => $arSizes[0], "height" => $arSizes[1]], BX_RESIZE_IMAGE_EXACT)["src"];
     }
 
+    /**
+     * @throws ArgumentException
+     */
     public static function setFormatPhone(string $phone): string
     {
         $result = "+d (ddd) ddd-dd-dd";
         $phone = preg_replace("/\D/", "", $phone);
         $phone = preg_replace("/^8/", "7", $phone);
         if (strlen($phone) < 11) {
-            throw new Exception(Loc::getMessage("ERROR_MOBILE_PHONE_TOO_SHORT"));
+            throw new ArgumentException(Loc::getMessage("ERROR_MOBILE_PHONE_TOO_SHORT"));
         }
         if (strlen($phone) > 11) {
-            throw new Exception(Loc::getMessage("ERROR_MOBILE_PHONE_TOO_LONG"));
+            throw new ArgumentException(Loc::getMessage("ERROR_MOBILE_PHONE_TOO_LONG"));
         }
         for ($i = 0; $i < strlen($phone); $i++) {
             $result = preg_replace("/d/", $phone[$i], $result, 1);
@@ -169,6 +179,30 @@ class Main
             ->where('USER_ID', $userId)
             ->where($groupQuery)
             ->fetchAll();
+    }
+
+    public static function getApplicationFormat(int $number): string {
+        return str_pad($number, 6, "0", STR_PAD_LEFT);
+    }
+
+    public static function getCartItem($item, $count): array {
+        return [
+            "id" => $item->getId(),
+            "count" => $count,
+            "size" => $item->getUfSize(),
+            "xml" => $item->getUfCode(),
+            "price1" => $item->get("UF_PRICE_1"),
+            "price2" => $item->get("UF_PRICE_2"),
+            "price3" => $item->get("UF_PRICE_3"),
+            "box" => $item->getUfBoxCount(),
+            "name" => $item->getProduct()->getName(),
+            "image" => \CFile::ResizeImageGet(
+                ($item->get("PRODUCT")->getPreviewPicture()
+                    ?: $item->get("PRODUCT")->getDetailPicture())
+                    ?: Main::getFileIdBySrc(Option::get(NK_MODULE_NAME, "NOPHOTO")),
+                ["width" => 40, "height" => 40]
+            )["src"]
+        ];
     }
 
 }

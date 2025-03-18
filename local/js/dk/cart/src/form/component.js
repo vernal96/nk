@@ -228,7 +228,7 @@ export const Form = {
                     if (data.delivery) {
                         this.form.delivery = data.delivery;
                     }
-                    this.form.deliveryData.city = data.city;
+                    this.form.deliveryData.city = +data.city;
                     this.form.deliveryData.street = data.street;
                     this.form.deliveryData.house = data.house;
                     this.form.deliveryData.corpus = data.corpus;

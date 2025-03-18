@@ -1,5 +1,7 @@
 <?php
 
+use Bitrix\Main\ArgumentException;
+use Bitrix\Main\Config\Option;
 use Bitrix\Main\Web\Json;
 
 //const VUEJS_DEBUG = true;
@@ -20,17 +22,32 @@ const NK_MODULE_NAME = "dk.nk";
 const EMAIL_TEMPLATE_PATH = "/local/templates/nk.mail/";
 const DEFAULT_PRICE_STATUS = 1;
 
+define("BITRIX24_DISABLED", (bool)Option::get(NK_MODULE_NAME, 'BX24_DISABLED'));
+
 function printR(mixed $array): void
 {
     echo "<pre style='background: #00000012; padding: 1em;'>" . print_r($array, true) . "</pre>";
 }
 
-function logToFile($data, $append = false): void
+function logToFile(mixed $data, bool $append = false): void
 {
+    try {
+        $data = Json::encode($data, JSON_PRETTY_PRINT);
+    } catch (ArgumentException $e) {
+        $data = $e->getMessage();
+    }
     file_put_contents(
-        "/var/www/u1364127/data/www/logs/debug.json",
-        Json::encode($data, JSON_PRETTY_PRINT),
-        $append ? FILE_APPEND : 0
+        'C:\OSPanel\home\n-krep.local\logs/debug.json', $data, $append ? FILE_APPEND : 0
     );
 }
 
+function addUncaughtExceptionToLog(Throwable $exception): void
+{
+    CEventLog::Log(
+        CEventLog::SEVERITY_ERROR,
+        'An error has occurred on the website',
+        NK_MODULE_NAME,
+        'Uncaught Exception',
+        preg_replace('/\n/', '<br>', (string)$exception)
+    );
+}

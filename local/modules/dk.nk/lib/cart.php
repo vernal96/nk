@@ -2,16 +2,14 @@
 
 namespace DK\NK;
 
-use Bitrix\Iblock\ElementTable;
 use Bitrix\Main\Application;
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\Data\Cache;
 use Bitrix\Main\Localization\Loc;
-use Bitrix\Main\ORM\Fields\Relations\Reference;
-use Bitrix\Main\ORM\Query\Join;
 use Bitrix\Main\Session\SessionInterface;
 use CUser;
 use DK\NK\Entity\CartTable;
+use DK\NK\Entity\SizesTable;
 use DK\NK\Helper\Catalog;
 use DK\NK\Helper\Main;
 
@@ -54,6 +52,7 @@ class Cart
     private function setUserData(): void
     {
         global $USER;
+        if (!$USER) return;
         $cache = Cache::createInstance();
         $taggedCache = Application::getInstance()->getTaggedCache();
         $cacheUnique = "dk.users." . $USER->GetID();
@@ -82,7 +81,7 @@ class Cart
                         "inn" => $userData["WORK_COMPANY"],
                         "delivery" => "delivery",
                         "ft" => "pht",
-                        "city" => $userData["PERSONAL_CITY"],
+                        "city" => (int)$userData["PERSONAL_CITY"],
                         "street" => $userData["UF_STREET"],
                         "house" => $userData["UF_HOME"],
                         "corpus" => $userData["UF_CORPUS"],
@@ -107,14 +106,14 @@ class Cart
                 $arItems[$itemId] = $count;
             }
         }
-        $itemCollection = Main::getHLObject(HL_SIZES)::query()
+        $itemCollection = SizesTable::query()
             ->setSelect(["*", "PRODUCT"])
-            ->registerRuntimeField("PRODUCT", new Reference("PRODUCT", ElementTable::class, Join::on("this.UF_PRODUCT", "ref.ID")))
             ->whereIn("ID", array_keys($arItems))
             ->fetchCollection();
         $result = [];
         foreach ($itemCollection as $item) {
             $result[] = [
+                "id" => $item->getId(),
                 "count" => $arItems[$item["ID"]],
                 "size" => $item->getUfSize(),
                 "xml" => $item->getUfCode(),
@@ -122,13 +121,14 @@ class Cart
                 "price2" => $item->get("UF_PRICE_2"),
                 "price3" => $item->get("UF_PRICE_3"),
                 "box" => $item->getUfBoxCount(),
-                "name" => $item->get("PRODUCT")->getName(),
+                "name" => $item->getProduct()->getName(),
                 "image" => \CFile::ResizeImageGet(
-                    ($item->get("PRODUCT")->getPreviewPicture() ?: $item->get("PRODUCT")->getDetailPicture()) ?: Main::getFileIdBySrc(Option::get(NK_MODULE_NAME, "NOPHOTO")),
+                    ($item->get("PRODUCT")->getPreviewPicture()
+                        ?: $item->get("PRODUCT")->getDetailPicture())
+                        ?: Main::getFileIdBySrc(Option::get(NK_MODULE_NAME, "NOPHOTO")),
                     ["width" => 40, "height" => 40]
                 )["src"]
             ];
-
         }
         return $result;
     }
@@ -199,9 +199,7 @@ class Cart
     private function save(): void
     {
         global $USER;
-        if ($this->session->has($this->dealSessionName)) {
-            $this->session->remove($this->dealSessionName);
-        }
+        $this->removeDeal();
         $this->setTotalSum();
         $this->setTotalCount();
         Application::getInstance()->getSession()->set($this->cartSessionName, $this->cart);
@@ -323,8 +321,13 @@ class Cart
 
     public function setDeal(int $deal): void
     {
-        $deal = str_pad($deal, 7, "0", STR_PAD_LEFT);
         $this->session->set($this->dealSessionName, $deal);
+    }
+
+    public function removeDeal(): void {
+        if ($this->session->has($this->dealSessionName)) {
+            $this->session->remove($this->dealSessionName);
+        }
     }
 
     public function getDeal(): string

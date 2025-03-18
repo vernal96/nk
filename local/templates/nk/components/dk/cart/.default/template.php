@@ -12,7 +12,7 @@ $this->setFrameMode(true);
     <div class="white-block">
         <? \DK\NK\Helper\Main::include("form_success", [
             "static" => true,
-            "successTitle" => Loc::getMessage("CART_SUCCESS_TITLE", ["#DEAL#" => $deal]),
+            "successTitle" => Loc::getMessage("CART_SUCCESS_TITLE", ["#DEAL#" => \DK\NK\Helper\Main::getApplicationFormat($deal)]),
             "successDescription" => Loc::getMessage("CART_SUCCESS_DESCRIPTION")
         ]); ?>
     </div>

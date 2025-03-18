@@ -1,5 +1,6 @@
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'] . "/bitrix/modules/main/include/prolog_admin.php");
+/** @var CMain $APPLICATION */
 ?>
     <div class="adm-workarea">
         <? $APPLICATION->IncludeComponent(

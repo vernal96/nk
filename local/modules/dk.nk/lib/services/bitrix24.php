@@ -50,6 +50,7 @@ class Bitrix24
         return self::parseResult($this->httpClient->getResult(), $resultSelect);
     }
 
+    /** @noinspection PhpUnused */
     public function setBatchHalt(int $halt): void
     {
         $this->batchHalt = $halt;
@@ -82,6 +83,7 @@ class Bitrix24
         }
     }
 
+    /** @noinspection PhpUnused */
     public function batchClear(): void
     {
         $this->batchCMD = [];

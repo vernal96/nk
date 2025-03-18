@@ -70,6 +70,9 @@ $aTabs = [
         "OPTIONS" => [
             Loc::getMessage("DK_BX24_HEAD"),
             [
+                "BX24_DISABLED", Loc::getMessage("DK_BX24_DISABLED"), "", ["checkbox"],
+            ],
+            [
                 "BX24_HOOK", Loc::getMessage("DK_BX24_HOOK"), "", ["text", 50],
             ],
             [

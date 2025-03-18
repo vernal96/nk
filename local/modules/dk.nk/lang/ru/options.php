@@ -15,6 +15,7 @@ $MESS["DK_TELEGRAM"] = "Telegram";
 $MESS["DK_WHATSAPP"] = "WhatsApp";
 $MESS["DK_VK"] = "VK";
 $MESS["DK_VIBER"] = "Viber";
+$MESS["DK_BX24_DISABLED"] = "Отключить Bitrix 24";
 $MESS["DK_BX24_HOOK"] = "Вебхук для вызова rest api";
 $MESS["DK_BX24_INNER_TOKEN"] = "Токены входящих вебхуков";
 $MESS["DK_BX24_BOT_HOOK"] = "Вебхук для вызова rest api бота";

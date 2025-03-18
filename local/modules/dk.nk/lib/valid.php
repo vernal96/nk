@@ -4,10 +4,12 @@ namespace DK\NK;
 
 use Bitrix\Iblock\ElementTable;
 use Bitrix\Main\Application;
+use Bitrix\Main\ArgumentException;
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\Web\HttpClient;
 use Bitrix\Main\Web\Json;
 use DK\NK\Helper\Main;
+use Throwable;
 
 class Valid
 {
@@ -28,14 +30,26 @@ class Valid
         return trim($string) !== "";
     }
 
-    public static function market($id): bool
+    public static function market(?int $id): bool
     {
-        return (bool)ElementTable::query()->where("IBLOCK_ID", IBLOCK_MARKET)->where("ID", $id)->fetchObject();
+        if ($id === null) return false;
+        try {
+            return (bool)ElementTable::query()->where("IBLOCK_ID", IBLOCK_MARKET)->where("ID", $id)->fetchObject();
+        } catch (Throwable $exception) {
+            addUncaughtExceptionToLog($exception);
+            return false;
+        }
     }
 
-    public static function city($name): bool
+    public static function city(?int $id): bool
     {
-        return (bool)Main::getHLObject(HL_DELIVERY_CITIES)::query()->where("UF_NAME", $name)->fetchObject();
+        if ($id === null) return false;
+        try {
+            return (bool)Main::getHLObject(HL_DELIVERY_CITIES)::query()->where("ID", $id)->fetchObject();
+        } catch (Throwable $exception) {
+            addUncaughtExceptionToLog($exception);
+            return false;
+        }
     }
 
     public static function reV3($token): bool
@@ -46,8 +60,12 @@ class Valid
             "response" => $token,
             "remoteip" => Application::getInstance()->getContext()->getRequest()->getRemoteAddress()
         ]);
-        logToFile(Json::decode($httpClient->getResult()));
-        return Json::decode($httpClient->getResult())["success"];
+        try {
+            return Json::decode($httpClient->getResult())["success"];
+        } catch (ArgumentException $exception) {
+            addUncaughtExceptionToLog($exception);
+            return true;
+        }
     }
 
 }
