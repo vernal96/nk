@@ -27,7 +27,7 @@ class BitrixSync
                     "email" => $feedback->getEmail()
                 ], $bx24);
                 $bx24->batchAdd("deal", "crm.deal.add", ["fields" => [
-                    "TITLE" => 'Заявка с сайта от ' . $feedback->getCreatedDate()->format('d.m.Y H:i'),
+                    "TITLE" => Helper\Main::getApplicationFormat($feedback->getId()),
                     "TYPE_ID" => "SERVICE",
                     "CATEGORY_ID" => 7,
                     "STAGE_ID" => "C7:NEW",
