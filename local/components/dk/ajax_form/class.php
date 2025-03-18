@@ -1,11 +1,11 @@
 <?php
 
-use Bitrix\Main\Config\Option;
 use Bitrix\Main\Engine\ActionFilter\Csrf;
 use Bitrix\Main\Engine\Contract\Controllerable;
 use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\Mail\Event;
+use DK\NK\Entity\FeedbackTable;
 use DK\NK\Helper\Main;
-use DK\NK\Services\Bitrix24;
 use DK\NK\Valid;
 
 class NkAjaxForm extends CBitrixComponent implements Controllerable
@@ -31,6 +31,9 @@ class NkAjaxForm extends CBitrixComponent implements Controllerable
         ];
     }
 
+    /**
+     * @throws Exception
+     */
     public function submitAction(): array
     {
         $horizontal = $this->request->get("st") == 1;
@@ -59,13 +62,19 @@ class NkAjaxForm extends CBitrixComponent implements Controllerable
                 ];
             }
         }
-        $dealId = $this->sendBX24($this->request);
-        $formatDealId = str_pad($dealId, 6, "0", STR_PAD_LEFT);
+        $dealId = FeedbackTable::createObject()
+            ->setName($this->request["name"] ?: null)
+            ->setPhone($this->request["tel"] ?: null)
+            ->setEmail($this->request["email"] ?: null)
+            ->setComment($this->request["comment"] ?: null)
+            ->save()
+            ->getId();
+        $this->sendEmail($dealId);
         ob_start();
         Main::include("form_success", [
             "horizontal" => $horizontal,
             "error" => $error,
-            "formatDealId" => $formatDealId,
+            "formatDealId" => Main::getApplicationFormat($dealId),
         ]);
         return [
             "success" => true,
@@ -73,34 +82,15 @@ class NkAjaxForm extends CBitrixComponent implements Controllerable
         ];
     }
 
-    private function sendBX24($request): ?int
-    {
-        $comment = $request["comment"] ?? "";
-        $bx24 = new Bitrix24();
-        $contactList = \DK\NK\Helper\Bitrix24::addContact([
-            "name" => $request["name"],
-            "phone" => $request["tel"],
-            "email" => $request["email"]
-        ], $bx24);
-        $bx24->batchAdd("deal", "crm.deal.add", ["fields" => [
-            "TITLE" => Loc::getMessage("NEW_DEAL") . ". " . date('d.m.Y H:i'),
-            "TYPE_ID" => "SERVICE",
-            "CATEGORY_ID" => 7,
-            "STAGE_ID" => "C7:NEW",
-            "ASSIGNED_BY_ID" => Option::get(NK_MODULE_NAME, "BX24_FEEDBACK_RESPONSIBLE"),
-            "COMMENTS" => $comment,
-            "OPENED" => "Y", // Заменить на Y доступно для всех
-            "SOURCE_ID" => "WEB",
-        ]], 20);
-        $bx24->batchAdd("deal.contact", "crm.deal.contact.add", [
-            "id" => '$result[deal]',
-            "fields" => [
-                "CONTACT_ID" => empty($contactList) ? '$result[contact]' : $contactList[0]["ID"]
-            ]
-        ], 30);
-        $bx24->batchCall();
-        if ($bx24->batchResult[0]["result"]["result"]["deal"]) return $bx24->batchResult[0]["result"]["result"]["deal"];
-        throw new Exception(Loc::getMessage("ERROR_SUBMIT_BX24"));
+    private function sendEmail(int $id): void {
+        Event::send([
+            'EVENT_NAME' => 'FEEDBACK_FORM',
+            'C_FIELDS' => [
+                'NUMBER' => Main::getApplicationFormat($id),
+                'ID' => $id
+            ],
+            'LID' => SITE_ID
+        ]);
     }
 
 }
