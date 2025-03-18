@@ -105,6 +105,7 @@ class Order
         if ($userData['id']) $newOrder->setUserId((int)$userData['id']);
         if ($userData['email']) $newOrder->setEmail($userData['email']);
         if ($userData['comment']) $newOrder->setComment($userData['comment']);
+        if ($userData['inn']) $newOrder->setInn($userData['inn']);
 
         if ($userData['delivery'] === 'delivery') {
             $newOrder->setCityId($userData['city']);
@@ -116,6 +117,7 @@ class Order
         } else {
             $newOrder->setMarketId((int)$userData['marketId']);
         }
+
 
         if (
             $_FILES['files']
