@@ -52,7 +52,6 @@ class Cart
     private function setUserData(): void
     {
         global $USER;
-        if (!$USER) return;
         $cache = Cache::createInstance();
         $taggedCache = Application::getInstance()->getTaggedCache();
         $cacheUnique = "dk.users." . $USER->GetID();
@@ -95,6 +94,8 @@ class Cart
                 }
             }
             $this->userData = $userData;
+        } else {
+            $this->userData['delivery'] = 'delivery';
         }
     }
 
@@ -342,7 +343,6 @@ class Cart
         $this->session->remove($this->orderSessionName);
         $this->cart = [];
         $this->order = [];
-        $this->setUserField('delivery', 'delivery');
         $this->setTotalSum();
         $this->setTotalCount();
         if ($USER->IsAuthorized()) {
