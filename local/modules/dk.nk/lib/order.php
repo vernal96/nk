@@ -148,7 +148,7 @@ class Order
                 ->setOrderId($orderId)
                 ->setItemId($item['id'])
                 ->setCount($item['count'])
-                ->setPrice($item['price' . Main::getUserType()])
+                ->setPrice($item['price' . MainHelper::getUserType()])
                 ->save();
         }
     }
