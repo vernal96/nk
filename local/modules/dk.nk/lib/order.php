@@ -100,7 +100,7 @@ class Order
             ->setName($userData['name'])
             ->setPhone(MainHelper::setFormatPhone($userData['phone']))
             ->setFt($userData['ft'] === 'jur' ? OrderTable::FT_LEGAL_ENTITY : OrderTable::FT_PHYSICAL_PERSON)
-            ->setDelivery($userData['delivery'] === 'delivery' ? OrderTable::DELIVERY : OrderTable::SELF);
+            ->setDelivery($userData['delivery'] === 'self' ? OrderTable::SELF : OrderTable::DELIVERY);
 
         if ($userData['id']) $newOrder->setUserId((int)$userData['id']);
         if ($userData['email']) $newOrder->setEmail($userData['email']);
