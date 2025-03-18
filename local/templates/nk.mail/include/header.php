@@ -23,7 +23,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
                                             <td align="center"
                                                 style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px">
                                                 <img
-                                                        src="https://<?= $_SERVER['SERVER_NAME']; ?>/local/templates/nk.mail/images/<?= $PARAMS['image']; ?>"
+                                                        src="https://<?= SITE_SERVER_NAME; ?>/local/templates/nk.mail/images/<?= $PARAMS['image']; ?>"
                                                         alt=""
                                                         style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic"
                                                         width="100">
