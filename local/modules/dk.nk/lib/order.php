@@ -279,7 +279,7 @@ class Order
 
     public static function registerInBitrix24(): string
     {
-        if (BITRIX24_DISABLED) return __METHOD__ . '();';
+        if (Option::get(NK_MODULE_NAME, 'BX24_DISABLED')) return __METHOD__ . '();';
         try {
             $orders = OrderTable::query()
                 ->setSelect(['*'])

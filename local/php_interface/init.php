@@ -22,8 +22,6 @@ const NK_MODULE_NAME = "dk.nk";
 const EMAIL_TEMPLATE_PATH = "/local/templates/nk.mail/";
 const DEFAULT_PRICE_STATUS = 1;
 
-define("BITRIX24_DISABLED", (bool)Option::get(NK_MODULE_NAME, 'BX24_DISABLED'));
-
 function printR(mixed $array): void
 {
     echo "<pre style='background: #00000012; padding: 1em;'>" . print_r($array, true) . "</pre>";
