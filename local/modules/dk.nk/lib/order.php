@@ -98,7 +98,7 @@ class Order
         $userData = $this->cart->getUserData();
         $newOrder = OrderTable::createObject()
             ->setName($userData['name'])
-            ->setPhone(Main::setFormatPhone($userData['phone']))
+            ->setPhone(MainHelper::setFormatPhone($userData['phone']))
             ->setFt($userData['ft'] === 'jur' ? OrderTable::FT_LEGAL_ENTITY : OrderTable::FT_PHYSICAL_PERSON)
             ->setDelivery($userData['delivery'] === 'delivery' ? OrderTable::DELIVERY : OrderTable::SELF);
 
