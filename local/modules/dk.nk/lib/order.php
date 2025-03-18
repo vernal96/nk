@@ -107,15 +107,15 @@ class Order
         if ($userData['comment']) $newOrder->setComment($userData['comment']);
         if ($userData['inn']) $newOrder->setInn($userData['inn']);
 
-        if ($userData['delivery'] === 'delivery') {
+        if ($userData['delivery'] === 'self') {
+            $newOrder->setMarketId((int)$userData['marketId']);
+        } else {
             $newOrder->setCityId($userData['city']);
             $newOrder->setStreet($userData['street']);
             $newOrder->setHouse($userData['house']);
             $newOrder->setCorpus($userData['corpus']);
             $newOrder->setEntrance($userData['entrance']);
             $newOrder->setOffice($userData['office']);
-        } else {
-            $newOrder->setMarketId((int)$userData['marketId']);
         }
 
 
