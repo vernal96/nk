@@ -174,7 +174,7 @@ class Order
                 if (!Valid::notEmpty($fields["inn"])) {
                     $errorFields[] = "inn";
                 } else {
-                    if (!DaData::getRqByInn($fields["inn"])) $errorFields[] = "inn";
+                    if (!(new DaData())->getRqByInn((int)$fields["inn"])) $errorFields[] = "inn";
                 }
             }
         }

@@ -88,7 +88,7 @@ class Bitrix24
             ]
         ], "result.0");
         if (empty($requisites)) {
-            $companyInfo = DaData::getRqByInn($data["inn"]);
+            $companyInfo = (new DaData())->getRqByInn((int)$data["inn"]);
             $bx24->batchAdd("company", "crm.item.add", [
                 "entityTypeId" => 4,
                 "fields" => [

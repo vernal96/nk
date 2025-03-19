@@ -18,3 +18,5 @@ class FieldsException extends SystemException
     }
 
 }
+
+class ServiceConnectException extends SystemException {}

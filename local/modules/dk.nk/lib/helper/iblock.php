@@ -73,20 +73,28 @@ class Iblock
     }
 
     public static function setMarketInfo(int $id): void {
-        $market = BitrixIblock::wakeUp(IBLOCK_MARKET)->getEntityDataClass()::query()
-            ->setSelect(["COORD"])
-            ->where("ID", $id)
-            ->fetchObject();
-        if (!$market->getCoord()->getValue()) return;
-        $data = DaData::getAddressInfoByCoord($market->getCoord()->getValue());
-        $market
-            ->setCountry($data["country"])
-            ->setCity($data["city"])
-            ->setStreet($data["street_with_type"])
-            ->setPostIndex($data["postal_code"])
-            ->setHouse($data["house"])
-            ->setRegion($data["region"])
-            ->save();
+        try {
+            $market = BitrixIblock::wakeUp(IBLOCK_MARKET)->getEntityDataClass()::query()
+                ->addSelect('COORD')
+                ->where('ID', $id)
+                ->fetchObject();
+            if (!$market) return;
+            $coord = $market->getCoord()?->getValue();
+            if (!$coord) return;
+
+            $data = (new DaData())->getAddressInfoByCoord($coord);
+            if (empty($data)) return;
+            $market
+                ->setCountry($data['country'])
+                ->setCity($data['city'])
+                ->setStreet($data['street_with_type'])
+                ->setPostIndex($data['postal_code'])
+                ->setHouse($data['house'])
+                ->setRegion($data['region'])
+                ->save();
+        } catch (Throwable $exception) {
+            addUncaughtExceptionToLog($exception);
+        }
     }
 
     /** @noinspection PhpUnused */
@@ -118,8 +126,11 @@ class Iblock
     {
         $id = is_int($id) ? $id : (int)preg_replace("/\D/", "", $id);
         $arItem = $isElement ? ElementTable::getRowById($id) : SectionTable::getRowById($id);
-        $pictureId = $arItem[$isElement ? "PREVIEW_PICTURE" : "PICTURE"] ?: Main::getFileIdBySrc(Option::get(NK_MODULE_NAME, "NOPHOTO"));
-        return CFile::ResizeImageGet($pictureId, ["width" => $arSizes[0], "height" => $arSizes[1]], BX_RESIZE_IMAGE_EXACT)["src"];
+        $pictureId = $arItem[$isElement ? "PREVIEW_PICTURE" : "PICTURE"]
+            ?: Main::getFileIdBySrc(Option::get(NK_MODULE_NAME, "NOPHOTO"));
+        return CFile::ResizeImageGet(
+            $pictureId, ["width" => $arSizes[0], "height" => $arSizes[1]], BX_RESIZE_IMAGE_EXACT
+        )["src"];
     }
 
 }

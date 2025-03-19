@@ -93,9 +93,13 @@ class DKCartComponent extends CBitrixComponent implements Controllerable
         return $cart->getProducts();
     }
 
-    public function getCompanyByInnAction()
+    public function getCompanyByInnAction(): ?array
     {
-        return DaData::getRqByInn((int)$this->request->get("inn")) ?: null;
+        try {
+            return (new DaData())->getRqByInn((int)$this->request->get("inn")) ?: null;
+        } catch (Throwable) {
+            return null;
+        }
     }
 
     public function getUserDataAction(): ?array

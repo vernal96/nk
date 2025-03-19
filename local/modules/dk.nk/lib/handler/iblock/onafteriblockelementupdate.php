@@ -14,7 +14,7 @@ class OnAfterIBlockElementUpdate
             Main::setTimeLastUpdate();
         }
         else if ($arParams["IBLOCK_ID"] == IBLOCK_MARKET) {
-            Iblock::setMarketInfo($arParams["ID"]);
+            Iblock::setMarketInfo((int)$arParams["ID"]);
         }
     }
 

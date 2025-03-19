@@ -33,7 +33,7 @@ function logToFile(mixed $data, bool $append = false): void
         $data = $e->getMessage();
     }
     file_put_contents(
-        '/var/www/u1364127/data/www/logs/debug.json', $data, $append ? FILE_APPEND : 0
+        'C:\OSPanel\home\n-krep.local\logs\debug.json', $data, $append ? FILE_APPEND : 0
     );
 }
 
