@@ -1,7 +1,6 @@
 <?php
 
 use Bitrix\Main\ArgumentException;
-use Bitrix\Main\Config\Option;
 use Bitrix\Main\Web\Json;
 
 //const VUEJS_DEBUG = true;
@@ -11,7 +10,6 @@ const IBLOCK_FS = 1;
 const IBLOCK_CATALOG = 2;
 const IBLOCK_SIMPLE = 3;
 const IBLOCK_MARKET = 4;
-const IBLOCK_NEWS = 5;
 const HL_SIZES = 1;
 const HL_ABOUT_PROPERTIES = 2;
 const HL_DELIVERY_CITIES = 3;
@@ -35,7 +33,7 @@ function logToFile(mixed $data, bool $append = false): void
         $data = $e->getMessage();
     }
     file_put_contents(
-        'C:\OSPanel\home\n-krep.local\logs/debug.json', $data, $append ? FILE_APPEND : 0
+        '/var/www/u1364127/data/www/logs/debug.json', $data, $append ? FILE_APPEND : 0
     );
 }
 
