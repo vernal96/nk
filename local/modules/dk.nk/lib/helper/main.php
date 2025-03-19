@@ -31,7 +31,7 @@ class Main
     }
 
     public static function getPictureSrcSet(
-        array|int $file,
+        array|int|null $file,
         array     $sizesList,
         int       $resizeType = BX_RESIZE_IMAGE_EXACT
     ): void
