@@ -355,4 +355,20 @@ class Cart
         }
     }
 
+    public static function initUserStatus(): void
+    {
+        $session = Application::getInstance()->getSession();
+        if (!$session->has('USER_STATUS')) {
+            $auth = $session->get('SESS_AUTH');
+            $login = $auth['LOGIN'] ?? null;
+            if ($login) {
+                $user = CUser::GetByLogin($login)->Fetch();
+                $userStatus = $user['UF_STATUS'] ?: DEFAULT_PRICE_STATUS;
+            } else {
+                $userStatus = DEFAULT_PRICE_STATUS;
+            }
+            $session->set('USER_STATUS', $userStatus);
+        }
+    }
+
 }

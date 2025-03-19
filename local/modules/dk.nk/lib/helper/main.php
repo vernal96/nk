@@ -3,14 +3,14 @@
 namespace DK\NK\Helper;
 
 use Bitrix\Highloadblock\HighloadBlockTable as HL;
-use Bitrix\Iblock\ElementTable;
 use Bitrix\Iblock\ORM\Query;
-use Bitrix\Iblock\SectionTable;
 use Bitrix\Main\Application;
 use Bitrix\Main\ArgumentException;
+use Bitrix\Main\ArgumentOutOfRangeException;
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\FileTable;
 use Bitrix\Main\Loader;
+use Bitrix\Main\LoaderException;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\ORM\Data\DataManager;
@@ -19,20 +19,34 @@ use Bitrix\Main\SystemException;
 use Bitrix\Main\Type\DateTime as BitrixDateTime;
 use Bitrix\Main\UserGroupTable;
 use CFile;
+use DK\NK\Cart;
+use Throwable;
 
 class Main
 {
     public static function getPhone(string $phone): string
     {
-        $phone = preg_replace("/^8/", "+7", $phone);
-        return preg_replace("/[^\d+]/", "", $phone);
+        $phone = preg_replace('/^8/', '+7', trim($phone));
+        return preg_replace('/[^\d+]/', '', $phone);
     }
 
-    public static function getPictureSrcSet($file, $sizesList, $resizeType = BX_RESIZE_IMAGE_EXACT): void
+    public static function getPictureSrcSet(
+        array|int $file,
+        array     $sizesList,
+        int       $resizeType = BX_RESIZE_IMAGE_EXACT
+    ): void
     {
+        if (!$file || empty($sizesList)) {
+            return;
+        }
+
         ksort($sizesList);
+
         foreach ($sizesList as $screenSize => $sizes) {
-            $fileSrc = CFile::ResizeImageGet($file, ["width" => $sizes[0], "height" => $sizes[1]], BX_RESIZE_IMAGE_EXACT)["src"];
+            if (!isset($sizes[0], $sizes[1])) continue;
+            $fileData = CFile::ResizeImageGet($file, ["width" => $sizes[0], "height" => $sizes[1]], $resizeType);
+            if (!isset($fileData["src"])) continue;
+            $fileSrc = htmlspecialchars($fileData["src"], ENT_QUOTES, 'UTF-8');
             echo "<source media=\"(max-width: {$screenSize}px)\" srcset=\"$fileSrc\">";
         }
     }
@@ -47,7 +61,13 @@ class Main
         return array_values(array_map(fn($file) => $path . $file, $result));
     }
 
-    public static function getHLObject($id): DataManager|string
+    /**
+     * @throws LoaderException
+     * @throws ArgumentException
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     */
+    public static function getHLObject(int $id): DataManager|string
     {
         Loader::includeModule("highloadblock");
         $hlBlock = HL::getById($id)->fetch();
@@ -71,68 +91,65 @@ class Main
 
     public static function getFileIdBySrc(string $strFilename): ?int
     {
-        $strUploadDir = '/' . Option::get("main", "upload_dir") . "/";
-        $strFile = substr($strFilename, strlen($strUploadDir));
-        $result = FileTable::query()
-            ->registerRuntimeField("PATH", new ExpressionField("PATH", "CONCAT(%s, '/', %s)", ["SUBDIR", "FILE_NAME"]))
-            ->where("PATH", $strFile)
-            ->setSelect(["ID"])
-            ->exec()
-            ->fetch();
-        return $result ? $result["ID"] : null;
+        try {
+            $strFile = preg_replace(
+                '#^(https?://[^/]+)?/' . Option::get("main", "upload_dir") . '/#',
+                '',
+                $strFilename
+            );
+
+            return FileTable::query()
+                ->addSelect('ID')
+                ->where('PATH', $strFile)
+                ->registerRuntimeField(
+                    'PATH',
+                    new ExpressionField('PATH', "CONCAT(%s, '/', %s)", ['SUBDIR', 'FILE_NAME'])
+                )
+                ->fetchObject()
+                ?->getId();
+        } catch (Throwable $exception) {
+            addUncaughtExceptionToLog($exception);
+            return null;
+        }
     }
 
-    public static function priceFormat($number, $showCurrency = false): string
+    public static function priceFormat(int|float $number, bool $showCurrency = false): string
     {
-        $result = number_format($number, 2, ",", " ");
-        return $showCurrency ? $result . " " . Loc::getMessage("CURRENCY") : $result;
+        $result = number_format($number, 2, ',', ' ');
+        return $showCurrency ? $result . ' ' . Loc::getMessage("CURRENCY") : $result;
     }
 
     public static function numberFormat($number): string
     {
-        return number_format($number, 0, ",", " ");
+        return number_format($number, 0, ',', ' ');
     }
 
-    public static function num2word($num, $words)
+    public static function num2word(int $num, array $words)
     {
         $num = $num % 100;
         if ($num > 19) {
             $num = $num % 10;
         }
-        switch ($num) {
-            case 1:
-            {
-                return ($words[0]);
-            }
-            case 2:
-            case 3:
-            case 4:
-            {
-                return ($words[1]);
-            }
-            default:
-            {
-                return ($words[2]);
-            }
-        }
+        return match ($num) {
+            1 => ($words[0]),
+            2, 3, 4 => ($words[1]),
+            default => ($words[2]),
+        };
     }
 
     public static function getUserType(): int
     {
-        return Application::getInstance()->getSession()->get("USER_STATUS");
+        $session = Application::getInstance()->getSession();
+        if (!$session->has('USER_STATUS')) Cart::initUserStatus();
+        return $session->get('USER_STATUS');
     }
 
+    /**
+     * @throws ArgumentOutOfRangeException
+     */
     public static function setTimeLastUpdate(): void
     {
         Option::set(NK_MODULE_NAME, "LAST_UPDATE", new BitrixDateTime());
-    }
-
-    public static function getIblockPhotoSrc(bool $isElement, int|string $id, array $arSizes)
-    {
-        $id = is_int($id) ? $id : (int)preg_replace("/\D/", "", $id);
-        $arItem = $isElement ? ElementTable::getRowById($id) : SectionTable::getRowById($id);
-        $pictureId = $arItem[$isElement ? "PREVIEW_PICTURE" : "PICTURE"] ?: Main::getFileIdBySrc(Option::get(NK_MODULE_NAME, "NOPHOTO"));
-        return CFile::ResizeImageGet($pictureId, ["width" => $arSizes[0], "height" => $arSizes[1]], BX_RESIZE_IMAGE_EXACT)["src"];
     }
 
     /**
@@ -140,9 +157,9 @@ class Main
      */
     public static function setFormatPhone(string $phone): string
     {
-        $result = "+d (ddd) ddd-dd-dd";
-        $phone = preg_replace("/\D/", "", $phone);
-        $phone = preg_replace("/^8/", "7", $phone);
+        $result = '+d (ddd) ddd-dd-dd';
+        $phone = preg_replace('/\D/', '', $phone);
+        $phone = preg_replace('/^8/', '7', $phone);
         if (strlen($phone) < 11) {
             throw new ArgumentException(Loc::getMessage("ERROR_MOBILE_PHONE_TOO_SHORT"));
         }
@@ -150,7 +167,7 @@ class Main
             throw new ArgumentException(Loc::getMessage("ERROR_MOBILE_PHONE_TOO_LONG"));
         }
         for ($i = 0; $i < strlen($phone); $i++) {
-            $result = preg_replace("/d/", $phone[$i], $result, 1);
+            $result = preg_replace('/d/', $phone[$i], $result, 1);
         }
         return $result;
     }
@@ -182,27 +199,6 @@ class Main
     }
 
     public static function getApplicationFormat(int $number): string {
-        return str_pad($number, 6, "0", STR_PAD_LEFT);
+        return str_pad($number, 6, '0', STR_PAD_LEFT);
     }
-
-    public static function getCartItem($item, $count): array {
-        return [
-            "id" => $item->getId(),
-            "count" => $count,
-            "size" => $item->getUfSize(),
-            "xml" => $item->getUfCode(),
-            "price1" => $item->get("UF_PRICE_1"),
-            "price2" => $item->get("UF_PRICE_2"),
-            "price3" => $item->get("UF_PRICE_3"),
-            "box" => $item->getUfBoxCount(),
-            "name" => $item->getProduct()->getName(),
-            "image" => \CFile::ResizeImageGet(
-                ($item->get("PRODUCT")->getPreviewPicture()
-                    ?: $item->get("PRODUCT")->getDetailPicture())
-                    ?: Main::getFileIdBySrc(Option::get(NK_MODULE_NAME, "NOPHOTO")),
-                ["width" => 40, "height" => 40]
-            )["src"]
-        ];
-    }
-
 }

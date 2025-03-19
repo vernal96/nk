@@ -3,16 +3,21 @@
 namespace DK\NK\Helper;
 
 use Bitrix\Iblock\Component\Tools;
+use Bitrix\Iblock\ElementTable;
 use Bitrix\Iblock\InheritedProperty\ElementValues;
 use Bitrix\Iblock\InheritedProperty\SectionValues;
+use Bitrix\Iblock\SectionTable;
+use Bitrix\Main\ArgumentException;
 use Bitrix\Main\Config\Option;
+use Bitrix\Main\ObjectPropertyException;
+use Bitrix\Main\SystemException;
 use Bitrix\Main\UserFieldTable;
 use CFile;
 use CIBlock;
-use CTextParser;
 use CUserFieldEnum;
 use DK\NK\Services\DaData;
 use Throwable;
+use Bitrix\Iblock\Iblock as BitrixIblock;
 
 class Iblock
 {
@@ -62,23 +67,13 @@ class Iblock
         return $result;
     }
 
-    public static function newsListModifier($arResult, $arParams): array
-    {
-        foreach ($arResult["ITEMS"] as &$arItem) {
-            $imageId = $arItem["PREVIEW_PICTURE"]["ID"] ?? Main::getFileIdBySrc(Option::get(NK_MODULE_NAME, "NOPHOTO"));
-            $arItem["PREVIEW_PICTURE"]["THUMB"] = CFile::ResizeImageGet($imageId, ["width" => 420, "height" => 330], 2)["src"];
-            $arItem["PREVIEW_TEXT"] = $arItem["PREVIEW_TEXT"] ?: (new CTextParser)->html_cut(HTMLToTxt($arItem["DETAIL_TEXT"]), $arParams["PREVIEW_TRUNCATE_LEN"]);
-        }
-        return $arResult;
-    }
-
     public static function getCachePath(string $componentName): string {
         $componentNameParts = explode(":", $componentName);
         return SITE_ID . "/$componentNameParts[0]/$componentNameParts[1]/";
     }
 
     public static function setMarketInfo(int $id): void {
-        $market = \Bitrix\Iblock\Iblock::wakeUp(IBLOCK_MARKET)->getEntityDataClass()::query()
+        $market = BitrixIblock::wakeUp(IBLOCK_MARKET)->getEntityDataClass()::query()
             ->setSelect(["COORD"])
             ->where("ID", $id)
             ->fetchObject();
@@ -94,6 +89,7 @@ class Iblock
             ->save();
     }
 
+    /** @noinspection PhpUnused */
     public static function getUfEnumId(int $iblockId, string $ufName, string $xmlId): ?int
     {
         try {
@@ -111,6 +107,19 @@ class Iblock
         } catch (Throwable) {
             return null;
         }
+    }
+
+    /**
+     * @throws ArgumentException
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     */
+    public static function getIblockPhotoSrc(bool $isElement, int|string $id, array $arSizes)
+    {
+        $id = is_int($id) ? $id : (int)preg_replace("/\D/", "", $id);
+        $arItem = $isElement ? ElementTable::getRowById($id) : SectionTable::getRowById($id);
+        $pictureId = $arItem[$isElement ? "PREVIEW_PICTURE" : "PICTURE"] ?: Main::getFileIdBySrc(Option::get(NK_MODULE_NAME, "NOPHOTO"));
+        return CFile::ResizeImageGet($pictureId, ["width" => $arSizes[0], "height" => $arSizes[1]], BX_RESIZE_IMAGE_EXACT)["src"];
     }
 
 }

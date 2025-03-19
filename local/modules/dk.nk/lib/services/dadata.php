@@ -6,6 +6,7 @@ use Bitrix\Main\Config\Option;
 use Bitrix\Main\Data\Cache;
 use Bitrix\Main\Web\HttpClient;
 use Bitrix\Main\Web\Json;
+use Throwable;
 
 class DaData
 {
@@ -26,10 +27,15 @@ class DaData
         } else {
             $cache->startDataCache();
             self::init();
-            self::$httpClient->post(self::$address . "findById/party", Json::encode([
-                "query" => $inn,
-                "count" => 1
-            ]));
+            try {
+                $postData = Json::encode([
+                    "query" => $inn,
+                    "count" => 1
+                ]);
+            } catch (Throwable) {
+                $postData = '{}';
+            }
+            self::$httpClient->post(self::$address . "findById/party", $postData);
             $result = self::parseResult(self::$httpClient->getResult(), "suggestions.0.data");
             $cache->endDataCache($result);
         }
