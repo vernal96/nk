@@ -113,8 +113,9 @@ class Main
         }
     }
 
-    public static function priceFormat(int|float $number, bool $showCurrency = false): string
+    public static function priceFormat(int|float|null $number, bool $showCurrency = false): string
     {
+        if ($number === null) $number = 0;
         $result = number_format($number, 2, ',', ' ');
         return $showCurrency ? $result . ' ' . Loc::getMessage("CURRENCY") : $result;
     }
