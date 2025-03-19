@@ -41,9 +41,9 @@ function addUncaughtExceptionToLog(Throwable $exception): void
 {
     CEventLog::Log(
         CEventLog::SEVERITY_ERROR,
-        'An error has occurred on the website',
+        'UNCAUGHT_EXCEPTION',
         NK_MODULE_NAME,
-        'Uncaught Exception',
+        'EXCEPTION',
         preg_replace('/\n/', '<br>', (string)$exception)
     );
 }
