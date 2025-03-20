@@ -162,6 +162,7 @@ class Parser
             $updateArray = [
                 "IBLOCK_SECTION_ID" => $parentId,
                 "NAME" => $section[self::$titleFieldName],
+                "ACTIVE" => true
             ];
 
             if ($section["ELEMENTS"]) {
