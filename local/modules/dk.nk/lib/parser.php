@@ -84,8 +84,8 @@ class Parser
             CFile::Delete($loadedImage["ID"]);
         }
 
-        self::disableAllEmpty();
-        self::deactivateEmptyProducts();
+//        self::disableAllEmpty();
+//        self::deactivateEmptyProducts();
         Cache::clearCache(true);
         self::updateDBBitrix24();
         return true;
