@@ -27,6 +27,7 @@ class DKCatalogDetail extends CBitrixComponent implements Controllerable
             $rsElement = CIBlockElement::GetList([], [
                 "IBLOCK_ID" => $this->arParams["IBLOCK_ID"],
                 "ACTIVE" => "Y",
+                "SECTION_GLOBAL_ACTIVE" => "Y",
                 "CODE" => $this->arParams["CODE"],
             ]);
 
