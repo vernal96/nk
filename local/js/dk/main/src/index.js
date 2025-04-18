@@ -6,9 +6,6 @@ import {runModalCart} from "dk.cart";
 import Metric from './metric_events';
 
 BX.ready(() => {
-
-    BX.onCustomEvent(window, 'onPageReady');
-
     Methods.setPhonesMask();
     Methods.initViberLink();
     Methods.checkAgree();

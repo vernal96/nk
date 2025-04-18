@@ -323,6 +323,7 @@ export const Form = {
         this.getUserData();
     },
     mounted() {
+        BX.onCustomEvent(window, 'onCartPageReady');
         this.getDeliveryCities();
         this.getMarkets();
         this.getAgreeText();

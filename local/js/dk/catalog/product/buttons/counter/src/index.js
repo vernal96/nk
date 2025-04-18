@@ -35,18 +35,15 @@ export const Counter = {
         waitTime: 200,
         waiter: null
     }),
-    watch: {
-        count(newValue, oldValue) {
-            BX.onCustomEvent(window, 'onProductCartChange', {
-                prevValue: oldValue,
-                value: newValue
-            });
-        }
-    },
     methods: {
         add() {
             this.count = +this.count + 1;
             this.runAction();
+            BX.onCustomEvent(window, 'onProductCartAdd', {
+                count: this.count,
+                productId: this.productId,
+                sizeId: this.sizeId
+            });
         },
         remove() {
             if (+this.count) {
