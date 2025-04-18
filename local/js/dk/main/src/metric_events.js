@@ -2,7 +2,11 @@ export default {
     ym: {
         id: 100346127,
         init() {
-            this.productPageReady();
+            try {
+                this.productPageReady();
+            } catch (e) {
+
+            }
         },
         productPageReady() {
             BX.addCustomEvent('onProductPageReady', () => {
