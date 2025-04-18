@@ -11,7 +11,7 @@ export default {
         productPageReady() {
             BX.addCustomEvent('onProductPageReady', () => {
                 ym(this.id,'reachGoal','onProductPageReady', {
-                    url: location.href
+                    url: location.pathname
                 })
             });
         }
