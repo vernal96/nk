@@ -146,7 +146,8 @@ class DKCartComponent extends CBitrixComponent implements Controllerable
 
             return [
                 "success" => true,
-                'message' => $message
+                'message' => $message,
+                'sum' => $cart->getTotalSum()
             ];
         } catch (FieldsException $exception) {
             return [

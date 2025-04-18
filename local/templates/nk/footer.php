@@ -42,7 +42,5 @@ use DK\NK\Helper\Main;
 </div>
 <? Main::include("modal/recall"); ?>
 <? $APPLICATION->IncludeComponent("dk:mm", "", []); ?>
-<? Main::include("yandex_metrika"); ?>
-<? Main::include("google_tag"); ?>
 </body>
 </html>

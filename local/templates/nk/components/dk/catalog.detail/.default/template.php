@@ -156,4 +156,6 @@ $this->AddEditAction("edit_$arResult[ID]", $arResult["LINKS"]["DELETE"]["URL"], 
 <? endif; ?>
 <script>
     BX("pagetitle").classList.add("catalog-detail-page-header");
+    BX.onCustomEvent(window, 'onProductPageReady');
+    console.log(123);
 </script>

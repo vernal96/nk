@@ -52,6 +52,8 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
         Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/src/libs/fancybox/script.js");
         Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/src/libs/swiper/script.js");
         ?>
+        <? Main::include("yandex_metrika"); ?>
+        <? Main::include("google_tag"); ?>
     </head>
 
 <body>
@@ -97,7 +99,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
                             ]
                         ); ?>
                         <a href="tel:<?= Main::getPhone(Option::get(NK_MODULE_NAME, "PHONE")); ?>"
-                           class="header__phone">
+                           class="header__phone main-phone">
                             <span class="header__phone-icon"></span>
                         </a>
                         <button class="button header__burger mmo">
@@ -118,7 +120,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
                     ); ?>
                     <div class="header__tools">
                         <a href="tel:<?= Main::getPhone(Option::get(NK_MODULE_NAME, "PHONE")); ?>"
-                           class="header__phone">
+                           class="header__phone main-phone">
                             <span class="header__phone-icon"></span>
                             <span class="header__phone-text"><?= Option::get(NK_MODULE_NAME, "PHONE"); ?></span>
                         </a>

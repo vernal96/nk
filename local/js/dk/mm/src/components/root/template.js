@@ -48,7 +48,7 @@ export const template = `
         {{ lang.recall }}
     </button>
     <div class="mm__contact">
-      <a :href="phoneLink">
+      <a :href="phoneLink" class="main-phone">
         <i class="icon icon--phone-orange"></i>
         {{ phone.format }}
       </a>

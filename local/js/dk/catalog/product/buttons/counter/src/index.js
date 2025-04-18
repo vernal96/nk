@@ -35,6 +35,14 @@ export const Counter = {
         waitTime: 200,
         waiter: null
     }),
+    watch: {
+        count(newValue, oldValue) {
+            BX.onCustomEvent(window, 'onProductCartChange', {
+                prevValue: oldValue,
+                value: newValue
+            });
+        }
+    },
     methods: {
         add() {
             this.count = +this.count + 1;

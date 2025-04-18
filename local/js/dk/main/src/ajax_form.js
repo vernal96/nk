@@ -20,6 +20,7 @@ export function init() {
                 }).then(
                     response => {
                         if (response.data.success) {
+                            BX.onCustomEvent(window, 'onFormSubmitSuccess');
                             formElement.reset();
                         }
                         const form = formElement.classList.contains("form") ? formElement : formElement.closest(".form");
@@ -51,6 +52,7 @@ export function init() {
                         toggleLoadingSubmit(formElement, false);
                     },
                     response => {
+                        BX.onCustomEvent(window, 'onFormSubmitError');
                         const totalErrorElement = formElement.querySelector(".total-error");
                         if (totalErrorElement) {
                             totalErrorElement.querySelector(".total-error-content").textContent = response.errors[0].message;
