@@ -12,8 +12,10 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
     ym(100346127, "init", {
         clickmap:true,
         trackLinks:true,
-        accurateTrackBounce:true
+        accurateTrackBounce:true,
+        webvisor:true,
+        ecommerce:"dataLayer"
     });
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/100346127" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+<!-- /Yandex.Metrika counter -->
