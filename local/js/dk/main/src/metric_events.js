@@ -5,10 +5,11 @@ export default {
             try {
                 this.productPageReady();
                 this.addToCart();
-                this.onOrderSuccess();
-                this.onPhoneClick();
-                this.onRecallClick();
-                this.onRecallSubmitted();
+                this.orderSuccess();
+                this.phoneClick();
+                this.recallClick();
+                this.recallSubmitted();
+                this.cartPageReady();
             } catch (e) {}
         },
         productPageReady() {
@@ -18,27 +19,32 @@ export default {
                 });
             });
         },
-        addToCart() {
-            BX.addCustomEvent('onProductCartAdd', (object) => {
-                ym(this.id,'reachGoal','onProductCartAdd', object.data);
-            });
-        },
-        onOrderSuccess() {
+        cartPageReady() {
             BX.addCustomEvent('onCartPageReady', () => {
                 ym(this.id,'reachGoal','onCartPageReady');
             });
         },
-        onPhoneClick() {
+        addToCart() {
+            BX.addCustomEvent('onProductCartAdd', (object) => {
+                ym(this.id,'reachGoal','onAddToCart', object.data);
+            });
+        },
+        orderSuccess() {
+            BX.addCustomEvent('onCartSubmitSuccess', () => {
+                ym(this.id,'reachGoal','onOrderSuccess');
+            });
+        },
+        phoneClick() {
             BX.addCustomEvent('onMainPhoneClick', () => {
                 ym(this.id,'reachGoal','onPhoneClick');
             });
         },
-        onRecallClick() {
+        recallClick() {
             BX.addCustomEvent('onRecallOpen', () => {
                 ym(this.id,'reachGoal','onRecallClick');
             });
         },
-        onRecallSubmitted() {
+        recallSubmitted() {
             BX.addCustomEvent('onRecallOpen', () => {
                 ym(this.id,'reachGoal','onFormSubmitSuccess');
             });
