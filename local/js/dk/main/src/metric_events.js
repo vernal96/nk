@@ -45,7 +45,7 @@ export default {
             });
         },
         recallSubmitted() {
-            BX.addCustomEvent('onRecallOpen', () => {
+            BX.addCustomEvent('onFormSubmitSuccess', () => {
                 ym(this.id,'reachGoal','onFormSubmitSuccess');
             });
         }
