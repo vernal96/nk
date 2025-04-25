@@ -30,8 +30,8 @@ export default {
             });
         },
         orderSuccess() {
-            BX.addCustomEvent('onCartSubmitSuccess', () => {
-                ym(this.id,'reachGoal','onOrderSuccess');
+            BX.addCustomEvent('onCartSubmitSuccess', (object) => {
+                ym(this.id,'reachGoal','onOrderSuccess', object.data);
             });
         },
         phoneClick() {
