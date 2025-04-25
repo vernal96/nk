@@ -1,6 +1,5 @@
 *
 !/.gitignore
-!/.htaccess
 !/favicon.ico
 !/local/
 !/local/**
@@ -10,3 +9,6 @@
 !/404.php
 !/lang/
 !/lang/**
+**/vendor/**
+composer.lock
+.htaccess
