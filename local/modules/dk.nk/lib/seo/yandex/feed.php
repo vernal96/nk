@@ -4,6 +4,7 @@ namespace DK\NK\SEO\Yandex;
 
 use Bitrix\Iblock\InheritedProperty\ElementValues;
 use Bitrix\Main\Loader;
+use Bitrix\Main\Type\Date as BitrixDate;
 use CEventLog;
 use CFile;
 use CIBlockElement;
@@ -19,7 +20,7 @@ class Feed
 {
 
     private DOMDocument $doc;
-    private string $filePath = '/feed.yml';
+    private string $filePath;
     private string $siteUrl;
 
     public function __construct()
@@ -32,6 +33,9 @@ class Feed
         $this->doc = new DOMDocument('1.0', 'UTF-8');
         $this->doc->formatOutput = true;
         $this->siteUrl = 'https://n-krep.ru';
+        $date = new BitrixDate();
+        $fileName = $date->format('d.m.Y');
+        $this->filePath = "/yandex_feeds/$fileName.yml";
     }
 
     public function createFIle(): bool
@@ -231,16 +235,6 @@ class Feed
 
         if ($isCreated) {
             try {
-                $removeResult = $yandex->removeFeeds([$url]);
-                foreach ($removeResult as $item) {
-                    CEventLog::Log(
-                        CEventLog::SEVERITY_INFO,
-                        'YANDEX_FEED',
-                        NK_MODULE_NAME,
-                        'YANDEX_FEED_REMOVE',
-                        $item['status']
-                    );
-                }
                 $result = $yandex->uploadFeeds([
                     [
                         'url' => $url,
