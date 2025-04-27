@@ -6,10 +6,20 @@ use Bitrix\Main\UI\Extension;
 
 /** @var CMain $APPLICATION */
 
-Loader::includeModule("iblock");
-Loader::includeModule(NK_MODULE_NAME);
+try {
+    Loader::includeModule("iblock");
+    Loader::includeModule(NK_MODULE_NAME);
+} catch (Throwable $e) {
+    addUncaughtExceptionToLog($e);
+}
 
-define("SITE_NAME", SiteTable::getById(SITE_ID)->fetchObject()->getName());
+try {
+    define("SITE_NAME", SiteTable::getById(SITE_ID)->fetchObject()->getName());
+} catch (Throwable $e) {
+    addUncaughtExceptionToLog($e);
+    define("SITE_NAME", '');
+}
+
 
 CJSCore::Init();
 Extension::load([

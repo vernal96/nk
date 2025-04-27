@@ -21,7 +21,8 @@ class Feed
 
     private DOMDocument $doc;
     private string $filePath;
-    private string $siteUrl;
+    private string $urlPath;
+    private string $absolutePath;
 
     public function __construct()
     {
@@ -32,17 +33,18 @@ class Feed
         }
         $this->doc = new DOMDocument('1.0', 'UTF-8');
         $this->doc->formatOutput = true;
-        $this->siteUrl = 'https://n-krep.ru';
         $date = new BitrixDate();
         $fileName = $date->format('d.m.Y');
         $this->filePath = "/yandex_feeds/$fileName.yml";
+        $this->urlPath = HOST . $this->filePath;
+        $this->absolutePath = $_SERVER['DOCUMENT_ROOT'] . $this->filePath;
     }
 
     public function createFIle(): bool
     {
         try {
             $this->setXml();
-            return (bool)$this->doc->save("$_SERVER[DOCUMENT_ROOT]$this->filePath");
+            return (bool)$this->doc->save($this->absolutePath);
         } catch (Throwable $e) {
             addUncaughtExceptionToLog($e);
             return false;
@@ -82,7 +84,7 @@ class Feed
 
         $this->addSimpleTagToNode($shop, 'name', 'Надёжный Крепёж');
         $this->addSimpleTagToNode($shop, 'company', 'ООО "НК"');
-        $this->addSimpleTagToNode($shop, 'url', $this->siteUrl);
+        $this->addSimpleTagToNode($shop, 'url', HOST);
         $this->addSimpleTagToNode($shop, 'delivery', 'true');
 
         $shop->appendChild($this->getCurrencies());
@@ -176,7 +178,7 @@ class Feed
         $offer->setAttribute('id', $params['SIZE_ID']);
 
         $name = "$params[NAME] $params[UF_SIZE]";
-        $url = "$this->siteUrl{$params['DETAIL_PAGE_URL']}";
+        $url = HOST . "{$params['DETAIL_PAGE_URL']}";
         $picture = CFile::ResizeImageGet(
             $params['DETAIL_PICTURE'] ?: $params['PREVIEW_PICTURE'],
             ['width' => 600, 'height' => 600]
@@ -188,7 +190,7 @@ class Feed
         $this->addSimpleTagToNode($offer, 'currencyId', 'RUR');
         $this->addSimpleTagToNode($offer, 'categoryId', $params['IBLOCK_SECTION_ID']);
         if ($picture) {
-            $this->addSimpleTagToNode($offer, 'picture', $this->siteUrl . $picture['src']);
+            $this->addSimpleTagToNode($offer, 'picture', HOST . $picture['src']);
         }
         $this->addSimpleTagToNode(
             $offer,
@@ -231,13 +233,12 @@ class Feed
         $yandex = new Yandex();
 
         $isCreated = $feed->createFIle();
-        $url = "$feed->siteUrl$feed->filePath";
 
         if ($isCreated) {
             try {
                 $result = $yandex->uploadFeeds([
                     [
-                        'url' => $url,
+                        'url' => $feed->urlPath,
                         'type' => 'GOODS'
                     ]
                 ]);
@@ -247,7 +248,7 @@ class Feed
                         'YANDEX_FEED',
                         NK_MODULE_NAME,
                         'YANDEX_FEED',
-                        "$item[status]<br>url: $url"
+                        $item['status']
                     );
                 }
             } catch (Throwable $e) {

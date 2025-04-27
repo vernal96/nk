@@ -17,6 +17,8 @@ const HL_DELIVERY_INFO = 4;
 
 const NK_MODULE_NAME = "dk.nk";
 
+const HOST = 'https://n-krep.ru';
+
 const EMAIL_TEMPLATE_PATH = "/local/templates/nk.mail/";
 const DEFAULT_PRICE_STATUS = 1;
 

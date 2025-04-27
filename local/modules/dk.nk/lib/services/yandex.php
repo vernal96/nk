@@ -5,13 +5,16 @@ namespace DK\NK\Services;
 use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ArgumentOutOfRangeException;
 use Bitrix\Main\Config\Option;
-use DK\NK\ServiceConnectException;
 use DK\NK\Helper;
+use DK\NK\ServiceConnectException;
+use Throwable;
 
 class Yandex extends Service
 {
 
     private string $accessToken;
+    private int $userId;
+    private string $hostId;
 
     public function __construct()
     {
@@ -19,21 +22,32 @@ class Yandex extends Service
         $this->accessToken = Option::get(NK_MODULE_NAME, 'YANDEX_APP_TOKEN');
         $this->httpClient->setHeader('Authorization', "OAuth $this->accessToken");
         $this->httpClient->setHeader('Content-Type', 'application/json');
+        $this->userId = $this->getUserId();
+        $this->hostId = Option::get(NK_MODULE_NAME, 'YANDEX_HOST_ID');
     }
 
-    /**
-     * @throws ArgumentOutOfRangeException
-     * @throws ServiceConnectException
-     * @throws ArgumentException
-     */
-    public function getUserId(): int
+    private function getUserId(): int
     {
-        $userId = Option::get(NK_MODULE_NAME, 'YANDEX_APP_USER_ID');
-        if ($userId) return (int)$userId;
-        $requestResult = $this->sendRequest('user', [], 'GET');
-        $result = $this->parseResultFromJson($requestResult);
-        Option::set(NK_MODULE_NAME, 'YANDEX_APP_USER_ID', $result['user_id']);
-        return (int)$result['user_id'];
+        try {
+            $userId = Option::get(NK_MODULE_NAME, 'YANDEX_APP_USER_ID');
+            if ($userId) return (int)$userId;
+            $requestResult = $this->sendRequest('user', [], 'GET');
+            $result = $this->parseResultFromJson($requestResult);
+            Option::set(NK_MODULE_NAME, 'YANDEX_APP_USER_ID', $result['user_id']);
+            return (int)$result['user_id'];
+        } catch (Throwable $e) {
+            addUncaughtExceptionToLog($e);
+            return 0;
+        }
+    }
+
+    private function getFeedsUrl(string $method): string {
+        return sprintf(
+            'user/%d/hosts/%s/feeds/%s',
+            $this->userId,
+            $this->hostId,
+            $method
+        );
     }
 
     /**
@@ -43,11 +57,6 @@ class Yandex extends Service
      */
     public function uploadFeeds(array $feeds = []): array
     {
-        $url = sprintf(
-            'user/%d/hosts/%s/feeds/batch/add',
-            $this->getUserId(),
-            Option::get(NK_MODULE_NAME, 'YANDEX_HOST_ID')
-        );
         $params = [];
         foreach ($feeds as $feed) {
             $params['feeds'][] = [
@@ -58,7 +67,7 @@ class Yandex extends Service
                 )
             ];
         }
-        $requestResult = $this->sendRequest($url, $params);
+        $requestResult = $this->sendRequest($this->getFeedsUrl('batch/add'), $params);
         return $this->parseResultFromJson($requestResult, 'feeds');
     }
 
@@ -68,16 +77,22 @@ class Yandex extends Service
      * @throws ServiceConnectException
      */
     public function removeFeeds(array $feeds = []): array {
-        $url = sprintf(
-            'user/%d/hosts/%s/feeds/batch/remove',
-            $this->getUserId(),
-            Option::get(NK_MODULE_NAME, 'YANDEX_HOST_ID')
-        );
         $params = [];
         foreach ($feeds as $feed) {
             $params['urls'][] = $feed;
         }
-        $requestResult = $this->sendRequest($url, $params, 'DELETE');
+        $requestResult = $this->sendRequest($this->getFeedsUrl('batch/remove'), $params, 'DELETE');
+        return $this->parseResultFromJson($requestResult, 'feeds');
+    }
+
+    /**
+     * @throws ArgumentOutOfRangeException
+     * @throws ArgumentException
+     * @throws ServiceConnectException
+     */
+    public function getFeeds(): array
+    {
+        $requestResult = $this->sendRequest($this->getFeedsUrl('list'), [], 'GET');
         return $this->parseResultFromJson($requestResult, 'feeds');
     }
 }
