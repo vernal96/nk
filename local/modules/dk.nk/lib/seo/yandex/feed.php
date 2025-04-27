@@ -32,7 +32,7 @@ class Feed
         }
         $this->doc = new DOMDocument('1.0', 'UTF-8');
         $this->doc->formatOutput = true;
-        $this->siteUrl = 'https://' . SITE_SERVER_NAME;
+        $this->siteUrl = 'https://n-krep.ru';
     }
 
     public function createFIle(): bool
