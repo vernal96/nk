@@ -256,7 +256,7 @@ class Feed
             addUncaughtExceptionToLog($e);
         }
 
-        $feed->removeFile();
+//        $feed->removeFile();
 
         return sprintf('%s::%s()', self::class, __FUNCTION__);
     }
