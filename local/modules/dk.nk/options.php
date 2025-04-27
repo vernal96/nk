@@ -98,9 +98,21 @@ $aTabs = [
             [
                 "GRC_SECRET", Loc::getMessage("DK_GRC_SECRET"), "", ["text", 50],
             ],
-            Loc::getMessage("DK_YM_HEAD"),
+            Loc::getMessage("DK_YANDEX_HEAD"),
             [
                 "YM_KEY", Loc::getMessage("DK_YM_KEY"), "", ["text", 50],
+            ],
+            [
+                "YANDEX_APP_CLIENT_ID", Loc::getMessage("DK_YANDEX_APP_CLIENT_ID"), "", ["text", 50],
+            ],
+            [
+                "YANDEX_APP_TOKEN", Loc::getMessage("DK_YANDEX_APP_TOKEN"), "", ["text", 50],
+            ],
+            [
+                "YANDEX_HOST_ID", Loc::getMessage("DK_YANDEX_HOST_ID"), "", ["text", 50],
+            ],
+            [
+                "YANDEX_FEEDS_REGIONS", Loc::getMessage("DK_YANDEX_FEEDS_REGIONS"), "", ["text", 50],
             ],
             Loc::getMessage("KD_TINYMCE_HEAD"),
             [

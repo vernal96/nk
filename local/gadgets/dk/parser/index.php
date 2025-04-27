@@ -2,15 +2,14 @@
 
 /** @var CModule $APPLICATION */
 
-/** @var CModule $USER */
+/** @var CUser $USER */
 
 use Bitrix\Main\Application;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\UI\Extension;
 use DK\NK\Parser;
-
-
+if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 $canPermissions = \DK\NK\Helper\Main::checkUserGroup($USER->GetID(), 'PARSER');
 
 Extension::load([

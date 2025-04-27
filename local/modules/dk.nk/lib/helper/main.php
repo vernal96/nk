@@ -173,30 +173,34 @@ class Main
         return $result;
     }
 
-    /**
-     * @throws ArgumentException
-     * @throws ObjectPropertyException
-     * @throws SystemException
-     */
     public static function checkUserGroup(int $userId, array|int|string $groups): bool {
-        if (!is_array($groups)) $groups = [$groups];
+        try {
+            if (!is_array($groups)) $groups = [$groups];
 
-        $groupQuery = Query::filter()
-            ->logic('or')
-            ->where('GROUP_ID', 1);
+            $groupQuery = Query::filter()
+                ->logic('or')
+                ->where('GROUP_ID', 1);
 
-        foreach ($groups as $group) {
-            if (is_int($group)) {
-                $groupQuery->where('GROUP_ID', $group);
-            } else {
-                $groupQuery->where('GROUP.STRING_ID', $group);
+            foreach ($groups as $group) {
+                if (is_int($group)) {
+                    $groupQuery->where('GROUP_ID', $group);
+                } else {
+                    $groupQuery->where('GROUP.STRING_ID', $group);
+                }
             }
-        }
 
-        return (bool)UserGroupTable::query()
-            ->where('USER_ID', $userId)
-            ->where($groupQuery)
-            ->fetchAll();
+            return (bool)UserGroupTable::query()
+                ->where('USER_ID', $userId)
+                ->where($groupQuery)
+                ->fetchAll();
+        } catch (Throwable) {
+            return false;
+        }
+    }
+
+    public static function separatorStringToArray(string $string, string $separator = ','): array {
+        $array = explode($separator, $string);
+        return array_map(fn ($item) => trim($item), $array);
     }
 
     public static function getApplicationFormat(int $number): string {

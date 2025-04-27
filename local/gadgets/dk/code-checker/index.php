@@ -5,7 +5,7 @@ use Bitrix\Main\Data\Cache;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\UI\Extension;
-
+if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 $cache = Cache::createInstance();
 $taggedCache = Application::getInstance()->getTaggedCache();
 $cachePath = 'code-checker';
