@@ -235,11 +235,11 @@ class Feed
         $yandex = new Yandex();
 
         $feed->createFIle();
-
+        $url = "$feed->siteUrl$feed->filePath";
         try {
             $result = $yandex->uploadFeeds([
                 [
-                    'url' => "$feed->siteUrl/feed.yml",
+                    'url' => $url,
                     'type' => 'GOODS'
                 ]
             ]);
@@ -249,14 +249,14 @@ class Feed
                     'YANDEX_FEED_ERROR',
                     NK_MODULE_NAME,
                     'YANDEX_FEED',
-                    $item['status']
+                    "$item[status]<br>url: $url"
                 );
             }
         } catch (Throwable $e) {
             addUncaughtExceptionToLog($e);
         }
 
-//        $feed->removeFile();
+        $feed->removeFile();
 
         return sprintf('%s::%s()', self::class, __FUNCTION__);
     }
