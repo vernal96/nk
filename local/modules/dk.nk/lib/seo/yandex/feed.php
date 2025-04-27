@@ -27,14 +27,12 @@ class Feed
     {
         try {
             Loader::includeModule('iblock');
-
         } catch (Throwable $e) {
             addUncaughtExceptionToLog($e);
         }
         $this->doc = new DOMDocument('1.0', 'UTF-8');
         $this->doc->formatOutput = true;
         $this->siteUrl = 'https://' . SITE_SERVER_NAME;
-
     }
 
     public function createFIle(): bool
@@ -246,16 +244,13 @@ class Feed
                 ]
             ]);
             foreach ($result as $item) {
-                if ($item['status'] === 'OK') continue;
-                else {
-                    CEventLog::Log(
-                        CEventLog::SEVERITY_INFO,
-                        'YANDEX_FEED_ERROR',
-                        NK_MODULE_NAME,
-                        'YANDEX_FEED',
-                        $item['status']
-                    );
-                }
+                CEventLog::Log(
+                    CEventLog::SEVERITY_INFO,
+                    'YANDEX_FEED_ERROR',
+                    NK_MODULE_NAME,
+                    'YANDEX_FEED',
+                    $item['status']
+                );
             }
         } catch (Throwable $e) {
             addUncaughtExceptionToLog($e);
