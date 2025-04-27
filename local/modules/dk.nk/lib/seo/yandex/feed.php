@@ -3,7 +3,6 @@
 namespace DK\NK\SEO\Yandex;
 
 use Bitrix\Iblock\InheritedProperty\ElementValues;
-use Bitrix\Main\IO\File;
 use Bitrix\Main\Loader;
 use CEventLog;
 use CFile;
@@ -43,13 +42,6 @@ class Feed
         } catch (Throwable $e) {
             addUncaughtExceptionToLog($e);
             return false;
-        }
-    }
-
-    public function removeFile(): void {
-        $filePath = "$_SERVER[DOCUMENT_ROOT]$this->filePath";
-        if (File::isFileExists($filePath)) {
-            File::deleteFile($filePath);
         }
     }
 
@@ -234,26 +226,39 @@ class Feed
         $feed = new Feed();
         $yandex = new Yandex();
 
-        $feed->createFIle();
+        $isCreated = $feed->createFIle();
         $url = "$feed->siteUrl$feed->filePath";
-        try {
-            $result = $yandex->uploadFeeds([
-                [
-                    'url' => $url,
-                    'type' => 'GOODS'
-                ]
-            ]);
-            foreach ($result as $item) {
-                CEventLog::Log(
-                    CEventLog::SEVERITY_INFO,
-                    'YANDEX_FEED_ERROR',
-                    NK_MODULE_NAME,
-                    'YANDEX_FEED',
-                    "$item[status]<br>url: $url"
-                );
+
+        if ($isCreated) {
+            try {
+                $removeResult = $yandex->removeFeeds([$url]);
+                foreach ($removeResult as $item) {
+                    CEventLog::Log(
+                        CEventLog::SEVERITY_INFO,
+                        'YANDEX_FEED',
+                        NK_MODULE_NAME,
+                        'YANDEX_FEED_REMOVE',
+                        $item['status']
+                    );
+                }
+                $result = $yandex->uploadFeeds([
+                    [
+                        'url' => $url,
+                        'type' => 'GOODS'
+                    ]
+                ]);
+                foreach ($result as $item) {
+                    CEventLog::Log(
+                        CEventLog::SEVERITY_INFO,
+                        'YANDEX_FEED',
+                        NK_MODULE_NAME,
+                        'YANDEX_FEED',
+                        "$item[status]<br>url: $url"
+                    );
+                }
+            } catch (Throwable $e) {
+                addUncaughtExceptionToLog($e);
             }
-        } catch (Throwable $e) {
-            addUncaughtExceptionToLog($e);
         }
 
         return sprintf('%s::%s()', self::class, __FUNCTION__);

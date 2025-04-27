@@ -10,9 +10,6 @@ use DK\NK\ServiceConnectException;
 abstract class Service
 {
 
-    const GET = 'GET';
-    const POST = 'POST';
-
     private string $address;
     protected HttpClient $httpClient;
 
@@ -25,7 +22,7 @@ abstract class Service
      * @throws ArgumentException
      * @throws ServiceConnectException
      */
-    protected function sendRequest(string $url, array $params = [], string $method = self::POST): string
+    protected function sendRequest(string $url, array $params = [], string $method = 'POST'): string
     {
         $this->httpClient->query($method, $this->address . $url, Json::encode($params));
         if ($this->httpClient->getStatus() >= 200 && $this->httpClient->getStatus() < 300) {

@@ -30,7 +30,7 @@ class Yandex extends Service
     {
         $userId = Option::get(NK_MODULE_NAME, 'YANDEX_APP_USER_ID');
         if ($userId) return (int)$userId;
-        $requestResult = $this->sendRequest('user', [], self::GET);
+        $requestResult = $this->sendRequest('user', [], 'GET');
         $result = $this->parseResultFromJson($requestResult);
         Option::set(NK_MODULE_NAME, 'YANDEX_APP_USER_ID', $result['user_id']);
         return (int)$result['user_id'];
@@ -59,6 +59,25 @@ class Yandex extends Service
             ];
         }
         $requestResult = $this->sendRequest($url, $params);
+        return $this->parseResultFromJson($requestResult, 'feeds');
+    }
+
+    /**
+     * @throws ArgumentOutOfRangeException
+     * @throws ArgumentException
+     * @throws ServiceConnectException
+     */
+    public function removeFeeds(array $feeds = []): array {
+        $url = sprintf(
+            'user/%d/hosts/%s/feeds/batch/remove',
+            $this->getUserId(),
+            Option::get(NK_MODULE_NAME, 'YANDEX_HOST_ID')
+        );
+        $params = [];
+        foreach ($feeds as $feed) {
+            $params['urls'][] = $feed;
+        }
+        $requestResult = $this->sendRequest($url, $params, 'DELETE');
         return $this->parseResultFromJson($requestResult, 'feeds');
     }
 }
