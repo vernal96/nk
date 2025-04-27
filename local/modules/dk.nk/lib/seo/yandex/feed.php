@@ -4,6 +4,7 @@ namespace DK\NK\SEO\Yandex;
 
 use Bitrix\Iblock\InheritedProperty\ElementValues;
 use Bitrix\Main\IO\File;
+use Bitrix\Main\Loader;
 use CEventLog;
 use CFile;
 use CIBlockElement;
@@ -24,9 +25,16 @@ class Feed
 
     public function __construct()
     {
+        try {
+            Loader::includeModule('iblock');
+
+        } catch (Throwable $e) {
+            addUncaughtExceptionToLog($e);
+        }
         $this->doc = new DOMDocument('1.0', 'UTF-8');
         $this->doc->formatOutput = true;
         $this->siteUrl = 'https://' . SITE_SERVER_NAME;
+
     }
 
     public function createFIle(): bool
