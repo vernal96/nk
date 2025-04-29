@@ -7,7 +7,7 @@ if (empty($arResult)) {
 }
 
 global $APPLICATION;
-$result = "<ul class=\"breadcrumbs__wrapper\" itemprop=\"http://schema.org/breadcrumb\" itemscope itemtype=\"http://schema.org/BreadcrumbList\">";
+$result = "<ul class=\"breadcrumbs__wrapper\" itemprop=\"breadcrumb\" itemscope itemtype=\"http://schema.org/BreadcrumbList\">";
 foreach ($arResult as $index => $arItem) {
     $title = htmlspecialcharsex($arItem["TITLE"]);
     $result .= "<li itemprop=\"itemListElement\" itemscope itemtype=\"http://schema.org/ListItem\" ";
