@@ -1,10 +1,12 @@
 <?php
 
 use Bitrix\Iblock\Component\Tools;
+use Bitrix\Iblock\InheritedProperty\ElementValues;
 use Bitrix\Main\Application;
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\Engine\ActionFilter\Csrf;
 use Bitrix\Main\Engine\Contract\Controllerable;
+use Bitrix\Main\Web\Json;
 use DK\NK\Helper\Catalog;
 use DK\NK\Helper\Iblock;
 use DK\NK\Helper\Main;
@@ -50,6 +52,7 @@ class DKCatalogDetail extends CBitrixComponent implements Controllerable
             $this->arResult["PRICES"] = Catalog::getProductPrices($arFields["ID"]);
 
             $this->arResult["RECOMMEND"] = $this->arResult["PROPERTIES"]["RECOMMEND"]["VALUE"];
+            $this->arResult['JSON_LD'] = $this->getJsonLd($objElement);
             $taggedCache->registerTag("iblock_id_" . $this->arParams["IBLOCK_ID"]);
             $taggedCache->endTagCache();
             $this->endResultCache();
@@ -63,6 +66,50 @@ class DKCatalogDetail extends CBitrixComponent implements Controllerable
         }
 
         $APPLICATION->AddChainItem($this->arResult["NAME"], $this->arResult["DETAIL_PAGE_URL"]);
+    }
+
+    private function getJsonLd(_CIBElement $element): string {
+        $fields = $element->GetFields();
+        $pictureSrc = CFile::GetPath($fields['DETAIL_PICTURE'] ?: $fields['PREVIEW_PICTURE']);
+        $seo = (new ElementValues($fields['IBLOCK_ID'], $fields['ID']))->getValues();
+
+        $result = [
+            '@context' => 'http://schema.org',
+            '@type' => 'Product',
+            'name' => $fields["NAME"],
+            'description' => $seo['ELEMENT_META_DESCRIPTION'],
+            'offers' => $this->getJsonLdOffers($fields)
+        ];
+        if ($pictureSrc) $result['image'] = HOST . $pictureSrc;
+        try {
+            return Json::encode($result);
+        } catch (Exception) {
+            return '{}';
+        }
+    }
+
+    private function getJsonLdOffers(array $element): array {
+        $result = [];
+        try {
+            $sizes = Main::getHLObject(HL_SIZES)::query()
+                ->addSelect('*')
+                ->where('UF_PRODUCT', $element['ID'])
+                ->fetchAll();
+        } catch (Exception) {
+            $sizes = [];
+        }
+        foreach ($sizes as $size) {
+            $result[] = [
+                '@type' => 'Offer',
+                'url' => HOST . $element['DETAIL_PAGE_URL'],
+                'priceCurrency' => 'RUB',
+                'price' => $size['UF_PRICE_1'],
+                'itemCondition' => 'https://schema.org/NewCondition',
+                'sku' => $size['UF_CODE'],
+                'description' => $size['UF_SIZE'],
+            ];
+        }
+        return $result;
     }
 
     public function configureActions(): array
