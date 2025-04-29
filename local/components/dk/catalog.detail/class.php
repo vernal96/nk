@@ -57,6 +57,7 @@ class DKCatalogDetail extends CBitrixComponent implements Controllerable
             $taggedCache->endTagCache();
             $this->endResultCache();
         }
+        $this->arResult['IS_AJAX_REQUEST'] = (bool)$this->request->get(BX_AJAX_PARAM_ID);
         $this->includeComponentTemplate();
         if ($iprop = $this->arResult["IPROPERTY_VALUES"]) {
             $APPLICATION->SetPageProperty("TITLE", $iprop["ELEMENT_META_TITLE"]);

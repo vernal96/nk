@@ -6,6 +6,7 @@ use DK\NK\Helper\Main;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /** @var array $arResult */
+/** @var DKCatalogDetail $component */
 /** @var CBitrixComponentTemplate $this */
 $this->setFrameMode(true);
 ?>
@@ -158,6 +159,6 @@ $this->AddEditAction("edit_$arResult[ID]", $arResult["LINKS"]["DELETE"]["URL"], 
     BX("pagetitle").classList.add("catalog-detail-page-header");
     BX.onCustomEvent(window, 'onProductPageReady');
 </script>
-<? if (!$this->frameMode) : ?>
+<? if (!$arResult['IS_AJAX_REQUEST']) : ?>
     <script type="application/ld+json"><?= $arResult['JSON_LD']; ?></script>
 <? endif; ?>
