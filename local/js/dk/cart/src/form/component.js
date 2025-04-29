@@ -288,9 +288,6 @@ export const Form = {
                 data: new FormData(event.target)
             }).then(
                 response => {
-                    BX.onCustomEvent(window, 'onCartSubmitSuccess', {
-                        sum: response.data.sum
-                    });
                     this.totalError = "";
                     if (!response.data.success) {
                         this.errorFields = response.data.fields;
@@ -305,6 +302,9 @@ export const Form = {
                                 this.successFunction(response.data.message);
                             }
                         } else {
+                            BX.onCustomEvent(window, 'onCartSubmitSuccess', {
+                                sum: response.data.sum
+                            });
                             location.reload();
                         }
                     }
