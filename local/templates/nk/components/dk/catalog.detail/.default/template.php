@@ -158,4 +158,3 @@ $this->AddEditAction("edit_$arResult[ID]", $arResult["LINKS"]["DELETE"]["URL"], 
     BX("pagetitle").classList.add("catalog-detail-page-header");
     BX.onCustomEvent(window, 'onProductPageReady');
 </script>
-<script type="application/ld+json"><?= $arResult['JSON_LD']; ?></script>
