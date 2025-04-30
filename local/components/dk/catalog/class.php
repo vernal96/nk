@@ -30,7 +30,7 @@ class DKCatalogComponent extends CBitrixComponent implements Controllerable
         Loader::includeModule('iblock');
         $componentPage = $this->arParams["SEF_MODE"] === "Y" ? $this->sefMode() : $this->noSefMode();
         if (!$componentPage && $APPLICATION->GetCurPage() != $this->arParams["SEF_FOLDER"]) {
-            Tools::process404();
+            $componentPage = "template";
         } elseif ($componentPage == "sectionStart" || $componentPage == "root") {
             $componentPage = "section";
         } elseif (!$componentPage) {
