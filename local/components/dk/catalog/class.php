@@ -33,7 +33,7 @@ class DKCatalogComponent extends CBitrixComponent implements Controllerable
             if ($this->arParams['COMPONENT_TEMPLATE'] == 'main') {
                 $componentPage = "template";
             } else {
-//                Tools::process404();
+                Tools::process404();
             }
         } elseif ($componentPage == "sectionStart" || $componentPage == "root") {
             $componentPage = "section";
