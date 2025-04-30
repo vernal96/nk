@@ -4,13 +4,10 @@ namespace DK\NK\SEO\Yandex;
 
 use Bitrix\Iblock\InheritedProperty\ElementValues;
 use Bitrix\Main\Loader;
-use Bitrix\Main\Type\Date as BitrixDate;
-use CEventLog;
 use CFile;
 use CIBlockElement;
 use CIBlockSection;
 use DK\NK\Helper;
-use DK\NK\Services\Yandex;
 use DOMDocument;
 use DOMElement;
 use DOMException;
@@ -21,7 +18,6 @@ class Feed
 
     private DOMDocument $doc;
     private string $filePath;
-    private string $urlPath;
     private string $absolutePath;
 
     public function __construct()
@@ -33,10 +29,7 @@ class Feed
         }
         $this->doc = new DOMDocument('1.0', 'UTF-8');
         $this->doc->formatOutput = true;
-        $date = new BitrixDate();
-        $fileName = $date->format('d.m.Y');
-        $this->filePath = "/yandex_feeds/$fileName.yml";
-        $this->urlPath = HOST . $this->filePath;
+        $this->filePath = "/feed.yml";
         $this->absolutePath = $_SERVER['DOCUMENT_ROOT'] . $this->filePath;
     }
 
@@ -229,33 +222,7 @@ class Feed
 
     public static function agent(): string
     {
-        $feed = new Feed();
-        $yandex = new Yandex();
-
-        $isCreated = $feed->createFIle();
-
-        if ($isCreated) {
-            try {
-                $result = $yandex->uploadFeeds([
-                    [
-                        'url' => $feed->urlPath,
-                        'type' => 'GOODS'
-                    ]
-                ]);
-                foreach ($result as $item) {
-                    CEventLog::Log(
-                        CEventLog::SEVERITY_INFO,
-                        'YANDEX_FEED',
-                        NK_MODULE_NAME,
-                        'YANDEX_FEED',
-                        $item['status']
-                    );
-                }
-            } catch (Throwable $e) {
-                addUncaughtExceptionToLog($e);
-            }
-        }
-
+        (new Feed())->createFIle();
         return sprintf('%s::%s()', self::class, __FUNCTION__);
     }
 

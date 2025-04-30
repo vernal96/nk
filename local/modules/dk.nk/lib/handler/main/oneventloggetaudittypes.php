@@ -8,8 +8,7 @@ class OnEventLogGetAuditTypes
     public static function run(): array
     {
         return [
-            'UNCAUGHT_EXCEPTION' => '[UNCAUGHT_EXCEPTION] Не перехваченное исключение',
-            'YANDEX_FEED' => '[YANDEX_FEED] Yandex фид',
+            'UNCAUGHT_EXCEPTION' => '[UNCAUGHT_EXCEPTION] Не перехваченное исключение'
         ];
     }
 
