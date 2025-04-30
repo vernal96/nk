@@ -52,8 +52,6 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
         Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/src/libs/fancybox/script.js");
         Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/src/libs/swiper/script.js");
         ?>
-        <? Main::include("yandex_metrika"); ?>
-        <? Main::include("google_tag"); ?>
     </head>
 
 <body>
