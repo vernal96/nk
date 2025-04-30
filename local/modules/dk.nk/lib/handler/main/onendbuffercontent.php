@@ -9,7 +9,8 @@ class OnEndBufferContent
     {
         $pattern = '/(<link[^>]+rel=["\']canonical["\'][^>]+href=["\']https?:\/\/[^"\']*?\/)page-\d+\/([^"\']*["\'][^>]*>)/iu';
         $replacement = '$1$2';
-        $content = preg_replace($pattern, $replacement, $content);
+        $newContent = preg_replace($pattern, $replacement, $content, -1, $count);
+        if ($count) $content = $newContent;
     }
 
 }
