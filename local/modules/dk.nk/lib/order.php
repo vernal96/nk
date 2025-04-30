@@ -70,7 +70,6 @@ class Order
         if ($this->order->getFileId()) {
             $params['FILE'] = [$this->order->getFileId()];
         }
-        logToFile($params);
         return Event::send($params);
     }
 
