@@ -187,16 +187,16 @@ class DKCatalogComponent extends CBitrixComponent implements Controllerable
     {
         return [
             "getTree" => [
-                "prefilters" => [new Csrf()]
+//                "prefilters" => [new Csrf()]
             ],
             "getProducts" => [
-                "prefilters" => [new Csrf()]
+//                "prefilters" => [new Csrf()]
             ],
             "getPrices" => [
-                "prefilters" => [new Csrf()]
+//                "prefilters" => [new Csrf()]
             ],
             "cartUpdate" => [
-                "prefilters" => [new Csrf()]
+//                "prefilters" => [new Csrf()]
             ]
         ];
     }
