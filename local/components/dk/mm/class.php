@@ -89,10 +89,10 @@ class DKMMComponent extends CBitrixComponent implements Controllerable
     {
         return [
             "getTree" => [
-//                "prefilters" => [new Csrf()]
+                "prefilters" => [new Csrf()]
             ],
             "getMM" => [
-//                "prefilters" => [new Csrf()]
+                "prefilters" => [new Csrf()]
             ]
         ];
     }

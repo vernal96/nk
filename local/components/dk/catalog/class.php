@@ -6,6 +6,7 @@ use Bitrix\Main\Config\Option;
 use Bitrix\Main\Engine\ActionFilter\Csrf;
 use Bitrix\Main\Engine\Contract\Controllerable;
 use Bitrix\Main\Loader;
+use DK\NK\ActionFilter\AllowYandexForCsrf;
 use DK\NK\Cart;
 use DK\NK\Helper\Catalog;
 use DK\NK\Helper\Main;
@@ -187,16 +188,28 @@ class DKCatalogComponent extends CBitrixComponent implements Controllerable
     {
         return [
             "getTree" => [
-//                "prefilters" => [new Csrf()]
+                "prefilters" => [
+                    new AllowYandexForCsrf(),
+                    new Csrf()
+                ]
             ],
             "getProducts" => [
-//                "prefilters" => [new Csrf()]
+                "prefilters" => [
+                    new AllowYandexForCsrf(),
+                    new Csrf()
+                ]
             ],
             "getPrices" => [
-//                "prefilters" => [new Csrf()]
+                "prefilters" => [
+                    new AllowYandexForCsrf(),
+                    new Csrf()
+                ]
             ],
             "cartUpdate" => [
-//                "prefilters" => [new Csrf()]
+                "prefilters" => [
+                    new AllowYandexForCsrf(),
+                    new Csrf()
+                ]
             ]
         ];
     }
