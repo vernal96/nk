@@ -1,6 +1,6 @@
 <?php
 
-use Bitrix\Main\Engine\ActionFilter\Csrf;
+use DK\NK\ActionFilter\Csrf;
 use Bitrix\Main\Engine\Contract\Controllerable;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\Mail\Event;

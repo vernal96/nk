@@ -4,7 +4,7 @@ use Bitrix\Iblock\Component\Tools;
 use Bitrix\Iblock\InheritedProperty\ElementValues;
 use Bitrix\Main\Application;
 use Bitrix\Main\Config\Option;
-use Bitrix\Main\Engine\ActionFilter\Csrf;
+use DK\NK\ActionFilter\Csrf;
 use Bitrix\Main\Engine\Contract\Controllerable;
 use Bitrix\Main\Web\Json;
 use DK\NK\Helper\Catalog;

@@ -1,7 +1,7 @@
 <?php
 
 use Bitrix\Main\Config\Option;
-use Bitrix\Main\Engine\ActionFilter\Csrf;
+use DK\NK\ActionFilter\Csrf;
 use Bitrix\Main\Engine\Contract\Controllerable;
 use DK\NK\Helper\Main;
 
