@@ -10,7 +10,9 @@ export default {
                 this.recallClick();
                 this.recallSubmitted();
                 this.cartPageReady();
-            } catch (e) {}
+            } catch (e) {
+                console.error(e);
+            }
         },
         productPageReady() {
             BX.addCustomEvent('onProductPageReady', () => {

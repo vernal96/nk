@@ -1,7 +1,6 @@
 <?php
 
-use Bitrix\Main\ArgumentException;
-use Bitrix\Main\Web\Json;
+include __DIR__ . '/functions.php';
 
 //const VUEJS_DEBUG = true;
 
@@ -21,31 +20,3 @@ const HOST = 'https://n-krep.ru';
 
 const EMAIL_TEMPLATE_PATH = "/local/templates/nk.mail/";
 const DEFAULT_PRICE_STATUS = 1;
-
-function printR(mixed $array): void
-{
-    echo "<pre style='background: #00000012; padding: 1em;'>" . print_r($array, true) . "</pre>";
-}
-
-function logToFile(mixed $data, bool $append = false): void
-{
-    try {
-        $data = Json::encode($data, JSON_PRETTY_PRINT);
-    } catch (ArgumentException $e) {
-        $data = $e->getMessage();
-    }
-    file_put_contents(
-        '/var/www/u1364127/data/www/logs/debug.json', $data, $append ? FILE_APPEND : 0
-    );
-}
-
-function addUncaughtExceptionToLog(Throwable $exception): void
-{
-    CEventLog::Log(
-        CEventLog::SEVERITY_ERROR,
-        'UNCAUGHT_EXCEPTION',
-        NK_MODULE_NAME,
-        'EXCEPTION',
-        preg_replace('/\n/', '<br>', (string)$exception)
-    );
-}

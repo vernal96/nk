@@ -3,7 +3,6 @@ import "dk.main.methods";
 import * as AjaxForm from "./ajax_form";
 import {Fancybox} from "@fancyapps/ui";
 import {runModalCart} from "dk.cart";
-import Metric from './metric_events';
 
 BX.ready(() => {
     Methods.setPhonesMask();
@@ -27,8 +26,6 @@ BX.ready(() => {
     Methods.on('click', '[data-src="#recall"]', () => BX.onCustomEvent(window, 'onRecallOpen'));
 
 });
-
-Metric.ym.init();
 
 if (window.frameCacheVars !== undefined) {
     BX.addCustomEvent("onFrameDataReceived", function (json) {

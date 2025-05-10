@@ -3,12 +3,19 @@
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\Page\Asset;
+use Bitrix\Main\UI\Extension;
 use DK\NK\Helper\Main;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /** @var CMain $APPLICATION */
+/** @var CUser $USER */
 /** @var bool $IS_MAIN_PAGE */
 /** @var bool $IS_CATALOG_PAGE */
+
+if (!Main::checkUserGroup($USER->GetID(), [1, 'MANAGER'])) {
+    Extension::load('dk.seo.yandex');
+}
+
 ?>
 
     <!DOCTYPE html>
