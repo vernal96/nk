@@ -26,7 +26,7 @@ use Throwable;
 
 class Parser
 {
-    public static string $errors = "";
+    public static array $errors = [];
     private static array $fileSections;
     private static array $fileElements;
     private static array $structure;
@@ -87,7 +87,7 @@ class Parser
 //        self::disableAllEmpty();
 //        self::deactivateEmptyProducts();
         Cache::clearCache(true);
-        self::updateDBBitrix24();
+//        self::updateDBBitrix24();
         return true;
     }
 
@@ -172,6 +172,9 @@ class Parser
                 } else {
                     $existingElementId = self::$iblockElement->Add($addArray);
                 }
+                if (self::$iblockElement->getLastError()) {
+                    self::$errors[] = self::$iblockElement->getLastError();
+                }
                 self::updateImage($section, $existingElementId, true);
             } else {
                 self::$actualSections[] = $guid;
@@ -179,6 +182,9 @@ class Parser
                     self::$iblockSection->Update($existingSectionId, $updateArray);
                 } else {
                     $existingSectionId = self::$iblockSection->Add($addArray);
+                }
+                if (self::$iblockSection->getLastError()) {
+                    self::$errors[] = self::$iblockSection->getLastError();
                 }
                 self::updateImage($section, $existingSectionId);
                 if ($section["CHILDREN"]) {
@@ -223,10 +229,16 @@ class Parser
             self::$iblockElement->Update($elementId, [
                 "PREVIEW_PICTURE" => $imageArray
             ]);
+            if (self::$iblockElement->getLastError()) {
+                self::$errors[] = self::$iblockElement->getLastError();
+            }
         } else {
             self::$iblockSection->Update($elementId, [
                 "PREVIEW_PICTURE" => $imageArray
             ]);
+            if (self::$iblockSection->getLastError()) {
+                self::$errors[] = self::$iblockSection->getLastError();
+            }
         }
     }
 
@@ -271,6 +283,8 @@ class Parser
                 $paramsArray["UF_SORT"] = 500;
                 $sizesTable::add($paramsArray);
             }
+
+            self::setProductTag($parentId, $element[self::$sizeFieldName], !!$existingElement);
         }
         $deletedElements = $sizesTable::getList([
             "select" => ["ID"],
@@ -280,6 +294,23 @@ class Parser
         ]);
         while ($deletedElement = $deletedElements->fetch()) {
             $sizesTable::delete($deletedElement["ID"]);
+        }
+    }
+
+    private static function setProductTag($elementId, $tag, $add): void
+    {
+        $element = self::$iblockElement::GetByID($elementId)->Fetch();
+        if (!$element) return;
+        $tags = Main::separatorStringToArray($element['TAGS'] ?: '');
+        $tags = array_filter($tags, fn($t) => $t != '');
+        if (in_array($tag, $tags)) {
+            if (!$add) {
+                $tags = array_filter($tags, fn($t) => $t != $tag);
+                self::$iblockElement->Update($elementId, ['TAGS' => implode(',', $tags)]);
+            }
+        } else {
+            $tags[] = $tag;
+            self::$iblockElement->Update($elementId, ['TAGS' => implode(',', $tags)]);
         }
     }
 
@@ -297,11 +328,17 @@ class Parser
             self::$iblockSection->Update($notActualSection["ID"], [
                 "ACTIVE" => "N"
             ]);
+            if (self::$iblockSection->getLastError()) {
+                self::$errors[] = self::$iblockSection->getLastError();
+            }
         }
         while ($notActualElement = $notActualElements->Fetch()) {
             self::$iblockElement->Update($notActualElement["ID"], [
                 "ACTIVE" => "N"
             ]);
+            if (self::$iblockElement->getLastError()) {
+                self::$errors[] = self::$iblockElement->getLastError();
+            }
         }
     }
 

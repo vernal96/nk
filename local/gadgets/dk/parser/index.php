@@ -40,6 +40,17 @@ if ($request->get("PARSER_UPDATE")) {
         <span class="ui-alert-message">
             <? if ($result === true) : ?>
                 <strong><?= Loc::getMessage("NK_PARSER_SUCCESS"); ?></strong> <?= Loc::getMessage("NK_PARSER_SUCCESS_MESSAGE"); ?>
+                <? if (Parser::$errors) : ?>
+                    <br>
+                    <strong><?= Loc::getMessage("NK_PARSER_ERRORS"); ?></strong>
+                    <ul>
+                        <? foreach (Parser::$errors as $error) : ?>
+                            <li>
+                                <?=$error; ?>
+                            </li>
+                        <? endforeach; ?>
+                    </ul>
+                <? endif; ?>
             <? else: ?>
                 <strong><?= Loc::getMessage("NK_PARSER_ERROR"); ?></strong> <?= $result; ?>
             <? endif; ?>
