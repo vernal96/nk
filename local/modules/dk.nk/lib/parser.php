@@ -87,7 +87,7 @@ class Parser
 //        self::disableAllEmpty();
 //        self::deactivateEmptyProducts();
         Cache::clearCache(true);
-//        self::updateDBBitrix24();
+        self::updateDBBitrix24();
         return true;
     }
 
