@@ -9,5 +9,7 @@
 !/404.php
 !/lang/
 !/lang/**
+!/search/
+!/search/**
 **/vendor/**
 composer.lock

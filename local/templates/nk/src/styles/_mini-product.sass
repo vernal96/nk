@@ -18,11 +18,22 @@
   &__content
     display: block
     width: 100%
+    overflow: hidden
 
   &__title
     display: block
     grid-area: title
     margin-top: 0.2em
+
+  &__under-title
+    display: block
+    color: var(--clr-black-60)
+    font-size: 0.7em
+    line-height: 1
+    margin-bottom: .3em
+    overflow: hidden
+    text-wrap: nowrap
+    text-overflow: ellipsis
 
   &__price
     display: block

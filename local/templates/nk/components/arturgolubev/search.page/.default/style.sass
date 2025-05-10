@@ -1,0 +1,20 @@
+@import "../../../../src/styles/functions"
+
+.search-page
+  --items-row-count: 4
+
+  &__items
+    display: flex
+    gap: var(--gap)
+    flex-wrap: wrap
+
+    & .product
+      width: calc((100% - var(--gap) * (var(--items-row-count) - 1)) / var(--items-row-count))
+
+@media (max-width: 1110px)
+  .search-page
+    --items-row-count: 3
+
+@media (max-width: 650px)
+  .search-page
+    --items-row-count: 2
