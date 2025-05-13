@@ -20,12 +20,8 @@ export const component = {
             type: Object,
             required: true
         },
-        showBoxColumn: {
+        miniToCart: {
             type: Boolean,
-            required: true
-        },
-        boxHeader: {
-            type: String,
             required: true
         }
     },

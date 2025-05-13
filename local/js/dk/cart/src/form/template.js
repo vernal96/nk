@@ -52,7 +52,7 @@ export const template = `
     :isError="errorFields.includes('ft')"
     ></Selector>
     <template v-if="form.ft == 'jur'">
-        <label class="input input--required cart__form-item cart__form-item--full">
+        <label class="input cart__form-item cart__form-item--full">
             <span class="input__title">{{ lang.title.inn }}</span>
             <input 
             type="number" 

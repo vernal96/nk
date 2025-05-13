@@ -8,6 +8,7 @@ return [
     'js' => 'dist/counter.bundle.js',
     'rel' => [
 		'main.polyfill.core',
+		'dk.main.methods',
 	],
     'skip_core' => true,
 ];

@@ -95,7 +95,10 @@ class Cart
             }
             $this->userData = $userData;
         } else {
-            $this->userData['delivery'] = 'delivery';
+            $this->userData = [
+              'delivery' => 'self',
+              'ft' => 'pht'
+            ];
         }
     }
 
@@ -154,12 +157,19 @@ class Cart
         $productSizes = Catalog::getProductPrices($productId);
         if (!$productSizes) $this->getResponse();
         if (!in_array($id, array_column($productSizes, "ID"))) $this->getResponse();
+        if ($this->cart[$productId][$id] > $count) {
+            $type = 'remove';
+        } elseif ($this->cart[$productId][$id] < $count) {
+            $type = 'add';
+        } else {
+            $type = 'equally';
+        }
         $this->cart[$productId][$id] = $count;
         $this->save();
-        return $this->getResponse($id, $productId);
+        return $this->getResponse($id, $productId, $type);
     }
 
-    public function getResponse(int $id = null, int $productId = null): array
+    public function getResponse(int $id = null, int $productId = null, $type = null): array
     {
         $totalSum = $this->getTotalSum();
         $totalCount = $this->getTotalCount();
@@ -179,6 +189,7 @@ class Cart
             ];
         }
         return [
+            "type" => $type,
             "total" => [
                 "count" => $totalCount,
                 "sum" => $totalSum,
@@ -340,7 +351,6 @@ class Cart
     {
         global $USER;
         $this->session->remove($this->cartSessionName);
-        $this->session->remove($this->orderSessionName);
         $this->cart = [];
         $this->order = [];
         $this->setTotalSum();

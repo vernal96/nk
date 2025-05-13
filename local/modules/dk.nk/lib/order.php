@@ -170,9 +170,7 @@ class Order
         if (!Valid::notEmpty($fields["ft"])) $errorFields[] = "ft";
         else {
             if ($fields["ft"] == "jur") {
-                if (!Valid::notEmpty($fields["inn"])) {
-                    $errorFields[] = "inn";
-                } else {
+                if (Valid::notEmpty($fields["inn"])) {
                     if (!(new DaData())->getRqByInn((int)$fields["inn"])) $errorFields[] = "inn";
                 }
             }

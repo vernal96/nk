@@ -1,12 +1,8 @@
 export const template = `
 <tr>
     <td class="product-table__col">{{ size.title }}</td>
-    <td class="product-table__col" v-if="showBoxColumn">{{ size.box }}</td>
     <td class="product-table__col">
         {{ size.price }}
-        <small v-if="!showBoxColumn">
-            ({{ size.box }} {{ boxHeader }})
-        </small>
     </td>
     <td class="product-table__col product-table__col--counter">
         <Counter 
@@ -18,6 +14,16 @@ export const template = `
         @onChange="changeSum"
         ></Counter>
     </td>
-    <td class="product-table__col" :class="{'empty': !this.valueSum}">{{ this.sum }}</td>
+    <td class="product-table__col" :class="{'empty': !valueSum}">
+        <div class="total">
+            {{ sum }}
+            <a href="/cart/" class="button button--orange button--min button--small" v-if="valueSum">
+                <i class="icon icon--cart"></i>
+                <template v-if="!miniToCart">
+                    {{ lang.toCart }}
+                </template>
+            </a>
+        </div>
+    </td>
 </tr>
 `;

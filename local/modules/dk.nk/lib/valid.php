@@ -16,7 +16,8 @@ class Valid
 
     public static function phone($string): bool
     {
-        return !!preg_match("/^(\+\d|8)( \(\d{3}\) \d{3}-\d{2}-\d{2}|\d{10})$/", $string);
+        $cleaned = preg_replace('/\D/', '', $string);
+        return !!preg_match('/^([78])?\d{10}$/', $cleaned);
     }
 
     public static function email($string): bool

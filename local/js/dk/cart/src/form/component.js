@@ -107,12 +107,12 @@ export const Form = {
         ],
         delivery: [
             {
-                value: "delivery",
-                title: BX.message.DELIVERY
-            },
-            {
                 value: "self",
                 title: BX.message.SELF_DELIVERY
+            },
+            {
+                value: "delivery",
+                title: BX.message.DELIVERY
             }
         ],
         companyData: null,

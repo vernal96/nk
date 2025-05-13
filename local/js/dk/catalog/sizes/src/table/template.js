@@ -2,14 +2,14 @@ export const template = `
 <table v-if="showPlaceholder" ref="table">
     <thead>
         <tr>
-            <th v-for="j in 5">
+            <th v-for="j in 4">
                 <div class="content-loader"></div>
             </th>
         </tr>
     </thead>
     <tbody>
         <tr v-for="i in 6">
-            <td v-for="j in 5">
+            <td v-for="j in 4">
                 <div class="content-loader"></div>
             </td>
         </tr>
@@ -19,7 +19,6 @@ export const template = `
     <thead>
         <tr>
             <th>{{ sizesHeader }}</th>
-            <th v-if="showBoxColumn">{{ boxHeader }}</th>
             <th>{{ priceHeader }}</th>
             <th>{{ countHeader }}</th>
             <th>{{ sumHeader }}</th>
@@ -33,8 +32,7 @@ export const template = `
         :productId="productId"
         :containerWidth="containerWidth"
         :lang="lang"
-        :showBoxColumn="showBoxColumn"
-        :boxHeader="boxHeader"
+        :miniToCart="miniToCart"
         ></Row>
     </tbody>
 </table>

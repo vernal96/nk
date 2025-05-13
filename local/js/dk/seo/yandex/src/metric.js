@@ -2,53 +2,55 @@ export default {
     ym: {
         id: 100346127,
         init() {
+            this.productPageReady();
+            this.addToCart();
+            this.orderSuccess();
+            this.phoneClick();
+            this.recallClick();
+            this.recallSubmitted();
+            this.cartPageReady();
+        },
+        sendEvent(eventName, data = {}) {
             try {
-                this.productPageReady();
-                this.addToCart();
-                this.orderSuccess();
-                this.phoneClick();
-                this.recallClick();
-                this.recallSubmitted();
-                this.cartPageReady();
+                ym(this.id,'reachGoal', eventName, data);
             } catch (e) {
-                console.error(e);
+                console.error('YM is not defined.');
             }
+
         },
         productPageReady() {
             BX.addCustomEvent('onProductPageReady', () => {
-                ym(this.id,'reachGoal','onProductPageReady', {
-                    url: location.pathname
-                });
+                this.sendEvent('onProductPageReady', {url: location.pathname});
             });
         },
         cartPageReady() {
             BX.addCustomEvent('onCartPageReady', () => {
-                ym(this.id,'reachGoal','onCartPageReady');
+                this.sendEvent('onCartPageReady');
             });
         },
         addToCart() {
             BX.addCustomEvent('onProductCartAdd', (object) => {
-                ym(this.id,'reachGoal','onAddToCart', object.data);
+                this.sendEvent('onAddToCart', object.data);
             });
         },
         orderSuccess() {
             BX.addCustomEvent('onCartSubmitSuccess', (object) => {
-                ym(this.id,'reachGoal','onOrderSuccess', object.data);
+                this.sendEvent('onOrderSuccess', object.data);
             });
         },
         phoneClick() {
             BX.addCustomEvent('onMainPhoneClick', () => {
-                ym(this.id,'reachGoal','onPhoneClick');
+                this.sendEvent('onPhoneClick');
             });
         },
         recallClick() {
             BX.addCustomEvent('onRecallOpen', () => {
-                ym(this.id,'reachGoal','onRecallClick');
+                this.sendEvent('onRecallClick');
             });
         },
         recallSubmitted() {
             BX.addCustomEvent('onFormSubmitSuccess', () => {
-                ym(this.id,'reachGoal','onFormSubmitSuccess');
+                this.sendEvent('onFormSubmitSuccess');
             });
         }
     }

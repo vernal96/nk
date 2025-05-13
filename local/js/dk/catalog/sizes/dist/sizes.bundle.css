@@ -19,6 +19,24 @@
 .product-table__col--counter {
   max-width: 10em;
 }
+.product-table .total {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 0.4em;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  line-height: 1;
+  text-wrap: nowrap;
+}
 .product-table__image {
   width: min((100vw - 350px) / 1920 * 24 + 40px, 64px);
   height: min((100vw - 350px) / 1920 * 24 + 40px, 64px);

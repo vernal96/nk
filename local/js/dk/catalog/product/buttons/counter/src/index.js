@@ -1,4 +1,5 @@
 import "./style.css";
+import {Methods} from 'dk.main.methods';
 
 export const Counter = {
     name: "Counter",
@@ -33,17 +34,13 @@ export const Counter = {
         count: "",
         loading: false,
         waitTime: 200,
-        waiter: null
+        waiter: null,
+        requestToken: 0
     }),
     methods: {
         add() {
             this.count = +this.count + 1;
             this.runAction();
-            BX.onCustomEvent(window, 'onProductCartAdd', {
-                count: this.count,
-                productId: this.productId,
-                sizeId: this.sizeId
-            });
         },
         remove() {
             if (+this.count) {
@@ -60,6 +57,8 @@ export const Counter = {
             if (this.waiter) clearTimeout(this.waiter);
             this.waiter = setTimeout(() => {
                 this.loading = true;
+                this.requestToken++;
+                const currentToken = this.requestToken;
                 BX.ajax.runComponentAction("dk:catalog", "cartUpdate", {
                     mode: "class",
                     data: {
@@ -69,12 +68,26 @@ export const Counter = {
                     }
                 }).then(
                     response => {
+                        if (currentToken !== this.requestToken) return;
                         const responseCount = response.data.count.value ? response.data.count.value : "";
                         this.loading = false;
                         this.count = responseCount;
                         this.changeCartValues(response.data);
                         this.$emit("onChange", response.data);
                         this.waiter = null;
+
+                        if (response.data.type === 'add') {
+                            this.renderCartMessage();
+                        }
+
+                        if (response.data.type === 'add') {
+                            BX.onCustomEvent(window, 'onProductCartAdd', {
+                                count: this.count,
+                                productId: this.productId,
+                                sizeId: this.sizeId
+                            });
+                        }
+
                     }
                 );
             }, this.waitTime);
@@ -91,9 +104,35 @@ export const Counter = {
                 }
                 node.textContent = `${data.total.sum.format}`;
             });
+
+            document.querySelectorAll('.mini-cart').forEach(node => {
+                if (data.type === 'add') {
+                    node.classList.add('--shake-add');
+                } else if(data.type === 'remove') {
+                    node.classList.add('--shake-remove');
+                }
+                setTimeout(() => {
+                    node.classList.remove('--shake-add', '--shake-remove');
+                }, 500);
+            });
+
             document.querySelectorAll(".total-count").forEach(node => {
                 node.textContent = `${data.total.count.format}`;
             });
+        },
+        renderCartMessage() {
+            const id = 'cartMessage';
+            let node = document.getElementById(id);
+            if (!node) {
+                node = Methods.createStructure({
+                    classes: ['cart-message', 'note', 'note--success'],
+                    inner: `${BX.message.CART_ADD} <strong><a href="/cart/" class="simple-link">${BX.message.TO_CART}</a></strong>`,
+                    id: id
+                });
+                document.body.append(node);
+            }
+            setTimeout(() => node.classList.add('is-active'), 0);
+            setTimeout(() => node.classList.remove('is-active'), 2000);
         }
     },
     emits: ["onChange"],

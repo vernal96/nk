@@ -21,25 +21,19 @@ export const component = {
         containerWidth: 0,
         lang: {
             sizes: BX.message.SIZES_HEADER_TITLE,
-            box: BX.message.SIZES_HEADER_BOX,
             boxMobile: BX.message.SIZES_HEADER_BOX_MOBILE,
             price: BX.message.SIZES_HEADER_PRICE,
             priceMobile: BX.message.SIZES_HEADER_PRICE_MOBILE,
             count: BX.message.SIZES_HEADER_COUNT,
             countMobile: BX.message.SIZES_HEADER_COUNT_MOBILE,
             sum: BX.message.SIZES_HEADER_SUM,
-            currency: BX.message.CURRENCY
+            currency: BX.message.CURRENCY,
+            toCart: BX.message.TO_CART_SIMPLE
         }
     }),
     computed: {
-        showBoxColumn() {
-            return this.containerWidth > 1040;
-        },
         sizesHeader() {
             return this.lang.sizes;
-        },
-        boxHeader() {
-            return this.showBoxColumn ? this.lang.box : this.lang.boxMobile;
         },
         priceHeader() {
             return this.containerWidth > 580 ? this.lang.price : this.lang.priceMobile;
@@ -49,6 +43,9 @@ export const component = {
         },
         sumHeader() {
             return this.lang.sum;
+        },
+        miniToCart() {
+            return this.containerWidth < 560;
         }
     },
     methods: {
