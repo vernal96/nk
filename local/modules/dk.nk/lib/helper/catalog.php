@@ -25,7 +25,7 @@ class Catalog
     ];
     public const PRODUCT_SECTION_IMAGE_SIZE = ["width" => 440, "height" => 390];
     public static array $arSectionOrder = ["SORT" => "ASC", "NAME" => "ASC", "ID" => "ASC"];
-    public static array $arSectionFields = ["ID", "IBLOCK_ID", "IBLOCK_SECTION_ID", "NAME", "PICTURE", "DETAIL_PICTURE", "UF_ICON", "UF_NEW", "SECTION_PAGE_URL"];
+    public static array $arSectionFields = ["ID", "IBLOCK_ID", "IBLOCK_SECTION_ID", "NAME", "PICTURE", "DETAIL_PICTURE", "UF_ICON", "UF_NEW", "SECTION_PAGE_URL", 'UF_HIDE_FROM_MENU'];
     public static array $arProductOrder = ["SORT" => "ASC", "NAME" => "ASC", "ID" => "ASC"];
     public static array $arProductFields = ["ID", "NAME", "IBLOCK_ID", "CODE", "IBLOCK_SECTION_ID", "PREVIEW_PICTURE", "DETAIL_PAGE_URL"];
 
@@ -141,7 +141,8 @@ class Catalog
                     "ACTIVE" => "Y",
                     "GLOBAL_ACTIVE" => "Y",
                     "IBLOCK_ID" => IBLOCK_CATALOG,
-                    'ELEMENT_SUBSECTIONS' => 'N'
+                    'ELEMENT_SUBSECTIONS' => 'N',
+                    'UF_HIDE_FROM_MENU' => false
                 ],
                 true,
                 self::$arSectionFields,

@@ -318,7 +318,8 @@ class Parser
     {
         $notActualSections = self::$iblockSection->GetList([], [
             "!XML_ID" => self::$actualSections,
-            "IBLOCK_ID" => self::$iblockId
+            "IBLOCK_ID" => self::$iblockId,
+            "!UF_PARSER_IGNORE" => true
         ], false, ["ID"]);
         $notActualElements = self::$iblockElement->GetList([], [
             "!XML_ID" => self::$actualElements,
