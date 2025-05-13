@@ -665,8 +665,9 @@ ymaps ymaps[class$=map-copyrights-promo] {
 }
 .button--small {
   font-size: 0.8em;
-  height: auto;
-  padding: 0.8em;
+  height: calc(var(--input-height) / 1.5);
+  padding-left: 0.8em;
+  padding-right: 0.8em;
 }
 .button .icon {
   transition: transform 0.3s, opacity 0.3s, filter 0.3s;

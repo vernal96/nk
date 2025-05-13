@@ -18,10 +18,10 @@ export const template = `
 <table ref="table" v-else>
     <thead>
         <tr>
-            <th>{{ sizesHeader }}</th>
-            <th>{{ priceHeader }}</th>
-            <th>{{ countHeader }}</th>
-            <th>{{ sumHeader }}</th>
+            <th class="product-table__th product-table__th--size">{{ sizesHeader }}</th>
+            <th class="product-table__th product-table__th--price">{{ priceHeader }}</th>
+            <th class="product-table__th product-table__th--counter">{{ countHeader }}</th>
+            <th class="product-table__th product-table__th--total">{{ sumHeader }}</th>
         </tr>
     </thead>
     <tbody>

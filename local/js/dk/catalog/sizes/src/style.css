@@ -14,6 +14,18 @@
 .product-table__col--counter {
   max-width: 10em;
 }
+.product-table__th--size {
+  width: 20%;
+}
+.product-table__th--price {
+  width: 20%;
+}
+.product-table__th--counter {
+  width: 30%;
+}
+.product-table__th--total {
+  width: 30%;
+}
 .product-table .total {
   display: flex;
   gap: 0.4em;
