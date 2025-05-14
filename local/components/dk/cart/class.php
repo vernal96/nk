@@ -159,7 +159,7 @@ class DKCartComponent extends CBitrixComponent implements Controllerable
             return [
                 "success" => false,
                 "fields" => [],
-                "error" => $exception->getMessage()
+                "error" => Loc::getMessage('UNCAUGHT_ERROR')
             ];
         }
     }
