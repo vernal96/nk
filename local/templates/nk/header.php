@@ -137,12 +137,6 @@ if (!Main::checkUserGroup($USER->GetID(), [1, 'MANAGER'])) {
                             "arturgolubev:search.title",
                             ".default",
                             [
-                                "ANIMATE_HINTS" => [
-                                    "Поиск...",
-                                    "Саморезы",
-                                    "Шурупы",
-                                    "Анкерные болты",
-                                ],
                                 "ANIMATE_HINTS_SPEED" => "1",
                                 "CATEGORY_0" => [
                                     0 => "iblock_catalog",

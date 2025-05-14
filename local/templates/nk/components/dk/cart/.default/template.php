@@ -15,6 +15,15 @@ $this->setFrameMode(true);
             "successTitle" => Loc::getMessage("CART_SUCCESS_TITLE", ["#DEAL#" => \DK\NK\Helper\Main::getApplicationFormat($deal)]),
             "successDescription" => Loc::getMessage("CART_SUCCESS_DESCRIPTION")
         ]); ?>
+        <div class="form-success form-success--static">
+            <div class="form-success__inner">
+                <div class="form-success__description">
+                    <a href="/catalog/" class="button button--orange">
+                        <?= Loc::getMessage('CART_SUCCESS_BACK'); ?>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 <? else : ?>
     <? $sum = Cart::getInstance()->getTotalSum(); ?>
