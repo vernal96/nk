@@ -159,6 +159,9 @@ class Main
     public static function setFormatPhone(string $phone): string
     {
         $result = '+d (ddd) ddd-dd-dd';
+        if (!str_starts_with($phone, '+7') && !str_starts_with($phone, '8')) {
+            $phone = "+7$phone";
+        }
         $phone = preg_replace('/\D/', '', $phone);
         $phone = preg_replace('/^8/', '7', $phone);
         if (strlen($phone) < 11) {
