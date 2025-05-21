@@ -12,9 +12,14 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /** @var bool $IS_MAIN_PAGE */
 /** @var bool $IS_CATALOG_PAGE */
 
-if (!Main::checkUserGroup($USER->GetID(), [1, 'MANAGER'])) {
+try {
+    if (!Main::checkUserGroup($USER->GetID(), [1, 'MANAGER'])) {
+        Extension::load('dk.seo.yandex');
+    }
+} catch (Throwable $ex) {
     Extension::load('dk.seo.yandex');
 }
+
 
 ?>
 
