@@ -10,3 +10,5 @@ $MESS["SIZES_HEADER_SUM"] = "Сумма, руб.";
 
 $MESS["SIZES_SHOW"] = "Показать";
 $MESS["SIZES_HIDE"] = "Скрыть";
+
+$MESS["SIZES_TO_CART"] = "В корзину";

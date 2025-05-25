@@ -126,7 +126,7 @@ export const Counter = {
             if (!node) {
                 node = Methods.createStructure({
                     classes: ['cart-message', 'note', 'note--success'],
-                    inner: `${BX.message.CART_ADD} <strong><a href="/cart/" class="simple-link">${BX.message.TO_CART}</a></strong>`,
+                    inner: `${BX.message.NOTIFY_CART_ADD} <strong><a href="/cart/" class="simple-link">${BX.message.NOTIFY_TO_CART}</a></strong>`,
                     id: id
                 });
                 document.body.append(node);

@@ -28,7 +28,7 @@ export const component = {
             countMobile: BX.message.SIZES_HEADER_COUNT_MOBILE,
             sum: BX.message.SIZES_HEADER_SUM,
             currency: BX.message.CURRENCY,
-            toCart: BX.message.TO_CART_SIMPLE
+            toCart: BX.message.SIZES_TO_CART
         }
     }),
     computed: {

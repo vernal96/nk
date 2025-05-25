@@ -4,6 +4,7 @@ use Bitrix\Iblock\Component\Tools;
 use Bitrix\Iblock\InheritedProperty\ElementValues;
 use Bitrix\Main\Application;
 use Bitrix\Main\Config\Option;
+use Bitrix\Main\Type\Date as BitrixDate;
 use DK\NK\ActionFilter\Csrf;
 use Bitrix\Main\Engine\Contract\Controllerable;
 use Bitrix\Main\Web\Json;
@@ -75,7 +76,7 @@ class DKCatalogDetail extends CBitrixComponent implements Controllerable
         $seo = (new ElementValues($fields['IBLOCK_ID'], $fields['ID']))->getValues();
 
         $result = [
-            '@context' => 'http://schema.org',
+            '@context' => 'https://schema.org',
             '@type' => 'Product',
             'name' => $fields["NAME"],
             'description' => $seo['ELEMENT_META_DESCRIPTION'],
@@ -99,6 +100,9 @@ class DKCatalogDetail extends CBitrixComponent implements Controllerable
         } catch (Exception) {
             $sizes = [];
         }
+
+        $priceValidUntil = (new BitrixDate())->add('+1 year')->format('Y-m-d');
+
         foreach ($sizes as $size) {
             $result[] = [
                 '@type' => 'Offer',
@@ -108,6 +112,8 @@ class DKCatalogDetail extends CBitrixComponent implements Controllerable
                 'itemCondition' => 'https://schema.org/NewCondition',
                 'sku' => $size['UF_CODE'],
                 'description' => $size['UF_SIZE'],
+                'priceValidUntil' => $priceValidUntil,
+                'availability' => 'https://schema.org/InStock'
             ];
         }
         return $result;
