@@ -75,15 +75,17 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
                     [],
                     true
                 ); ?>
-                <div class="catalog-products__footer">
-                    <? $APPLICATION->IncludeComponent("bitrix:main.pagenavigation", "",
-                        [
-                            "NAV_OBJECT" => $productsResult["NAV_OBJECT"],
-                            "SEF_MODE" => "Y"
-                        ],
-                        $this
-                    ); ?>
-                </div>
+                <? if ($productsResult["NAV_OBJECT"]->getPageCount() > 1) : ?>
+                    <div class="catalog-products__footer">
+                        <? $APPLICATION->IncludeComponent("bitrix:main.pagenavigation", "",
+                            [
+                                "NAV_OBJECT" => $productsResult["NAV_OBJECT"],
+                                "SEF_MODE" => "Y"
+                            ],
+                            $this
+                        ); ?>
+                    </div>
+                <? endif; ?>
                 <? if (!$arResult["VARIABLES"]["SECTION_CODE"] && Loc::getMessage("CATALOG_DESCRIPTION")) : ?>
                     <div class="white-block text-content">
                         <?= (new CTextParser())->convertText(Loc::getMessage("CATALOG_DESCRIPTION")); ?>
