@@ -1,3 +1,5 @@
 import Metric from './metric';
+import Ecommerce from './ecommerce';
 
-Metric.ym.init();
+Metric.init();
+Ecommerce.init();

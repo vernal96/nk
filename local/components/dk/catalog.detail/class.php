@@ -3,6 +3,7 @@
 use Bitrix\Iblock\Component\Tools;
 use Bitrix\Iblock\InheritedProperty\ElementValues;
 use Bitrix\Main\Application;
+use Bitrix\Main\ArgumentException;
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\Type\Date as BitrixDate;
 use DK\NK\ActionFilter\Csrf;
@@ -11,6 +12,7 @@ use Bitrix\Main\Web\Json;
 use DK\NK\Helper\Catalog;
 use DK\NK\Helper\Iblock;
 use DK\NK\Helper\Main;
+use DK\NK\Helper\SEO;
 
 class DKCatalogDetail extends CBitrixComponent implements Controllerable
 {
@@ -54,6 +56,7 @@ class DKCatalogDetail extends CBitrixComponent implements Controllerable
 
             $this->arResult["RECOMMEND"] = $this->arResult["PROPERTIES"]["RECOMMEND"]["VALUE"];
             $this->arResult['JSON_LD'] = $this->getJsonLd($objElement);
+            $this->arResult['JSON_ECOMMERCE'] = $this->getJsonEcommerce($objElement);
             $taggedCache->registerTag("iblock_id_" . $this->arParams["IBLOCK_ID"]);
             $taggedCache->endTagCache();
             $this->endResultCache();
@@ -68,6 +71,29 @@ class DKCatalogDetail extends CBitrixComponent implements Controllerable
         }
 
         $APPLICATION->AddChainItem($this->arResult["NAME"], $this->arResult["DETAIL_PAGE_URL"]);
+    }
+
+    private function getJsonEcommerce(_CIBElement $element): string {
+        $result = [];
+        $fields = $element->GetFields();
+        try {
+            $sizes = Main::getHLObject(HL_SIZES)::query()
+                ->addSelect('*')
+                ->where('UF_PRODUCT', $fields['ID'])
+                ->fetchAll();
+        } catch (Exception) {
+            $sizes = [];
+        }
+
+        foreach ($sizes as $size) {
+            $result[] = SEO::getEcommerceProductFormat($size, $fields);
+        }
+        try {
+            return Json::encode($result);
+        } catch (ArgumentException) {
+            return '[]';
+        }
+
     }
 
     private function getJsonLd(_CIBElement $element): string {
