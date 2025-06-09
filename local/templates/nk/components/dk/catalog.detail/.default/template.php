@@ -157,7 +157,7 @@ $this->AddEditAction("edit_$arResult[ID]", $arResult["LINKS"]["DELETE"]["URL"], 
 <? endif; ?>
 <script>
     BX("pagetitle").classList.add("catalog-detail-page-header");
-    BX.onCustomEvent(window, 'onProductPageReady', {items: <?= $arResult['JSON_ECOMMERCE']; ?>});
+    BX.onCustomEvent(window, 'onProductPageReady');
 </script>
 <? if (!$arResult['IS_AJAX_REQUEST']) : ?>
     <script type="application/ld+json"><?= $arResult['JSON_LD']; ?></script>
