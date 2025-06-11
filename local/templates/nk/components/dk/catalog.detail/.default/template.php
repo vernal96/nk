@@ -116,6 +116,9 @@ $this->AddEditAction("edit_$arResult[ID]", $arResult["LINKS"]["DELETE"]["URL"], 
             <? endif; ?>
         </div>
     </div>
+    <script>
+        BX.onCustomEvent(window, 'onSingleProductPageReady', <?=$sizeId ?: 'null';?>);
+    </script>
 <? endif; ?>
 
 <? if ($arResult["DETAIL_TEXT"] || $arResult["PROPERTIES"]["DESCRIPTION"]["~VALUE"]) : ?>

@@ -1,6 +1,21 @@
 export default {
     init() {
         this.impressions.init(this);
+
+        BX.addCustomEvent('onSingleProductPageReady', (event) => {
+            this.push('detail', [event.data]);
+        });
+
+        BX.addCustomEvent('onProductCartAdd', (event) => {
+            this.push('add', [event.data.sizeId]);
+        });
+
+        BX.addCustomEvent('onCartSubmitSuccess', (event) => {
+            this.push('add', [event.data.items], {
+                id: `#${event.data.id}`,
+                revenue: event.data.sum.value
+            });
+        });
     },
     impressions: {
         items: [],
@@ -12,31 +27,30 @@ export default {
             });
             setInterval(() => {
                 if (!this.items.length) return;
-                this.getData();
+                parent.push('impressions', this.items);
                 this.items = [];
             }, 500);
-        },
-        getData() {
-            BX.ajax.runAction('dk:nk.SEO.impressions', {
-                data: {
-                    ids: this.items
-                }
-            }).then(({data}) => {
-                this.parent.push({
-                    impressions: data
-                });
-            }).catch(({errors}) => {
-                console.error(errors);
-            });
         }
     },
-    push(data) {
-        if (typeof window.dataLayer == 'undefined') return;
-        window.dataLayer.push({
-            'ecommerce': {
-                'currencyCode': 'RUB',
-                ...data
+    push(type, ids, action = null) {
+        // if (typeof window.dataLayer == 'undefined') return;
+
+        BX.ajax.runAction('dk:nk.SEO.getItems', {
+            data: {
+                ids: ids
             }
+        }).then(({data}) => {
+            window.dataLayer.push({
+                ecommerce: {
+                    currencyCode: 'RUB',
+                    [type]: {
+                        actionField: action,
+                        products: data,
+                    }
+                }
+            });
+        }).catch(({errors}) => {
+            console.error(errors);
         });
     }
 }

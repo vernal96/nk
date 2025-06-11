@@ -17,7 +17,7 @@ class SEO extends Controller
     public function configureActions(): array
     {
         return [
-            'impressions' => [
+            'getItems' => [
                 'prefilters' => [
                     new ActionFilter\Csrf(),
                     new ActionFilter\HttpMethod([ActionFilter\HttpMethod::METHOD_POST])
@@ -26,7 +26,7 @@ class SEO extends Controller
         ];
     }
 
-    public function impressionsAction(array $ids): array
+    public function getItemsAction(array $ids): array
     {
         $result = [];
 

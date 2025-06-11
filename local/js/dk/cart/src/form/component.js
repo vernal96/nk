@@ -303,7 +303,9 @@ export const Form = {
                             }
                         } else {
                             BX.onCustomEvent(window, 'onCartSubmitSuccess', {
-                                sum: response.data.sum
+                                sum: response.data.sum,
+                                id: response.data.id,
+                                items: response.data.items
                             });
                             location.reload();
                         }

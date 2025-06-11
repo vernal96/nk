@@ -130,6 +130,8 @@ class DKCartComponent extends CBitrixComponent implements Controllerable
             $order->sendManagerEmail();
             $order->sendClientEmail();
 
+            $items = array_column($cart->getList(), 'id');
+
             if ($fastPay) {
                 ob_start();
                 Main::include("form_success", [
@@ -147,7 +149,9 @@ class DKCartComponent extends CBitrixComponent implements Controllerable
             return [
                 "success" => true,
                 'message' => $message,
-                'sum' => $cart->getTotalSum()
+                'sum' => $cart->getTotalSum(),
+                'id' => $number,
+                'items' => $items
             ];
         } catch (FieldsException $exception) {
             return [
