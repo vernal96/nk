@@ -138,6 +138,7 @@ export const Counter = {
     emits: ["onChange"],
     mounted() {
         this.count = this.cartCount ? this.cartCount : "";
+        BX.onCustomEvent(window, 'onCounterInit', this.sizeId);
     },
     template: `
 		<div
