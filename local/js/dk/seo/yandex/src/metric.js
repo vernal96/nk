@@ -50,7 +50,7 @@ export default {
     },
     recallSubmitted() {
         BX.addCustomEvent('onFormSubmitSuccess', () => {
-            this.sendEvent('onFormSubmitSuccess');
+            this.sendEvent('onRecallSubmitted');
         });
     }
 }
