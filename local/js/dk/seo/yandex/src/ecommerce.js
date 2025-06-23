@@ -11,10 +11,14 @@ export default {
         });
 
         BX.addCustomEvent('onCartSubmitSuccess', (event) => {
-            this.push('add', [event.data.items], {
+            this.push('purchase', event.data.items, {
                 id: `#${event.data.id}`,
                 revenue: event.data.sum.value
             });
+        });
+
+        BX.addCustomEvent('onCounterInit', (event) => {
+            this.push('detail', [event.data]);
         });
     },
     impressions: {
@@ -33,7 +37,7 @@ export default {
         }
     },
     push(type, ids, action = null) {
-        // if (typeof window.dataLayer == 'undefined') return;
+        if (typeof window.dataLayer == 'undefined') return;
 
         BX.ajax.runAction('dk:nk.SEO.getItems', {
             data: {
