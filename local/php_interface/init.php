@@ -9,6 +9,7 @@ const IBLOCK_FS = 1;
 const IBLOCK_CATALOG = 2;
 const IBLOCK_SIMPLE = 3;
 const IBLOCK_MARKET = 4;
+const IBLOCK_NEWS = 5;
 const HL_SIZES = 1;
 const HL_ABOUT_PROPERTIES = 2;
 const HL_DELIVERY_CITIES = 3;

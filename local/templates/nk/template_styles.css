@@ -1818,6 +1818,16 @@ nav a:active {
   color: var(--clr-black-60);
   text-align: center;
 }
+.footer__menu {
+  font-size: 0.9em;
+  padding-bottom: 1em;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8em 2em;
+}
+.footer__menu a {
+  color: var(--clr-black-40);
+}
 
 @media (max-width: 470px) {
   .footer__copyright {
