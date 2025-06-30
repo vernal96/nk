@@ -2,9 +2,9 @@ export default {
     init() {
         this.impressions.init(this);
 
-        BX.addCustomEvent('onSingleProductPageReady', (event) => {
-            this.push('detail', [event.data]);
-        });
+        // BX.addCustomEvent('onSingleProductPageReady', (event) => {
+        //     this.push('detail', [event.data]);
+        // });
 
         BX.addCustomEvent('onProductCartAdd', (event) => {
             this.push('add', [event.data.sizeId]);
